@@ -1,9 +1,13 @@
+# build files
 build/
 cmake-build-*/
-data/output/*
+# Genrated images from compiler
+data/output/* 
 !data/output/.gitkeep
+# IDE files
 .vscode/
 .idea/
+# Object and executable files from compilation
 *.o
 *.obj
 *.exe
