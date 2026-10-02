@@ -1,0 +1,11 @@
+build/
+cmake-build-*/
+data/output/*
+!data/output/.gitkeep
+.vscode/
+.idea/
+*.o
+*.obj
+*.exe
+*.out
+.DS_Store
