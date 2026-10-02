@@ -12,6 +12,6 @@
 - **Tested:** Added test files and shared PR links with the team.
 
 - **Changed:** Added Continuos Integration, CMake, doctest and dummy test fil
-- **Why:** 
-- **PR:** #number
-- **Tested:** how you checked it works (tests added, examples run)
+- **Why:** To catch mistakes in code before they are pushed to main and to test on different systems that some teammate do not have e.g. code might run on windows but can't run on linux
+- **PR:** #2
+- **Tested:** Ran a test locally by changing 0.1.0 to 9.9.0 in tests/test_version.cpp.
