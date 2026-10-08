@@ -12,24 +12,24 @@
 - Created templates for weekly reports and individual changelogs (Oscar)
 - Added a CODEOWNERS file so reviewers are requested automatically and everyone gets an email when a PR opens (Oscar, #9)
 - Merged the first README: objectives, project structure, requirements, build and test instructions, and planned contributions (Oscar, #10)
-- 6 of 8 members merged their research files into docs/research/:
+- All 8 members wrote their research files and merged them into docs/research/:
   - Data loading (Member 1, #7): CSV reading with `std::ifstream`, `std::stringstream` and `std::getline`; Members 2, 3, 4 and 7 depend on the DataFrame columns and CSV reader
   - Statistical summaries (Member 2, #4): mean, median, standard deviation, min, max, quartiles, IQR, a combined `summary()`, histogram binning and KDE, using only the standard library
   - ECDF plots (Member 3, #5): sort the data, compute F(x) = i/n for each value, and return step coordinates for the renderer; tests planned for empty, single-value and duplicate data
+  - Joint plots (Member 4, #11): scatter, histogram (Freedman–Diaconis bins, vertical and horizontal) and a three-panel joint plot with shared scales and an optional KDE margin
   - Axis scaling and layout (Member 5, #12): linear and log scales, mapping data to pixels and back, "nice" tick values, and Figure/Axes classes that support several Axes in one Figure for the joint plot; log scale rejects zero and negative values
+  - Rendering (Member 6, #13): RGBA Canvas with Bresenham lines, midpoint circles, filled shapes and clipping, and the shared Color, Point and Rect types; no external libraries
   - Image export, build and integration (Member 7, #6): `save_png()` with stb_image_write, optional `save_ppm()` with no dependencies, maintaining CMake and CI, and the full CSV-to-PNG `pipeline.cpp` example
   - Labels and annotations (Member 8, #8): text drawing with stb_truetype and DejaVu Sans, plus titles, axis and tick labels, legends and free-text annotations, with text measurement for positioning
 
 ## In Progress
-- Joint plots research (Member 4, #11): scatter, histogram (Freedman–Diaconis bins, vertical and horizontal) and a three-panel joint plot with shared scales and an optional KDE margin. PR is open with 2 of 3 approvals
-- Rendering research (Member 6, #13): RGBA Canvas with Bresenham lines, midpoint circles, filled shapes and clipping, and the shared Color, Point and Rect types. Opened this week and merged on 6 October
 - Making the CI build a required check on main, so no PR can merge with a failing build (Oscar)
 - Agreeing the final library name; "vizlib" is the working name until then (All)
 - README sections for features, usage, examples and limitations will be filled in as modules are completed (Oscar)
 
 ## Challenges/Blockers
 - The first CMake setup failed three times: tests/ had no CMakeLists.txt, the doctest files were missing, and an include path did not match the folder name. All three are fixed, and the fixes are written up in the build guide so others avoid them (Oscar)
-- The repo owner could still bypass the merge rules from the PR page. Research PRs #6, #7 and #8 were merged with 2 approvals instead of 3 using this bypass, to meet the Saturday deadline. Being fixed by removing all bypass permissions, so the rules apply to everyone from next week (Oscar)
+- The repo owner could still bypass the merge rules from the PR page. This bypass was used to merge research PRs that did not have 3 approvals: #6, #7 and #8 with 2, #13 with 1, and #11 with none after new commits dismissed its earlier approvals. #11 and #13 were also submitted after the Saturday deadline. Being fixed by removing all bypass permissions, so the rules apply to everyone from next week (Oscar)
 - Each research PR needed 3 approvals, so 24 reviews were needed before Saturday. Members were asked to review the next three members' PRs, but most reviews came from Members 1, 3, 4 and 7. Members 2, 5 and 6 have not reviewed any PRs yet (All)
 - Some first-time Git mistakes: files committed without the .md extension (fixed in #5 by renaming; `Axis_scaling` from #12 still has none), placeholder commit messages ("Your message"), and research file names that do not follow the `module-Name.md` pattern. A short Git checklist will be shared with the team (Oscar)
 
