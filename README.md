@@ -75,7 +75,7 @@ All tests run automatically on every pull request through GitHub Actions.
 - Member 3: Zawedde Crystal
 - Member 4: Kiwalabye Oscar Muwanguzi
 - Member 5: 
-- Member 6:
+- Member 6: Nambalirwa Flavia Cate
 - Member 7: Namaganda Norah Margret
 - Member 8: Kabahamba Joy A Maria
 
