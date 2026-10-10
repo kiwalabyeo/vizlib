@@ -1,0 +1,34 @@
+KIZITO MARK JAMES
+
+25/U/30991/PS
+
+BCCE
+
+## Introduction
+Week 2 focused on building the core foundational interfaces and implementation files for the vizlib library, specifically establishing data ingestion and preprocessing capabilities.
+
+## What Was Done This Week
+
+Developed and finalized dataframe.hpp and dataframe.cpp to support columnar data storage and name-based column retrieval.
+
+Implemented csv_reader.hpp and csv_reader.cpp to read CSV files from disk, parse lines, handle missing values, and throw appropriate standard exceptions on bad input.
+
+Created preprocessing.hpp and preprocessing.cpp incorporating the drop_missing() function to filter out incomplete data rows.
+
+Added sample CSV files like tips.csv to the data/input/ directory so downstream team members can test statistical summaries and plotting modules.
+
+Participated in team coordination meetings and aligned module interfaces with group specifications.
+
+## Challenges Faced
+
+Catching up on missed Week 1 architectural planning while simultaneously implementing Week 2 data loading and preprocessing code.
+
+Learning and navigating Git branching workflows, commit conventions, and pull request submissions for team review.
+
+## Next Steps
+
+Write comprehensive unit tests for the DataFrame and CSV reader modules using doctest.h.
+
+Support team members in integrating statistical and plotting modules with the DataFrame output.
+
+Refine documentation and prepare code for final peer review and merging into the main branch.
