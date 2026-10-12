@@ -74,7 +74,7 @@ All tests run automatically on every pull request through GitHub Actions.
 - Member 2: Natukunda Melissa
 - Member 3: Zawedde Crystal
 - Member 4: Kiwalabye Oscar Muwanguzi
-- Member 5: 
+- Member 5: Mugabe Destiny
 - Member 6: Nambalirwa Flavia Cate
 - Member 7: Namaganda Norah Margret
 - Member 8: Kabahamba Joy A Maria
@@ -88,7 +88,7 @@ All tests run automatically on every pull request through GitHub Actions.
 
 - Kiwalabye Oscar Muwanguzi (@kiwalabyeo): wrote the scatter plot, the histogram plot, the joint plot combining them with histogram or KDE margins, and the joint plot example. Created the GitHub repo and its rules, the PR, report and changelog templates, and the project plan, and coordinated the team workflow.
 
-- Member 5: wrote linear and log axis scaling, tick generation, and the Figure and Axes layout system.
+- Mugabe Destiny (@destiny-mugabe): wrote linear and log axis scaling, tick generation, and the Figure and Axes layout system.
 
 - Nambalirwa Flavia Cate(@FlaviaCate): built the Canvas rendering engine (lines, rectangles, circles, filled shapes, line thickness, clipping) and the shared Color, Point and Rect types.
 
