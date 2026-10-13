@@ -7,6 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(vizlib
     src/version.cpp
+    src/image_export.cpp
 )
 
 target_include_directories(vizlib
