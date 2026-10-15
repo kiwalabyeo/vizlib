@@ -1,0 +1,2 @@
+add_executable(scatter_example scatter_example.cpp)
+target_link_libraries(scatter_example PRIVATE vizlib)

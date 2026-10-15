@@ -8,6 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(vizlib
     src/version.cpp
     src/image_export.cpp
+    src/canvas.cpp
+    src/scatter.cpp
 )
 
 target_include_directories(vizlib
@@ -25,4 +27,9 @@ option(VIZLIB_BUILD_TESTS "Build the tests" ON)
 if(VIZLIB_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
+endif()
+
+option(VIZLIB_BUILD_EXAMPLES "Build the examples" ON)
+if(VIZLIB_BUILD_EXAMPLES)
+    add_subdirectory(examples)
 endif()
