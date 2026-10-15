@@ -2,7 +2,7 @@
 
 **Name:** Kiwalabye Oscar Muwanguzi 25/U/08733/PS
 **Task area:** Joint plots (this week: the scatter plot)
-**Branch / pull request:** `feature/scatter-plot`
+**Branch / pull request:** `feature/scatter-plot`, PR #51
 
 ---
 

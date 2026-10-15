@@ -8,7 +8,7 @@
 ## 15-10-2026
 - **Changed:** Added `scatter()` and `ScatterStyle` (`include/vizlib/scatter.hpp`, `src/scatter.cpp`), with tests and `examples/scatter_example.cpp`. Added `canvas.cpp`, `scatter.cpp` and an examples option to the CMake build.
 - **Why:** Week 2 goal: a scatter plot drawing on the Canvas with hand-picked points.
-- **PR:** #(this PR)
+- **PR:** #51
 - **Tested:** Added `tests/test_scatter.cpp` (5 test cases); all 9 test cases pass. Ran the example and checked the saved PNG.
 
 ## 02-10-2026
