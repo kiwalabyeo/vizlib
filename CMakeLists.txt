@@ -10,6 +10,7 @@ add_library(vizlib
     src/image_export.cpp
     src/canvas.cpp
     src/scatter.cpp
+    scr/text.cpp
 )
 
 target_include_directories(vizlib
