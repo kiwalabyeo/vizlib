@@ -3,6 +3,7 @@ add_executable(vizlib_tests
     test_version.cpp
     test_image_export.cpp
     test_scatter.cpp
+    test_text.cpp
 )
 
 target_link_libraries(vizlib_tests PRIVATE vizlib)
