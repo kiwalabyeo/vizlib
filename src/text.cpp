@@ -1,4 +1,3 @@
-```cpp
 #include "vizlib/text.hpp"
 
 #include <algorithm>
@@ -251,4 +250,4 @@ void TextRenderer::draw_text(
 }
 
 } // namespace vizlib
-```
+
