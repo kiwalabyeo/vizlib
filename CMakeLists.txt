@@ -11,6 +11,8 @@ add_library(vizlib
     src/canvas.cpp
     src/scatter.cpp
     src/text.cpp
+    src/annotations.cpp
+    src/legend.cpp
 )
 
 target_include_directories(vizlib
