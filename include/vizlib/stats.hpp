@@ -16,5 +16,6 @@ public:
     double quantile(const vector<double>& sorted_data, double q);
     double interquartile_range(const vector<double>& sorted_data);
     int count(const vector<double>& data, double value);
+    std::vector<double> histogram_bin_edges(const std::vector<double>&data);
 };
 
