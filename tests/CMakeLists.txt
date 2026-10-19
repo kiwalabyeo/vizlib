@@ -12,3 +12,8 @@ target_link_libraries(vizlib_tests PRIVATE vizlib)
 target_include_directories(vizlib_tests PRIVATE ${PROJECT_SOURCE_DIR}/third_party)
 
 add_test(NAME vizlib_tests COMMAND vizlib_tests)
+
+set_tests_properties(vizlib_tests PROPERTIES
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+)
+
