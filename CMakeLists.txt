@@ -10,6 +10,10 @@ add_library(vizlib
     src/image_export.cpp
     src/canvas.cpp
     src/scatter.cpp
+    src/scale.cpp
+    src/axes.cpp
+    src/figure.cpp
+    src/histogram.cpp
     src/text.cpp
     src/annotations.cpp
     src/legend.cpp
