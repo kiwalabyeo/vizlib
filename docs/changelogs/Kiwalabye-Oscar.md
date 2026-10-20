@@ -8,7 +8,7 @@
 ## 19-10-2026
 - **Changed:** Added `histogram()`, `histogram_counts()`, `HistogramStyle` and `Orientation` (`include/vizlib/histogram.hpp`, `src/histogram.cpp`), with tests and `examples/histogram_example.cpp`. Added Member 5's `scale.cpp`, `axes.cpp` and `figure.cpp` to the CMake build so the histogram can draw through `Axes`.
 - **Why:** Week 3 goal (carried into Week 4): histogram in both orientations. The caller passes the bin edges for now, because the Freedman–Diaconis edges in `stats.cpp` are not usable yet (not built, and wrong for unsorted data or IQR 0).
-- **PR:** #TBD
+- **PR:** #57
 - **Tested:** Added `tests/test_histogram.cpp` (8 test cases); all 27 test cases pass. Ran the example and checked the saved PNG.
 
 ## 15-10-2026
