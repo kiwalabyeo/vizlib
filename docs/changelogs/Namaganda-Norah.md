@@ -9,12 +9,15 @@
 - **Why:** Examples such as `histogram_example.cpp` and `scatter_example.cpp` copy the canvas into a byte array by hand while waiting for this adapter. The PNG version keeps transparency (RGBA); the PPM version is RGB only.
 - **PR:** #61
 - **Tested:** 2 new doctest cases check the PNG signature and size, and the PPM size and pixel order (top-left first). All 29 test cases pass in `vizlib_tests.exe` (MSVC, Windows).
+<<<<<<< HEAD
 
 
 - **Changed:** Added `examples/pipeline.cpp` and registered it in `examples/CMakeLists.txt`. It generates sample data, draws a scatter plot and a histogram side by side, and saves one PNG with the Canvas export adapter.
 - **Why:** Week 3 task: a first version of the pipeline that connects the modules. It uses generated data and equal-width bins for now, because the CSV loader and the stats code are not usable on `main` yet.
 - **PR:** #61
 - **Tested:** Built with MSVC and ran `pipeline.exe`. It saved `data/output/pipeline.png`, and the picture shows both plots correctly.
+=======
+>>>>>>> 6e8a886 (Add changelog entry for Canvas export adapter)
 
 ## 2026-10-14
 - **Changed:** Added `save_png()` (using stb_image_write) and `save_ppm()` in `include/vizlib/image_export.hpp` and `src/image_export.cpp`. Added `third_party/stb_image_write.h` and `tests/test_image_export.cpp`. Registered the new source and the new test in both `CMakeLists.txt` files.
