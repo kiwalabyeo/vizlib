@@ -9,6 +9,9 @@ add_library(vizlib
     src/version.cpp
     src/image_export.cpp
     src/canvas.cpp
+    src/canvas.cpp
+    src/canvas_export.cpp
+    src/scatter.cpp
     src/scatter.cpp
     src/scale.cpp
     src/axes.cpp
