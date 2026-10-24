@@ -2,7 +2,9 @@
 #include "vizlib/annotations.hpp"
 
 #include <stdexcept>
-#include <utility>
+
+#include "vizlib/canvas.hpp"
+#include "vizlib/text.hpp"
 
 namespace vizlib {
 
@@ -25,6 +27,19 @@ const std::vector<Annotation>& Annotations::get_annotations() const {
 
 void Annotations::clear() {
     annotations_.clear();
+}
+
+void Annotations::draw(Canvas& canvas,
+                       const TextRenderer& renderer) const {
+    for (const auto& annotation : annotations_) {
+        renderer.draw_text(
+            canvas,
+            annotation.text,
+            annotation.position,
+            annotation.fontSize,
+            annotation.color
+        );
+    }
 }
 
 } // namespace vizlib

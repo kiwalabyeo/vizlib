@@ -9,6 +9,9 @@
 
 namespace vizlib {
 
+class Canvas;
+class TextRenderer;
+
 struct Annotation {
     std::string text;
     Point position;
@@ -26,6 +29,8 @@ public:
     const std::vector<Annotation>& get_annotations() const;
 
     void clear();
+
+    void draw(Canvas& canvas, const TextRenderer& renderer) const;
 
 private:
     std::vector<Annotation> annotations_;
