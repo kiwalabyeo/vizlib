@@ -1,52 +1,52 @@
-// Draws a scatter plot of a few hand-picked points and saves it as a PNG.
+// Draws a scatter plot of the iris data set (sepal length against petal
+// length) and saves it as a PNG.
 // Run from the project root: ./build/examples/scatter_example
 
+#include "example_utils.hpp"
+
+#include <vizlib/axes.hpp>
 #include <vizlib/canvas.hpp>
-#include <vizlib/image_export.hpp>
 #include <vizlib/scatter.hpp>
 
-#include <cstdint>
+#include <exception>
 #include <iostream>
 #include <vector>
 
 int main()
 {
-    const vizlib::Color white{255, 255, 255, 255};
-    const vizlib::Color light_grey{235, 235, 235, 255};
-
-    vizlib::Canvas canvas(400, 300, white);
-
-    // grey plot area, 40 px margin all round, so we can see where the dots should stay
-    const vizlib::Rect area{40, 40, 320, 220};
-    for (int y = 40; y < 260; ++y)
-        for (int x = 40; x < 360; ++x)
-            canvas.set_pixel(x, y, light_grey);
-
-    // hand-picked points: roughly a rising line with some noise
-    const std::vector<double> x = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    const std::vector<double> y = {2.1, 3.9, 3.2, 5.5, 6.1, 5.8, 7.9, 8.4, 8.0, 9.7};
-
-    vizlib::scatter(canvas, area, x, y);
-
-    // copy the canvas into an RGBA byte array for save_png
-    // (to be replaced by Member 7's canvas export adapter once it is merged)
-    std::vector<std::uint8_t> bytes;
-    bytes.reserve(static_cast<std::size_t>(canvas.width()) * canvas.height() * 4);
-    for (int row = 0; row < canvas.height(); ++row)
+    try
     {
-        for (int col = 0; col < canvas.width(); ++col)
+        const std::vector<double> x = examples::read_csv_column("data/input/iris.csv", "sepal_length");
+        const std::vector<double> y = examples::read_csv_column("data/input/iris.csv", "petal_length");
+
+        const vizlib::Color white{255, 255, 255, 255};
+        const vizlib::Color light_grey{235, 235, 235, 255};
+        vizlib::Canvas canvas(400, 300, white);
+
+        // grey plot area, 40 px margin all round, so we can see where the dots should stay
+        const vizlib::Rect area{40, 40, 320, 220};
+        for (int y_px = 40; y_px < 260; ++y_px)
+            for (int x_px = 40; x_px < 360; ++x_px)
+                canvas.set_pixel(x_px, y_px, light_grey);
+
+        vizlib::Axes axes;
+        axes.setPlotArea(area);
+        vizlib::ScatterStyle style;
+        style.radius = 3;
+        vizlib::scatter(canvas, axes, x, y, style);
+
+        const char* path = "data/output/scatter_example.png";
+        if (!examples::save_canvas_png(canvas, path))
         {
-            const vizlib::Color c = canvas.get_pixel(col, row);
-            bytes.insert(bytes.end(), {c.r, c.g, c.b, c.a});
+            std::cerr << "Could not save " << path << "\n";
+            return 1;
         }
+        std::cout << "Plotted " << x.size() << " iris flowers. Saved " << path << "\n";
     }
-
-    const char* path = "data/output/scatter_example.png";
-    if (!vizlib::save_png(path, canvas.width(), canvas.height(), 4, bytes.data()))
+    catch (const std::exception& e)
     {
-        std::cerr << "Could not save " << path << "\n";
+        std::cerr << "Error: " << e.what() << "\n";
         return 1;
     }
-    std::cout << "Saved " << path << "\n";
     return 0;
 }

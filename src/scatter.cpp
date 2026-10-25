@@ -4,25 +4,18 @@
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
 namespace vizlib {
 
 namespace {
 
-// the smallest and largest value of a data range
-struct Range {
-    double min = 0;
-    double max = 0;
-};
-
 // Finds the range of the values that will be plotted, then adds 5% padding.
 // Only points where neither x nor y is NaN are counted, because those are the
 // only points that get drawn.
-void data_ranges(const std::vector<double>& x, const std::vector<double>& y,
-                 Range& x_range, Range& y_range) {
+DataBounds data_bounds(const std::vector<double>& x, const std::vector<double>& y) {
     const double inf = std::numeric_limits<double>::infinity();
-    x_range = {inf, -inf};
-    y_range = {inf, -inf};
+    DataBounds b{inf, -inf, inf, -inf};
 
     bool found_point = false;
     for (std::size_t i = 0; i < x.size(); ++i) {
@@ -30,32 +23,28 @@ void data_ranges(const std::vector<double>& x, const std::vector<double>& y,
             continue;
         }
         found_point = true;
-        x_range.min = std::min(x_range.min, x[i]);
-        x_range.max = std::max(x_range.max, x[i]);
-        y_range.min = std::min(y_range.min, y[i]);
-        y_range.max = std::max(y_range.max, y[i]);
+        b.x_min = std::min(b.x_min, x[i]);
+        b.x_max = std::max(b.x_max, x[i]);
+        b.y_min = std::min(b.y_min, y[i]);
+        b.y_max = std::max(b.y_max, y[i]);
     }
     if (!found_point) {
         throw std::invalid_argument("scatter: every point contains a NaN.");
     }
 
-    for (Range* r : {&x_range, &y_range}) {
-        double span = r->max - r->min;
+    for (auto [lo, hi] : {std::pair{&b.x_min, &b.x_max}, std::pair{&b.y_min, &b.y_max}}) {
+        double span = *hi - *lo;
         if (span == 0) {
             // all values are equal: give the range a width of 1 so we never
             // divide by zero, and the dots land in the middle
-            r->min -= 0.5;
-            r->max += 0.5;
+            *lo -= 0.5;
+            *hi += 0.5;
             span = 1.0;
         }
-        r->min -= 0.05 * span;
-        r->max += 0.05 * span;
+        *lo -= 0.05 * span;
+        *hi += 0.05 * span;
     }
-}
-
-// Converts a data value to a fraction from 0 (range min) to 1 (range max).
-double fraction(double value, Range r) {
-    return (value - r.min) / (r.max - r.min);
+    return b;
 }
 
 // Draws a filled circle by colouring every pixel whose distance from the
@@ -77,30 +66,45 @@ void draw_dot(Canvas& canvas, Point center, double radius, Color c) {
 
 }  // end of unnamed namespace
 
+ScatterPlot::ScatterPlot(std::vector<double> x, std::vector<double> y, ScatterStyle style)
+    : x_(std::move(x)), y_(std::move(y)), style_(style) {
+    if (x_.size() != y_.size()) {
+        throw std::invalid_argument("scatter: x and y must have the same length.");
+    }
+    if (x_.empty()) {
+        throw std::invalid_argument("scatter: x and y must not be empty.");
+    }
+    bounds_ = data_bounds(x_, y_);
+}
+
+DataBounds ScatterPlot::bounds() const {
+    return bounds_;
+}
+
+void ScatterPlot::draw(Canvas& canvas, const Axes& axes) const {
+    for (std::size_t i = 0; i < x_.size(); ++i) {
+        if (std::isnan(x_[i]) || std::isnan(y_[i])) {
+            continue;   // a missing value: skip this point
+        }
+        draw_dot(canvas, axes.dataToPixel(x_[i], y_[i]), style_.radius, style_.color);
+    }
+}
+
+void scatter(Canvas& canvas, Axes& axes,
+             const std::vector<double>& x, const std::vector<double>& y,
+             const ScatterStyle& style) {
+    const ScatterPlot plot(x, y, style);
+    const DataBounds b = plot.bounds();
+    axes.setDataRange(b.x_min, b.x_max, b.y_min, b.y_max);
+    plot.draw(canvas, axes);
+}
+
 void scatter(Canvas& canvas, Rect area,
              const std::vector<double>& x, const std::vector<double>& y,
              const ScatterStyle& style) {
-    if (x.size() != y.size()) {
-        throw std::invalid_argument("scatter: x and y must have the same length.");
-    }
-    if (x.empty()) {
-        throw std::invalid_argument("scatter: x and y must not be empty.");
-    }
-
-    Range x_range, y_range;
-    data_ranges(x, y, x_range, y_range);
-
-    for (std::size_t i = 0; i < x.size(); ++i) {
-        if (std::isnan(x[i]) || std::isnan(y[i])) {
-            continue;   // a missing value: skip this point
-        }
-        // x grows to the right. Pixel y grows downwards, so the y fraction is
-        // flipped to put large values at the top of the area.
-        Point pixel;
-        pixel.x = area.x + fraction(x[i], x_range) * area.width;
-        pixel.y = area.y + (1.0 - fraction(y[i], y_range)) * area.height;
-        draw_dot(canvas, pixel, style.radius, style.color);
-    }
+    Axes axes;
+    axes.setPlotArea(area);
+    scatter(canvas, axes, x, y, style);
 }
 
 }  // end of namespace vizlib

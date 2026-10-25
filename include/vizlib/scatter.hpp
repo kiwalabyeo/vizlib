@@ -1,9 +1,11 @@
 #pragma once
 
 #include <vector>
+#include "vizlib/axes.hpp"
 #include "vizlib/canvas.hpp"
 #include "vizlib/color.hpp"
 #include "vizlib/geometry.hpp"
+#include "vizlib/plot.hpp"
 
 namespace vizlib {
 
@@ -13,15 +15,36 @@ struct ScatterStyle {
     double radius = 4.0;              // dot radius in pixels
 };
 
-// Draws one filled dot per (x[i], y[i]) pair inside `area` on the canvas.
+// A scatter plot: one filled dot per (x[i], y[i]) pair.
 //
-// The data range is the min and max of the data plus 5% padding on each side,
-// so no dot sits on the border. Larger y values are drawn higher up.
+// bounds() is the min and max of the data plus 5% padding on each side, so no
+// dot sits on the border. Points with a NaN in x or y are skipped.
 //
-// Throws std::invalid_argument if x and y have different lengths, are empty,
-// or contain no point without a NaN. Points with a NaN in x or y are skipped.
-//
-// Week 2 version: `area` stands in for an Axes until the Axes class exists.
+// The constructor throws std::invalid_argument if x and y have different
+// lengths, are empty, or contain no point without a NaN, so a ScatterPlot that
+// exists can always be drawn.
+class ScatterPlot : public Plot {
+private:
+    std::vector<double> x_;
+    std::vector<double> y_;
+    ScatterStyle style_;
+    DataBounds bounds_;
+
+public:
+    ScatterPlot(std::vector<double> x, std::vector<double> y, ScatterStyle style = {});
+
+    DataBounds bounds() const override;
+    void draw(Canvas& canvas, const Axes& axes) const override;
+};
+
+// Draws a scatter plot into `axes`, after setting its data range to the
+// ScatterPlot bounds. Throws like the ScatterPlot constructor.
+void scatter(Canvas& canvas, Axes& axes,
+             const std::vector<double>& x, const std::vector<double>& y,
+             const ScatterStyle& style = {});
+
+// Same as above, drawing inside `area` of the canvas. Kept from Week 2 so
+// existing code still works.
 void scatter(Canvas& canvas, Rect area,
              const std::vector<double>& x, const std::vector<double>& y,
              const ScatterStyle& style = {});

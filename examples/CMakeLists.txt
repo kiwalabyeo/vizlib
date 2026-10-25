@@ -6,3 +6,6 @@ target_link_libraries(histogram_example PRIVATE vizlib)
 
 add_executable(pipeline pipeline.cpp)
 target_link_libraries(pipeline PRIVATE vizlib)
+
+add_executable(joint_plot_example joint_plot_example.cpp)
+target_link_libraries(joint_plot_example PRIVATE vizlib)
