@@ -1,4 +1,5 @@
 #include "vizlib/canvas.hpp"
+#include <cmath>
 #include <stdexcept>
 
 namespace vizlib {
@@ -31,5 +32,19 @@ Color Canvas::get_pixel(int x, int y) const {
 
 int Canvas::width() const  { return width_; }
 int Canvas::height() const { return height_; }
+
+// fills every pixel inside the rectangle with the colour. Pixels that fall
+// off the canvas are skipped by set_pixel.
+void Canvas::fill_rect(Rect r, Color c) {
+    const int x0 = static_cast<int>(std::lround(r.x));
+    const int y0 = static_cast<int>(std::lround(r.y));
+    const int x1 = static_cast<int>(std::lround(r.x + r.width));
+    const int y1 = static_cast<int>(std::lround(r.y + r.height));
+    for (int y = y0; y < y1; ++y) {
+        for (int x = x0; x < x1; ++x) {
+            set_pixel(x, y, c);
+        }
+    }
+}
 
 }  // end of namespace vizlib
