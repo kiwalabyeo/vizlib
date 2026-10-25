@@ -7,11 +7,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(vizlib
     src/version.cpp
+    ecdf.cpp
     src/image_export.cpp
     src/canvas.cpp
-    src/canvas.cpp
     src/canvas_export.cpp
-    src/scatter.cpp
     src/scatter.cpp
     src/scale.cpp
     src/axes.cpp
@@ -20,6 +19,7 @@ add_library(vizlib
     src/text.cpp
     src/annotations.cpp
     src/legend.cpp
+    src/stats.cpp
 )
 
 target_include_directories(vizlib

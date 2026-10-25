@@ -1,4 +1,5 @@
 #include "vizlib/stats.hpp"
+<<<<<<< HEAD
 #include <vector>
 # include <algorithm>
 # include <iostream>
@@ -9,6 +10,22 @@ namespace vizlib{
 
 double summaryStatistics::mean()const{
 
+=======
+
+#include <algorithm>
+#include <iostream>
+#include <math.h>
+#include <stdexcept>
+#include <unordered_map>
+#include <vector>
+
+namespace vizlib {
+
+double summaryStatistics::mean(const std::vector<double>& data){
+    if(data.empty()){
+        throw std::invalid_argument("data cannot be empty");
+    }
+>>>>>>> 0dbae7e (Integrate stats and text into pipeline, fix summaryStatistics linking)
     double sum = 0;
     for (double number: Data){
     sum += number;

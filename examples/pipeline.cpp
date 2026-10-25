@@ -8,6 +8,8 @@
 #include <vizlib/canvas_export.hpp>
 #include <vizlib/histogram.hpp>
 #include <vizlib/scatter.hpp>
+#include <vizlib/stats.hpp>
+#include <vizlib/text.hpp>
 
 #include <algorithm>
 #include <iostream>
@@ -40,14 +42,10 @@ int main()
         y.push_back(0.5 * i + noise(rng));   // a rising line with noise
     }
 
-    // Step 2: 10 equal bins from the smallest to the largest y value.
-    // Later this will use the bin edges from stats.
-    const auto range = std::minmax_element(y.begin(), y.end());
-    const double low = *range.first;
-    const double high = *range.second;
-    std::vector<double> edges;
-    for (int i = 0; i <= 10; ++i)
-        edges.push_back(low + (high - low) * i / 10.0);
+    // Step 2: bin edges from the stats module
+    vizlib::summaryStatistics stats(y);
+    const std::vector<double> sorted_y = stats.sorted(y);
+    const std::vector<double> edges = stats.histogram_bin_edges(sorted_y);
 
     // Step 3: canvas with two plot areas side by side
     const vizlib::Color white{255, 255, 255, 255};
@@ -65,6 +63,12 @@ int main()
     vizlib::Axes axes;
     axes.setPlotArea(right_area);
     vizlib::histogram(canvas, axes, y, edges);
+
+    // Step 4b: titles with the text module
+    const vizlib::TextRenderer text("third_party/fonts/DejaVuSans.ttf");
+    const vizlib::Color black{0, 0, 0, 255};
+    text.draw_text(canvas, "Scatter plot", vizlib::Point{40, 30}, 16.0, black);
+    text.draw_text(canvas, "Histogram", vizlib::Point{370, 30}, 16.0, black);
 
     // Step 5: save with the Canvas export adapter (one line)
     const char* path = "data/output/pipeline.png";

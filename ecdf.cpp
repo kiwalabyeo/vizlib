@@ -1,5 +1,5 @@
 # include <algorithm>
-# include "ecdf.hpp"
+#include <vizlib/ecdf.hpp>
 # include <vector>
 
 namespace viz{

@@ -4,6 +4,11 @@
 **GitHub:** @NamagandaNorah-Margret20
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
+## 2026-10-26
+- **Changed:** `examples/pipeline.cpp` now gets its histogram bin edges from `summaryStatistics::histogram_bin_edges` (data sorted first with `sorted`) and draws a title above each plot with `TextRenderer`. Fixed `include/vizlib/stats.hpp` and `src/stats.cpp`, which defined two different `summaryStatistics` classes (one global, one inside `vizlib`), so the linker could not find `histogram_bin_edges`. The header now holds the single class inside `namespace vizlib`, with `#pragma once`. In the root `CMakeLists.txt`, added `src/stats.cpp` and `ecdf.cpp` to the library and removed duplicate source lines; removed duplicate test lines in `tests/CMakeLists.txt`.
+- **Why:** Week 3 task: integrate the different modules into the pipeline. The stats code is now usable, so the pipeline no longer needs hand-made equal-width bins.
+- **PR:** #61
+- **Tested:** Rebuilt with MSVC; `pipeline.exe` saved `data/output/pipeline.png` with both plots and titles. All tests pass in CTest.
 ## 2026-10-23
 - **Changed:** Added `save_png(const Canvas&, path)` and `save_ppm(const Canvas&, path)` in `include/vizlib/canvas_export.hpp` and `src/canvas_export.cpp`, so a whole Canvas can be saved in one call. Added `tests/test_canvas_export.cpp` and registered the new source and test in both `CMakeLists.txt` files.
 - **Why:** Examples such as `histogram_example.cpp` and `scatter_example.cpp` copy the canvas into a byte array by hand while waiting for this adapter. The PNG version keeps transparency (RGBA); the PPM version is RGB only.
