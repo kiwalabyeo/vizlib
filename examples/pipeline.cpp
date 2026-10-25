@@ -43,9 +43,9 @@ int main()
     }
 
     // Step 2: bin edges from the stats module
+           // Step 2: bin edges from the stats module
     vizlib::summaryStatistics stats(y);
-    const std::vector<double> sorted_y = stats.sorted(y);
-    const std::vector<double> edges = stats.histogram_bin_edges(sorted_y);
+    const std::vector<double> edges = stats.histogram_bin_edges();
 
     // Step 3: canvas with two plot areas side by side
     const vizlib::Color white{255, 255, 255, 255};

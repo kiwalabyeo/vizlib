@@ -7,7 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(vizlib
     src/version.cpp
-    ecdf.cpp
+    src/ecdf.cpp
     src/image_export.cpp
     src/canvas.cpp
     src/canvas_export.cpp
