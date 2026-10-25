@@ -59,6 +59,10 @@ public:
                                      const std::vector<double>& y_edges,
                                      const ScatterStyle& style = {});
 
+    // Same, with the bin edges from auto_bin_edges() (Freedman–Diaconis).
+    static JointPlot with_histograms(const std::vector<double>& x, const std::vector<double>& y,
+                                     const ScatterStyle& style = {});
+
     // Works out the three panel areas inside `area` and sets their data
     // ranges. Throws std::invalid_argument if the layout leaves no room for a
     // panel (margin_ratio must be between 0 and 1, gap not negative).

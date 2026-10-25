@@ -1,4 +1,5 @@
 #include "vizlib/histogram.hpp"
+#include "vizlib/stats.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -62,6 +63,42 @@ std::vector<std::size_t> histogram_counts(const std::vector<double>& data,
         ++counts[bin];
     }
     return counts;
+}
+
+std::vector<double> auto_bin_edges(const std::vector<double>& data) {
+    std::vector<double> sorted;
+    for (double v : data) {
+        if (!std::isnan(v)) {
+            sorted.push_back(v);
+        }
+    }
+    if (sorted.empty()) {
+        throw std::invalid_argument("histogram: data has no value that is not NaN.");
+    }
+    std::sort(sorted.begin(), sorted.end());
+    const double lo = sorted.front();
+    const double hi = sorted.back();
+    if (lo == hi) {
+        return {lo - 0.5, hi + 0.5};
+    }
+
+    // Freedman–Diaconis gives the bin width, and with it the number of bins.
+    // Its last edge can overshoot the max, so the edges are spread evenly
+    // from min to max instead (same as numpy).
+    const summaryStatistics stats(sorted, sorted);
+    std::size_t bins = stats.histogram_bin_edges().size();
+    bins = bins >= 2 ? bins - 1 : 0;
+    if (bins == 0) {
+        // IQR is 0: Freedman–Diaconis cannot pick a width, use Sturges' rule
+        bins = static_cast<std::size_t>(std::ceil(std::log2(static_cast<double>(sorted.size())))) + 1;
+    }
+
+    std::vector<double> edges;
+    for (std::size_t i = 0; i <= bins; ++i) {
+        edges.push_back(lo + (hi - lo) * static_cast<double>(i) / static_cast<double>(bins));
+    }
+    edges.back() = hi;   // no rounding error on the last edge
+    return edges;
 }
 
 HistogramPlot::HistogramPlot(const std::vector<double>& data, std::vector<double> edges,

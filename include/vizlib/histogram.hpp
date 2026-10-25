@@ -30,6 +30,15 @@ struct HistogramStyle {
 std::vector<std::size_t> histogram_counts(const std::vector<double>& data,
                                           const std::vector<double>& edges);
 
+// Bin edges for `data`, evenly spaced from its min to its max. The number of
+// bins comes from the Freedman–Diaconis rule (Member 2's
+// summaryStatistics::histogram_bin_edges). If the IQR is 0, Sturges' rule
+// (log2(n) + 1 bins) is used instead, and if every value is the same there is
+// one bin of width 1 around it. NaN values are ignored.
+//
+// Throws std::invalid_argument if `data` has no value that is not NaN.
+std::vector<double> auto_bin_edges(const std::vector<double>& data);
+
 // A histogram: one bar per bin.
 //
 // bounds(): the bin axis runs from the first to the last edge, and the count
@@ -57,8 +66,7 @@ public:
 // Draws a histogram into `axes`, after setting its data range to the
 // HistogramPlot bounds. Throws like the HistogramPlot constructor.
 //
-// The caller passes the bin edges. Once the Freedman–Diaconis edges in stats
-// are fixed, an overload without `edges` will use them.
+// Pass auto_bin_edges(data) as `edges` for Freedman–Diaconis bins.
 void histogram(Canvas& canvas, Axes& axes,
                const std::vector<double>& data, const std::vector<double>& edges,
                const HistogramStyle& style = {});
