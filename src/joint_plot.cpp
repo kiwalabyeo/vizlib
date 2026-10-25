@@ -28,6 +28,11 @@ JointPlot JointPlot::with_histograms(const std::vector<double>& x, const std::ve
                      std::make_unique<HistogramPlot>(y, y_edges, right_style));
 }
 
+JointPlot JointPlot::with_histograms(const std::vector<double>& x, const std::vector<double>& y,
+                                     const ScatterStyle& style) {
+    return with_histograms(x, y, auto_bin_edges(x), auto_bin_edges(y), style);
+}
+
 JointAxes JointPlot::layout(Rect area, const JointLayout& layout) const {
     if (!(layout.margin_ratio > 0 && layout.margin_ratio < 1) || !(layout.gap >= 0)) {
         throw std::invalid_argument("joint plot: margin_ratio must be between 0 and 1, gap not negative.");

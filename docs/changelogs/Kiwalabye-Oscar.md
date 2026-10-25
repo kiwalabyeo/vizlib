@@ -6,10 +6,10 @@
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 
 ## 25-10-2026
-- **Changed:** Added the `Plot` base class (`plot.hpp`) with `ScatterPlot`, `HistogramPlot` and `KdePlot` deriving from it, and `JointPlot` (`joint_plot.hpp`, `src/joint_plot.cpp`) with shared scales and any `Plot` in each panel. `scatter()` now also takes an `Axes`; the `Rect` version and `histogram()` still work as before. Added `data/input/iris.csv`, `examples/joint_plot_example.cpp`, and switched `scatter_example.cpp` to iris.
+- **Changed:** Added the `Plot` base class (`plot.hpp`) with `ScatterPlot`, `HistogramPlot` and `KdePlot` deriving from it, and `JointPlot` (`joint_plot.hpp`, `src/joint_plot.cpp`) with shared scales and any `Plot` in each panel. `scatter()` now also takes an `Axes`; the `Rect` version and `histogram()` still work as before. Added `auto_bin_edges()`, which uses Member 2's Freedman–Diaconis rule for the number of bins. Extended Member 1's `data/input/iris.csv` from 14 rows to the full 150, added `examples/joint_plot_example.cpp`, and switched `scatter_example.cpp` to iris read with `read_csv()`. CMake: added `stats.cpp`, `dataframe.cpp` and `csv_reader.cpp` to the library (they were not being built) and removed duplicate source entries.
 - **Why:** Week 3 goal (scatter on real CSV data) and Week 4 goal (joint plot with histogram or KDE margins). The `Plot` base class gives the project real inheritance and polymorphism.
 - **PR:** #TBD
-- **Tested:** Added `tests/test_joint_plot.cpp` (10 test cases); all 39 test cases pass, also under AddressSanitizer + UBSan. Broke the code on purpose 5 ways; the tests caught all 5. Ran all three examples and checked the PNGs.
+- **Tested:** Added `tests/test_joint_plot.cpp` (10 test cases) and 3 `auto_bin_edges` test cases; all 42 test cases pass, also under AddressSanitizer + UBSan. Broke the code on purpose 5 ways; the tests caught all 5. Ran all examples, including Member 7's pipeline, and checked the PNGs.
 
 ## 19-10-2026
 - **Changed:** Added `histogram()`, `histogram_counts()`, `HistogramStyle` and `Orientation` (`include/vizlib/histogram.hpp`, `src/histogram.cpp`), with tests and `examples/histogram_example.cpp`. Added Member 5's `scale.cpp`, `axes.cpp` and `figure.cpp` to the CMake build so the histogram can draw through `Axes`.

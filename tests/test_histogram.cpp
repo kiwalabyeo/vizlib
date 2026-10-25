@@ -114,3 +114,43 @@ TEST_CASE("histogram rejects bad input")
     CHECK_THROWS_AS(vizlib::histogram(canvas, axes, {NAN, NAN}, {0, 1}), std::invalid_argument); // only NaN
     CHECK_THROWS_AS(vizlib::histogram(canvas, axes, {1}, {0}), std::invalid_argument);          // bad edges
 }
+
+TEST_CASE("auto_bin_edges spreads Freedman–Diaconis bins from min to max")
+{
+    // Freedman–Diaconis picks 3 bins for 1..10, spread evenly over the range
+    const std::vector<double> e = vizlib::auto_bin_edges({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+    REQUIRE(e.size() == 4);
+    CHECK(e.front() == 1);
+    CHECK(e[1] == doctest::Approx(4));
+    CHECK(e.back() == 10);
+
+    // order does not matter
+    CHECK(vizlib::auto_bin_edges({10, 9, 8, 7, 6, 5, 4, 3, 2, 1}) == e);
+}
+
+TEST_CASE("auto_bin_edges handles an IQR of 0, equal values and NaN")
+{
+    // IQR is 0 but the values differ: Sturges' rule, ceil(log2(9)) + 1 = 5 bins
+    const std::vector<double> sturges = vizlib::auto_bin_edges({1, 1, 1, 1, 1, 1, 1, 1, 100});
+    CHECK(sturges.size() == 6);
+    CHECK(sturges.front() == 1);
+    CHECK(sturges.back() == 100);
+
+    // every value the same: one bin of width 1 around it
+    CHECK(vizlib::auto_bin_edges({5, 5, 5, 5}) == std::vector<double>{4.5, 5.5});
+
+    // NaN is ignored, and only NaN throws
+    CHECK(vizlib::auto_bin_edges({NAN, 2, 4}).front() == 2);
+    CHECK_THROWS_AS(vizlib::auto_bin_edges({NAN, NAN}), std::invalid_argument);
+    CHECK_THROWS_AS(vizlib::auto_bin_edges({}), std::invalid_argument);
+}
+
+TEST_CASE("auto_bin_edges never loses a value")
+{
+    const std::vector<double> data = {3.2, -1.5, 7.75, 0, 0, 2.5, 9.1, 4.4, 4.4, 6};
+    const auto counts = vizlib::histogram_counts(data, vizlib::auto_bin_edges(data));
+    std::size_t total = 0;
+    for (std::size_t c : counts)
+        total += c;
+    CHECK(total == data.size());
+}

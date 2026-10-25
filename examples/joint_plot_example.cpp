@@ -5,6 +5,8 @@
 #include "example_utils.hpp"
 
 #include <vizlib/canvas.hpp>
+#include <vizlib/canvas_export.hpp>
+#include <vizlib/csv_reader.hpp>
 #include <vizlib/joint_plot.hpp>
 #include <vizlib/kde_plot.hpp>
 #include <vizlib/scatter.hpp>
@@ -52,23 +54,15 @@ namespace
         }
     }
 
-    // evenly spaced bin edges from `from` to `to`
-    // (to be replaced by Member 2's Freedman–Diaconis edges once they are fixed)
-    std::vector<double> edges(double from, double to, double width)
-    {
-        std::vector<double> e;
-        for (double v = from; v <= to + 1e-9; v += width)
-            e.push_back(v);
-        return e;
-    }
 }
 
 int main()
 {
     try
     {
-        const std::vector<double> x = examples::read_csv_column("data/input/iris.csv", "sepal_length");
-        const std::vector<double> y = examples::read_csv_column("data/input/iris.csv", "petal_length");
+        const vizlib::DataFrame iris = vizlib::read_csv("data/input/iris.csv");
+        const std::vector<double> x = examples::numeric_column(iris, "sepal_length");
+        const std::vector<double> y = examples::numeric_column(iris, "petal_length");
 
         const vizlib::Color white{255, 255, 255, 255};
         const vizlib::Color dark{40, 40, 40, 255};
@@ -77,8 +71,8 @@ int main()
         style.radius = 3;
 
         // left: the usual joint plot, scatter with histogram margins
-        const vizlib::JointPlot with_histograms = vizlib::JointPlot::with_histograms(
-            x, y, edges(4.0, 8.0, 0.25), edges(1.0, 7.0, 0.4), style);
+        // (Freedman–Diaconis bins, worked out by auto_bin_edges)
+        const vizlib::JointPlot with_histograms = vizlib::JointPlot::with_histograms(x, y, style);
         with_histograms.draw(canvas, {30, 50, 400, 380});
 
         // right: the same scatter with KDE margins. JointPlot does not know or
@@ -102,7 +96,7 @@ int main()
         text.draw_text(canvas, "x: sepal length    y: petal length    (150 flowers)", {30, 452}, 12, dark);
 
         const char* path = "data/output/joint_plot_example.png";
-        if (!examples::save_canvas_png(canvas, path))
+        if (!vizlib::save_png(canvas, path))
         {
             std::cerr << "Could not save " << path << "\n";
             return 1;

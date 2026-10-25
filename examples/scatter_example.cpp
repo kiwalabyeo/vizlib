@@ -6,6 +6,8 @@
 
 #include <vizlib/axes.hpp>
 #include <vizlib/canvas.hpp>
+#include <vizlib/canvas_export.hpp>
+#include <vizlib/csv_reader.hpp>
 #include <vizlib/scatter.hpp>
 
 #include <exception>
@@ -16,8 +18,9 @@ int main()
 {
     try
     {
-        const std::vector<double> x = examples::read_csv_column("data/input/iris.csv", "sepal_length");
-        const std::vector<double> y = examples::read_csv_column("data/input/iris.csv", "petal_length");
+        const vizlib::DataFrame iris = vizlib::read_csv("data/input/iris.csv");
+        const std::vector<double> x = examples::numeric_column(iris, "sepal_length");
+        const std::vector<double> y = examples::numeric_column(iris, "petal_length");
 
         const vizlib::Color white{255, 255, 255, 255};
         const vizlib::Color light_grey{235, 235, 235, 255};
@@ -36,7 +39,7 @@ int main()
         vizlib::scatter(canvas, axes, x, y, style);
 
         const char* path = "data/output/scatter_example.png";
-        if (!examples::save_canvas_png(canvas, path))
+        if (!vizlib::save_png(canvas, path))
         {
             std::cerr << "Could not save " << path << "\n";
             return 1;
