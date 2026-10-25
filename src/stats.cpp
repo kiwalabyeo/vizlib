@@ -1,4 +1,4 @@
-#include "stats.hpp"
+#include "vizlib/stats.hpp"
 #include <vector>
 # include <algorithm>
 # include <iostream>
