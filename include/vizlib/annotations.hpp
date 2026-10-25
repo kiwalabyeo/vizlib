@@ -38,8 +38,6 @@ public:
 
     void clear();
 
-    void draw(Canvas& canvas, const TextRenderer& renderer) const;
-
 private:
     std::vector<Annotation> annotations_;
 };

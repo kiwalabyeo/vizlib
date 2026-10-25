@@ -1,3 +1,5 @@
+#include "doctest.h"
+#include "vizlib/legend.hpp"
 #include "vizlib/canvas.hpp"
 #include "vizlib/text.hpp"
 
