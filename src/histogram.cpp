@@ -1,8 +1,10 @@
 #include "vizlib/histogram.hpp"
+#include "vizlib/stats.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
+#include <utility>
 
 namespace vizlib {
 
@@ -63,41 +65,93 @@ std::vector<std::size_t> histogram_counts(const std::vector<double>& data,
     return counts;
 }
 
-void histogram(Canvas& canvas, Axes& axes,
-               const std::vector<double>& data, const std::vector<double>& edges,
-               const HistogramStyle& style) {
+std::vector<double> auto_bin_edges(const std::vector<double>& data) {
+    std::vector<double> sorted;
+    for (double v : data) {
+        if (!std::isnan(v)) {
+            sorted.push_back(v);
+        }
+    }
+    if (sorted.empty()) {
+        throw std::invalid_argument("histogram: data has no value that is not NaN.");
+    }
+    std::sort(sorted.begin(), sorted.end());
+    const double lo = sorted.front();
+    const double hi = sorted.back();
+    if (lo == hi) {
+        return {lo - 0.5, hi + 0.5};
+    }
+
+    // Freedman–Diaconis gives the bin width, and with it the number of bins.
+    // Its last edge can overshoot the max, so the edges are spread evenly
+    // from min to max instead (same as numpy).
+    const summaryStatistics stats(sorted, sorted);
+    std::size_t bins = stats.histogram_bin_edges().size();
+    bins = bins >= 2 ? bins - 1 : 0;
+    if (bins == 0) {
+        // IQR is 0: Freedman–Diaconis cannot pick a width, use Sturges' rule
+        bins = static_cast<std::size_t>(std::ceil(std::log2(static_cast<double>(sorted.size())))) + 1;
+    }
+
+    std::vector<double> edges;
+    for (std::size_t i = 0; i <= bins; ++i) {
+        edges.push_back(lo + (hi - lo) * static_cast<double>(i) / static_cast<double>(bins));
+    }
+    edges.back() = hi;   // no rounding error on the last edge
+    return edges;
+}
+
+HistogramPlot::HistogramPlot(const std::vector<double>& data, std::vector<double> edges,
+                             HistogramStyle style)
+    : edges_(std::move(edges)), style_(style) {
     if (data.empty()) {
         throw std::invalid_argument("histogram: data must not be empty.");
     }
     if (std::all_of(data.begin(), data.end(), [](double v) { return std::isnan(v); })) {
         throw std::invalid_argument("histogram: every value is NaN.");
     }
+    counts_ = histogram_counts(data, edges_);
+}
 
-    const std::vector<std::size_t> counts = histogram_counts(data, edges);
+const std::vector<std::size_t>& HistogramPlot::counts() const {
+    return counts_;
+}
 
-    const std::size_t tallest = *std::max_element(counts.begin(), counts.end());
+DataBounds HistogramPlot::bounds() const {
+    const std::size_t tallest = *std::max_element(counts_.begin(), counts_.end());
     // if nothing landed in a bin, still give the count axis a height of 1
     const double count_max = tallest == 0 ? 1.0 : 1.05 * static_cast<double>(tallest);
 
-    const bool vertical = style.orientation == Orientation::Vertical;
-    if (vertical) {
-        axes.setDataRange(edges.front(), edges.back(), 0.0, count_max);
-    } else {
-        axes.setDataRange(0.0, count_max, edges.front(), edges.back());
+    if (style_.orientation == Orientation::Vertical) {
+        return {edges_.front(), edges_.back(), 0.0, count_max};
     }
+    return {0.0, count_max, edges_.front(), edges_.back()};
+}
 
-    for (std::size_t i = 0; i < counts.size(); ++i) {
-        if (counts[i] == 0) {
+void HistogramPlot::draw(Canvas& canvas, const Axes& axes) const {
+    const bool vertical = style_.orientation == Orientation::Vertical;
+
+    for (std::size_t i = 0; i < counts_.size(); ++i) {
+        if (counts_[i] == 0) {
             continue;
         }
-        const double count = static_cast<double>(counts[i]);
+        const double count = static_cast<double>(counts_[i]);
         // one corner of the bar sits on the base line, the other at its height
-        const Point base = vertical ? axes.dataToPixel(edges[i], 0.0)
-                                    : axes.dataToPixel(0.0, edges[i]);
-        const Point top = vertical ? axes.dataToPixel(edges[i + 1], count)
-                                   : axes.dataToPixel(count, edges[i + 1]);
-        fill_box(canvas, base, top, style.color);
+        const Point base = vertical ? axes.dataToPixel(edges_[i], 0.0)
+                                    : axes.dataToPixel(0.0, edges_[i]);
+        const Point top = vertical ? axes.dataToPixel(edges_[i + 1], count)
+                                   : axes.dataToPixel(count, edges_[i + 1]);
+        fill_box(canvas, base, top, style_.color);
     }
+}
+
+void histogram(Canvas& canvas, Axes& axes,
+               const std::vector<double>& data, const std::vector<double>& edges,
+               const HistogramStyle& style) {
+    const HistogramPlot plot(data, edges, style);
+    const DataBounds b = plot.bounds();
+    axes.setDataRange(b.x_min, b.x_max, b.y_min, b.y_max);
+    plot.draw(canvas, axes);
 }
 
 }  // end of namespace vizlib

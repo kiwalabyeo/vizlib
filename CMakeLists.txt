@@ -9,6 +9,9 @@ add_library(vizlib
     src/version.cpp
     src/ecdf.cpp
     src/image_export.cpp
+    src/csv_reader.cpp
+    src/dataframe.cpp
+    src/stats.cpp
     src/canvas.cpp
     src/canvas_export.cpp
     src/scatter.cpp
@@ -16,10 +19,11 @@ add_library(vizlib
     src/axes.cpp
     src/figure.cpp
     src/histogram.cpp
+    src/kde_plot.cpp
+    src/joint_plot.cpp
     src/text.cpp
     src/annotations.cpp
     src/legend.cpp
-    src/stats.cpp
 )
 
 target_include_directories(vizlib
