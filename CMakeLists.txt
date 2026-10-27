@@ -7,6 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(vizlib
     src/version.cpp
+    src/ecdf.cpp
     src/image_export.cpp
     src/csv_reader.cpp
     src/dataframe.cpp

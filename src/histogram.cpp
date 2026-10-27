@@ -85,7 +85,7 @@ std::vector<double> auto_bin_edges(const std::vector<double>& data) {
     // Freedman–Diaconis gives the bin width, and with it the number of bins.
     // Its last edge can overshoot the max, so the edges are spread evenly
     // from min to max instead (same as numpy).
-    const summaryStatistics stats(sorted, sorted);
+    const summaryStatistics stats(sorted);
     std::size_t bins = stats.histogram_bin_edges().size();
     bins = bins >= 2 ? bins - 1 : 0;
     if (bins == 0) {
