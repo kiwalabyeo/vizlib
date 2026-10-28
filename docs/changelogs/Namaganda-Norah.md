@@ -4,6 +4,11 @@
 **GitHub:** @NamagandaNorah-Margret20
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
+## 2026-10-28
+- **Changed:** `.github/workflows/ci.yml`: the `linux` job now runs `./build/examples/pipeline` after the tests and then checks that `data/output/pipeline.png` exists and is not empty (`test -s`). `examples/pipeline.cpp` now reads `data/input/iris.csv` with `read_csv` instead of generating random data, using a new helper `column_as_doubles` that turns a `DataFrame` column into a `std::vector<double>` (`sepal_length` for x, `petal_length` for y).
+- **Why:** Week 4 tasks: complete GitHub Actions CI, test the build and tests on a clean environment, and run the complete CSV-to-PNG pipeline. Running `pipeline` in CI on a fresh machine also checks that no required files (the font, `data/input`, `data/output`) are missing from the repo.
+- **PR:** #80
+- **Tested:** Rebuilt with MSVC; `pipeline.exe` read `iris.csv` and saved `data/output/pipeline.png` with both plots and titles. `CI / linux` passes on the pull request (build, CTest, pipeline run and PNG check).
 ## 2026-10-26
 - **Changed:** `examples/pipeline.cpp` now gets its histogram bin edges from `summaryStatistics::histogram_bin_edges` (data sorted first with `sorted`) and draws a title above each plot with `TextRenderer`. Fixed `include/vizlib/stats.hpp` and `src/stats.cpp`, which defined two different `summaryStatistics` classes (one global, one inside `vizlib`), so the linker could not find `histogram_bin_edges`. The header now holds the single class inside `namespace vizlib`, with `#pragma once`. In the root `CMakeLists.txt`, added `src/stats.cpp` and `ecdf.cpp` to the library and removed duplicate source lines; removed duplicate test lines in `tests/CMakeLists.txt`.
 - **Why:** Week 3 task: integrate the different modules into the pipeline. The stats code is now usable, so the pipeline no longer needs hand-made equal-width bins.
