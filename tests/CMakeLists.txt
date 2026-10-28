@@ -5,6 +5,7 @@ add_executable(vizlib_tests
     test_ecdf.cpp
     test_image_export.cpp
     test_canvas_export.cpp
+    test_canvas.cpp
     test_scatter.cpp
     test_histogram.cpp
     test_joint_plot.cpp

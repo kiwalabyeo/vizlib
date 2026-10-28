@@ -1,6 +1,8 @@
 #include "vizlib/canvas.hpp"
 #include <cmath>
 #include <stdexcept>
+#include <cstdlib>
+#include <algorithm>
 
 namespace vizlib {
 
@@ -33,6 +35,50 @@ Color Canvas::get_pixel(int x, int y) const {
 int Canvas::width() const  { return width_; }
 int Canvas::height() const { return height_; }
 
+namespace {
+// Colours a square of side `thickness` around (x, y). Thickness 1 = one pixel.
+void stamp(Canvas& canvas, int x, int y, int thickness, Color c) {
+    int half = thickness / 2;                      // integer division, e.g. 3/2 = 1
+    for (int dy = 0; dy < thickness; ++dy)
+        for (int dx = 0; dx < thickness; ++dx)
+            canvas.set_pixel(x - half + dx, y - half + dy, c);  // set_pixel ignores off-canvas
+}
+}  // end unnamed namespace: only this file can use stamp()
+
+// Bresenham's line algorithm (Bresenham, 1965): uses only integers, no rounding errors.
+void Canvas::draw_line(Point from, Point to, Color c, int thickness) {
+    if (thickness < 1) throw std::invalid_argument("thickness must be at least 1");
+    int x0 = static_cast<int>(std::lround(from.x));  // doubles -> nearest whole pixel
+    int y0 = static_cast<int>(std::lround(from.y));
+    int x1 = static_cast<int>(std::lround(to.x));
+    int y1 = static_cast<int>(std::lround(to.y));
+
+    int dx = std::abs(x1 - x0);          // how far we go across
+    int dy = -std::abs(y1 - y0);         // how far we go down, stored NEGATIVE (trick that keeps the maths simple)
+    int sx = (x0 < x1) ? 1 : -1;         // step direction in x: right or left
+    int sy = (y0 < y1) ? 1 : -1;         // step direction in y: down or up
+    int err = dx + dy;                   // error term: how far we are from the true line
+
+    while (true) {
+        stamp(*this, x0, y0, thickness, c);        // colour the current pixel
+        if (x0 == x1 && y0 == y1) break;           // reached the end
+        int e2 = 2 * err;
+        if (e2 >= dy) { err += dy; x0 += sx; }     // error says: step in x
+        if (e2 <= dx) { err += dx; y0 += sy; }     // error says: step in y (both can happen = diagonal)
+    }
+}
+
+void Canvas::draw_rect(Rect r, Color c) {
+    if (r.width <= 0 || r.height <= 0) throw std::invalid_argument("Rect must have positive width and height");
+    double left = r.x, top = r.y;
+    double right = r.x + r.width - 1;     // -1 because the last pixel is width-1 away from the first
+    double bottom = r.y + r.height - 1;
+    draw_line({left, top},     {right, top},    c);   // top edge
+    draw_line({right, top},    {right, bottom}, c);   // right edge
+    draw_line({right, bottom}, {left, bottom},  c);   // bottom edge
+    draw_line({left, bottom},  {left, top},     c);   // left edge
+}
+
 // fills every pixel inside the rectangle with the colour. Pixels that fall
 // off the canvas are skipped by set_pixel.
 void Canvas::fill_rect(Rect r, Color c) {
@@ -47,4 +93,34 @@ void Canvas::fill_rect(Rect r, Color c) {
     }
 }
 
+// Midpoint circle algorithm: walk one eighth of the circle, mirror it 8 ways.
+void Canvas::draw_circle(Point center, double radius, Color c) {
+    if (radius < 0) throw std::invalid_argument("radius must not be negative");
+    int cx = static_cast<int>(std::lround(center.x));
+    int cy = static_cast<int>(std::lround(center.y));
+    int x = static_cast<int>(std::lround(radius));
+    int y = 0;
+    int err = 1 - x;
+    while (x >= y) {
+        set_pixel(cx + x, cy + y, c);  set_pixel(cx - x, cy + y, c);
+        set_pixel(cx + x, cy - y, c);  set_pixel(cx - x, cy - y, c);
+        set_pixel(cx + y, cy + x, c);  set_pixel(cx - y, cy + x, c);
+        set_pixel(cx + y, cy - x, c);  set_pixel(cx - y, cy - x, c);
+        ++y;
+        if (err <= 0) { err += 2 * y + 1; }
+        else          { --x; err += 2 * (y - x) + 1; }
+    }
+}
+
+void Canvas::fill_circle(Point center, double radius, Color c) {
+    if (radius < 0) throw std::invalid_argument("radius must not be negative");
+    int cx = static_cast<int>(std::lround(center.x));
+    int cy = static_cast<int>(std::lround(center.y));
+    int r = static_cast<int>(std::lround(radius));
+    for (int dy = -r; dy <= r; ++dy) {
+        int half = static_cast<int>(std::lround(std::sqrt(static_cast<double>(r * r - dy * dy))));
+        for (int x = cx - half; x <= cx + half; ++x)         // one horizontal strip per row
+            set_pixel(x, cy + dy, c);
+    }
+}
 }  // end of namespace vizlib
