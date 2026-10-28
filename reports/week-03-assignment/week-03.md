@@ -58,6 +58,13 @@ The drawings are photographed and uploaded with this report:
 2. **Figure 2: encapsulation.** The classes `Canvas`, `Legend` and `TextRenderer`, each with private data and public functions.
 3. **Figure 3: encapsulation.** The class `summaryStatistics`.
 
+![Figure 1: Inheritance and polymorphism](figure1.jpg)
+
+![Figure 2: Encapsulation — Canvas, Legend and TextRenderer](figure2.jpg)
+
+![Figure 3: Encapsulation — summaryStatistics](figure3.jpg)
+
+
 Each box shows the class name at the top, the member data in the middle and the member functions at the bottom.
 
 ## 7. Summary
