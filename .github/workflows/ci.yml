@@ -17,6 +17,10 @@ jobs:
         run: cmake --build build
       - name: Test
         run: ctest --test-dir build --output-on-failure
+      - name: Run pipeline
+        run: ./build/examples/pipeline
+      - name: Check PNG was created
+        run: test -s data/output/pipeline.png
 
   other-platforms:
     if: github.event_name == 'push'
