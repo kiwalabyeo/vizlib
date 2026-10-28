@@ -29,6 +29,7 @@ void test_standard_data() {
 int main(){
     std::cout<<"Running ECDF unit tests....";
     test_empty_vector();
+    test_standard_data();
     std::cout<<"All tests finished\n";
     return 0;
 }
