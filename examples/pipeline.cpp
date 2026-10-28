@@ -10,6 +10,7 @@
 #include <vizlib/scatter.hpp>
 #include <vizlib/stats.hpp>
 #include <vizlib/text.hpp>
+#include "vizlib/csv_reader.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -28,20 +29,26 @@ namespace
     }
 }
 
-int main()
+// Turns one DataFrame column into a plain list of numbers.
+// Cells that are text instead of numbers are skipped.
+static std::vector<double> column_as_doubles(const vizlib::DataFrame& df,
+                                             const std::string& name)
 {
-    // Step 1: data. Later this will come from the CSV reader.
-    // A fixed seed gives the same picture every run.
-    std::mt19937 rng(42);
-    std::normal_distribution<double> noise(0.0, 2.0);
-    std::vector<double> x;
-    std::vector<double> y;
-    for (int i = 1; i <= 60; ++i)
+    std::vector<double> values;
+    for (const vizlib::CellValue& cell : df.get_column(name))
     {
-        x.push_back(i);
-        y.push_back(0.5 * i + noise(rng));   // a rising line with noise
+        if (const double* number = std::get_if<double>(&cell))
+        {
+            values.push_back(*number);
+        }
     }
-
+    return values;
+}
+int main()
+{    // Step 1: data from the CSV file
+    const vizlib::DataFrame df = vizlib::read_csv("data/input/iris.csv");
+    const std::vector<double> x = column_as_doubles(df, "sepal_length");
+    const std::vector<double> y = column_as_doubles(df, "petal_length");
     // Step 2: bin edges from the stats module
            // Step 2: bin edges from the stats module
     vizlib::summaryStatistics stats(y);
