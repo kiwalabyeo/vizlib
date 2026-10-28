@@ -9,7 +9,7 @@
 I included a base class binningStrategy with derived classes FreedmanDiaconis and Sturges to handle the different methods of histogram binning.
 - **Why**
 The method used before did not cater for some instances such as a small, normally disrtibuted dataset. Also, in order to utiise the aspects of OOP such as polymorphism and inheritance.
-- **PR:** 80
+- **PR:** 83
 - **Tested:** Tested the statisticalSummaries class and its functions,and the different binning strategies.
 ## 2026-10-24
 - **Changed:**
