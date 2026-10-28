@@ -2,7 +2,7 @@
 #include <vizlib/ecdf.hpp>
 # include <vector>
 
-namespace viz{
+namespace vizlib{
     std::vector<Point> ECDFPlot::compute_coordinates(const std::vector<double> &data){
     if (data.empty()){
         return {};
