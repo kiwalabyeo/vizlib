@@ -93,7 +93,8 @@ check that this does not cause a crash.
 
 ## 4. How I tested the work
 
-I added `tests/test_canvas.cpp` with tests for the main Canvas functions. The tests check that:
+I added `tests/test_canvas.cpp` with tests for the main Canvas functions. 
+The tests check that:
 
 -   A pixel can be set to a colour and read back correctly.
 -   Setting a pixel outside the Canvas does not crash.
@@ -107,7 +108,9 @@ I added `tests/test_canvas.cpp` with tests for the main Canvas functions. The te
     circle.
 -   A negative circle radius is rejected.
 
-It was also something new I learnt that I realised makes life a lot easier: I configured and built the project in GitHub Codespaces using CMake. The build completed successfully, including compilation of
+It was also something new I learnt that I realised makes life a lot easier: 
+I configured and built the project in GitHub Codespaces using CMake. The build
+ completed successfully, including compilation of
 `tests/test_canvas.cpp`. I then ran:
 
 ``` bash
@@ -226,13 +229,26 @@ checked or completed as part of the remaining project work:
     planned for Week 4.
 -   Confirm the feature branch, pull request and review status.
 
-I plan to use Wu's smooth-line algorithm which was earlier listed as optional 
-(if time allows).
-Bresenham's algorithm is implemented for the current line-drawing work.
-A link of youtube that helped understand it and also build the code is pasted below.
+### 7.1 Improving the Existing Bresenham's Line Algorithm
+
+For line drawing, our group originally chose Bresenham's line algorithm, 
+as stated in the original work plan. I followed this decision when 
+preparing my personal roadmap and implementing the current line-drawing functionality.
+
+Along the way, I learnt about Xiaolin Wu's line algorithm, which can be 
+used to produce smoother lines through antialiasing. Although this 
+algorithm was earlier listed as an optional improvement in the original 
+work plan, I do not plan to prioritise it for the current work. Instead, 
+I will focus on improving the already implemented Bresenham's algorithm, 
+particularly its line-thickness handling, clipping, and boundary conditions. 
+This will allow me to improve the existing functionality while maintaining 
+consistency with the group's original approach.
+However, I will discuss my groupmates this week and we decide if our program shouuld include 
+it or not, so that I do not make a redundant function which will not be implemented.
+
+The YouTube video linked below helped me understand Bresenham's line-drawing algorithm and its implementation. Although the explanation uses Python, it helped me understand the underlying logic and concepts that I could apply when implementing the algorithm in C++.
+
 https://www.youtube.com/watch?v=CceepU1vIKo&pp=ygUiYnJlc2VuaGFtJ3MgbGluZSBkcmF3aW5nIGFsZ29yaXRobQ%3D%3D
-The video and others, though expxlained using python language, luckily brought out 
-the aspects that I needed to use to implement in C++.
 
 ## 8. AI use
 
