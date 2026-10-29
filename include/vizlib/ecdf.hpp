@@ -1,12 +1,8 @@
-//This header file acts as a blueprint that defines a point as a pair of points x and y, and declares the function used to convert raw numbers into plot coordinates for an ECDF graph.
+//This header file declares the class used to convert raw numbers into plot coordinates for an ECDF graph.
 #pragma once //to prevent the header file from being included into sourcecode multiple times.
 # include <vector>
-namespace viz{
-    //structure representing a single x, y coorinate
-    struct Point{
-    double x;
-    double y;};
-
+#include "vizlib/geometry.hpp" // the shared Point type (x, y), the same one Canvas and Axes use
+namespace vizlib{
     //class calculating the ecdf coordinates
     class ECDFPlot{
         public:

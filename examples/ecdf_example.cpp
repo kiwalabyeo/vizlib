@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
-#include "ecdf.hpp"
+#include <vizlib/ecdf.hpp>
 
 int main() {
-    std::cout << "ECDF Plot Module Demo/n";
+    std::cout << "ECDF Plot Module Demo\n";
 
     //  sample data 
     std::vector<double> raw_data = {12.5, 5.0, 20.0, 12.5, 8.0, 15.0};
