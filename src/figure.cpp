@@ -1,5 +1,6 @@
 
 #include "vizlib/figure.hpp"
+
 #include <cmath>
 #include <stdexcept>
 #include <string>
@@ -128,6 +129,83 @@ void Figure::setYLabel(const std::string& label) {
 
 const std::string& Figure::getYLabel() const {
     return yLabel_;
+}
+
+// Draw the figure title and axis labels.
+void Figure::drawLabels(
+    Canvas& canvas,
+    const TextRenderer& renderer
+) const {
+    const Color black{0, 0, 0};
+
+    // Draw the title, centered near the top of the figure.
+    if (!title_.empty()) {
+        constexpr double titleFontSize = 18.0;
+
+        const TextMetrics metrics =
+            renderer.measure_text(title_, titleFontSize);
+
+        const double x =
+            (width_ - metrics.width) / 2.0;
+
+        const double baseline =
+            topMargin_ - 5.0;
+
+        renderer.draw_text(
+            canvas,
+            title_,
+            Point{x, baseline},
+            titleFontSize,
+            black
+        );
+    }
+
+    // Draw the X-axis label, centered near the bottom.
+    if (!xLabel_.empty()) {
+        constexpr double labelFontSize = 12.0;
+
+        const TextMetrics metrics =
+            renderer.measure_text(xLabel_, labelFontSize);
+
+        const double x =
+            (width_ - metrics.width) / 2.0;
+
+        const double baseline =
+            height_ - bottomMargin_ / 2.0 +
+            labelFontSize / 2.0;
+
+        renderer.draw_text(
+            canvas,
+            xLabel_,
+            Point{x, baseline},
+            labelFontSize,
+            black
+        );
+    }
+
+    // Draw the Y-axis label horizontally on the left.
+    // Text rotation is not currently supported.
+    if (!yLabel_.empty()) {
+        constexpr double labelFontSize = 12.0;
+
+        const TextMetrics metrics =
+            renderer.measure_text(yLabel_, labelFontSize);
+
+        const double x = 5.0;
+
+        const double baseline =
+            topMargin_ +
+            (height_ - topMargin_ - bottomMargin_) / 2.0 +
+            metrics.height / 2.0;
+
+        renderer.draw_text(
+            canvas,
+            yLabel_,
+            Point{x, baseline},
+            labelFontSize,
+            black
+        );
+    }
 }
 
 } // namespace vizlib
