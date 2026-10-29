@@ -3,8 +3,11 @@
 
 #include "vizlib/axes.hpp"
 #include "vizlib/geometry.hpp"
-#include <deque>
+#include "vizlib/canvas.hpp"
+#include "vizlib/text.hpp"
+
 #include <cstddef>
+#include <deque>
 #include <string>
 
 namespace vizlib {
@@ -56,6 +59,12 @@ public:
     // Set and retrieve the vertical axis label
     void setYLabel(const std::string& label);
     const std::string& getYLabel() const;
+
+    // Draw the title and axis labels on a canvas
+    void drawLabels(
+        Canvas& canvas,
+        const TextRenderer& renderer
+    ) const;
 };
 
-}
+} // namespace vizlib
