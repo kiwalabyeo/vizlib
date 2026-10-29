@@ -5,6 +5,7 @@
 #include "vizlib/geometry.hpp"
 #include <deque>
 #include <cstddef>
+#include <string>
 
 namespace vizlib {
 
@@ -19,6 +20,11 @@ private:
     double bottomMargin_;
 
     std::deque<Axes> axes_;
+
+    // Figure title and axis labels
+    std::string title_;
+    std::string xLabel_;
+    std::string yLabel_;
 
 public:
     Figure(int width = 800, int height = 600);
@@ -38,6 +44,18 @@ public:
 
     int getWidth() const;
     int getHeight() const;
+
+    // Set and retrieve the figure title
+    void setTitle(const std::string& title);
+    const std::string& getTitle() const;
+
+    // Set and retrieve the horizontal axis label
+    void setXLabel(const std::string& label);
+    const std::string& getXLabel() const;
+
+    // Set and retrieve the vertical axis label
+    void setYLabel(const std::string& label);
+    const std::string& getYLabel() const;
 };
 
 }
