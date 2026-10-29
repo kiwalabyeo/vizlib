@@ -9,3 +9,6 @@ target_link_libraries(pipeline PRIVATE vizlib)
 
 add_executable(joint_plot_example joint_plot_example.cpp)
 target_link_libraries(joint_plot_example PRIVATE vizlib)
+
+add_executable(ecdf_example ecdf_example.cpp)
+target_link_libraries(ecdf_example PRIVATE vizlib)
