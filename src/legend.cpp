@@ -1,3 +1,4 @@
+
 #include "vizlib/legend.hpp"
 
 #include "vizlib/canvas.hpp"
@@ -27,6 +28,15 @@ Point Legend::get_position() const {
     return position_;
 }
 
+// Implements the Drawable interface.
+void Legend::draw(
+    Canvas& canvas,
+    const TextRenderer& renderer
+) const {
+    draw(canvas, renderer, 12.0);
+}
+
+// Draws the legend using the specified font size.
 void Legend::draw(
     Canvas& canvas,
     const TextRenderer& renderer,
