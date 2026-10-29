@@ -2,6 +2,7 @@
 #include "vizlib/figure.hpp"
 #include <cmath>
 #include <stdexcept>
+#include <string>
 
 namespace vizlib {
 
@@ -102,4 +103,31 @@ int Figure::getHeight() const {
     return height_;
 }
 
+// Figure title
+void Figure::setTitle(const std::string& title) {
+    title_ = title;
 }
+
+const std::string& Figure::getTitle() const {
+    return title_;
+}
+
+// Horizontal axis label
+void Figure::setXLabel(const std::string& label) {
+    xLabel_ = label;
+}
+
+const std::string& Figure::getXLabel() const {
+    return xLabel_;
+}
+
+// Vertical axis label
+void Figure::setYLabel(const std::string& label) {
+    yLabel_ = label;
+}
+
+const std::string& Figure::getYLabel() const {
+    return yLabel_;
+}
+
+} // namespace vizlib
