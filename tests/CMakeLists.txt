@@ -9,6 +9,7 @@ add_executable(vizlib_tests
     test_text.cpp
     test_annotations.cpp
     test_legend.cpp
+    test_drawable.cpp
 )
 
 target_link_libraries(vizlib_tests PRIVATE vizlib)
