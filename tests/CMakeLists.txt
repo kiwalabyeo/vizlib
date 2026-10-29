@@ -1,3 +1,4 @@
+
 add_executable(vizlib_tests
     test_main.cpp
     test_version.cpp
@@ -10,6 +11,7 @@ add_executable(vizlib_tests
     test_annotations.cpp
     test_legend.cpp
     test_drawable.cpp
+    test_figure_labels.cpp
 )
 
 target_link_libraries(vizlib_tests PRIVATE vizlib)
@@ -20,4 +22,3 @@ add_test(NAME vizlib_tests COMMAND vizlib_tests)
 set_tests_properties(vizlib_tests PROPERTIES
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
-
