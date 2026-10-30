@@ -4,6 +4,7 @@
 #include <vector>
 #include "vizlib/axes.hpp"
 #include "vizlib/canvas.hpp"
+#include "vizlib/concepts.hpp"
 #include "vizlib/geometry.hpp"
 #include "vizlib/histogram.hpp"
 #include "vizlib/plot.hpp"
@@ -53,13 +54,37 @@ public:
               std::unique_ptr<Plot> right);
 
     // The usual joint plot: scatter in the centre, histograms of x and y in
-    // the margins. Throws like ScatterPlot and HistogramPlot.
+    // the margins. x and y can be any number types, even different ones (for
+    // example int on x and double on y). Throws like ScatterPlot and HistogramPlot.
+    template <Numeric TX, Numeric TY>
+    static JointPlot with_histograms(const std::vector<TX>& x, const std::vector<TY>& y,
+                                     const std::vector<double>& x_edges,
+                                     const std::vector<double>& y_edges,
+                                     const ScatterStyle& style = {}) {
+        HistogramStyle top_style;
+        top_style.color = style.color;
+        HistogramStyle right_style = top_style;
+        right_style.orientation = Orientation::Horizontal;
+
+        // three different plot types, all stored as Plot pointers
+        return JointPlot(std::make_unique<ScatterPlot<TX, TY>>(x, y, style),
+                         std::make_unique<HistogramPlot>(x, x_edges, top_style),
+                         std::make_unique<HistogramPlot>(y, y_edges, right_style));
+    }
+
+    // Same, with the bin edges from auto_bin_edges() (Freedman–Diaconis).
+    template <Numeric TX, Numeric TY>
+    static JointPlot with_histograms(const std::vector<TX>& x, const std::vector<TY>& y,
+                                     const ScatterStyle& style = {}) {
+        return with_histograms(x, y, auto_bin_edges(x), auto_bin_edges(y), style);
+    }
+
+    // double versions, for brace lists like with_histograms({1, 2}, {3, 4}, ...),
+    // which a template cannot work out the types from.
     static JointPlot with_histograms(const std::vector<double>& x, const std::vector<double>& y,
                                      const std::vector<double>& x_edges,
                                      const std::vector<double>& y_edges,
                                      const ScatterStyle& style = {});
-
-    // Same, with the bin edges from auto_bin_edges() (Freedman–Diaconis).
     static JointPlot with_histograms(const std::vector<double>& x, const std::vector<double>& y,
                                      const ScatterStyle& style = {});
 

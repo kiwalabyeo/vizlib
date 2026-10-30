@@ -8,7 +8,7 @@
 
 namespace vizlib {
 
-namespace {
+namespace detail {
 
 void check_edges(const std::vector<double>& edges) {
     if (edges.size() < 2) {
@@ -23,6 +23,10 @@ void check_edges(const std::vector<double>& edges) {
         }
     }
 }
+
+}  // namespace detail
+
+namespace {
 
 // Colours every pixel whose top-left corner lies inside the rectangle spanned
 // by the two corners. Rounding both sides the same way means neighbouring bars
@@ -43,26 +47,11 @@ void fill_box(Canvas& canvas, Point a, Point b, Color c) {
 
 }  // end of unnamed namespace
 
+// The double versions call the template with the type written out, otherwise
+// they would call themselves forever.
 std::vector<std::size_t> histogram_counts(const std::vector<double>& data,
                                           const std::vector<double>& edges) {
-    check_edges(edges);
-
-    std::vector<std::size_t> counts(edges.size() - 1, 0);
-    for (double value : data) {
-        if (std::isnan(value) || value < edges.front() || value > edges.back()) {
-            continue;
-        }
-        // upper_bound finds the first edge greater than the value, so the
-        // value belongs to the bin just before it. The right-most edge has
-        // nothing after it, so a value equal to it goes in the last bin.
-        auto it = std::upper_bound(edges.begin(), edges.end(), value);
-        std::size_t bin = static_cast<std::size_t>(it - edges.begin()) - 1;
-        if (bin == counts.size()) {
-            bin = counts.size() - 1;
-        }
-        ++counts[bin];
-    }
-    return counts;
+    return histogram_counts<double>(data, edges);
 }
 
 std::vector<double> auto_bin_edges(const std::vector<double>& data) {
@@ -104,13 +93,8 @@ std::vector<double> auto_bin_edges(const std::vector<double>& data) {
 HistogramPlot::HistogramPlot(const std::vector<double>& data, std::vector<double> edges,
                              HistogramStyle style)
     : edges_(std::move(edges)), style_(style) {
-    if (data.empty()) {
-        throw std::invalid_argument("histogram: data must not be empty.");
-    }
-    if (std::all_of(data.begin(), data.end(), [](double v) { return std::isnan(v); })) {
-        throw std::invalid_argument("histogram: every value is NaN.");
-    }
-    counts_ = histogram_counts(data, edges_);
+    detail::check_histogram_data(data);
+    counts_ = histogram_counts<double>(data, edges_);
 }
 
 const std::vector<std::size_t>& HistogramPlot::counts() const {
@@ -148,10 +132,7 @@ void HistogramPlot::draw(Canvas& canvas, const Axes& axes) const {
 void histogram(Canvas& canvas, Axes& axes,
                const std::vector<double>& data, const std::vector<double>& edges,
                const HistogramStyle& style) {
-    const HistogramPlot plot(data, edges, style);
-    const DataBounds b = plot.bounds();
-    axes.setDataRange(b.x_min, b.x_max, b.y_min, b.y_max);
-    plot.draw(canvas, axes);
+    histogram<double>(canvas, axes, data, edges, style);
 }
 
 }  // end of namespace vizlib
