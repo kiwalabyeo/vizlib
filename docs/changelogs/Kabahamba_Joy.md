@@ -1,16 +1,48 @@
-# Week 3 Changelog — Image Export, Build and Integration
+# Kabahamba Joy — Contribution Changelog
 
-## Added
-- Worked on integrating image export functionality into the vizlib library.
-- Worked on the project build configuration using CMake.
-- Worked on integrating source files, tests, and examples into the project build system.
+## Week 3
 
-## Changed
-- Updated build configuration to support integrating different library modules.
-- Improved project organization to support building and testing the library.
+### Date
+Week 3
 
-## Testing
-- Worked on building the project and checking integration with the existing modules.
+### Changed
+- Implemented text rendering functionality using `TextRenderer`.
+- Worked on annotation rendering on the canvas.
+- Implemented legend functionality and legend entry rendering.
+- Integrated `Annotations` and `Legend` with the `Drawable` interface.
 
-## Status
-- Continued development and integration of the library's image export and build infrastructure.
+### Why
+These changes allow the library to display text, annotations, and legends, making visualizations easier to understand and interpret.
+
+### PR
+See the relevant Week 3 pull requests.
+
+### Tested
+- Tested text rendering and drawing components.
+- Verified integration with the library.
+
+---
+
+## Week 4
+
+### Date
+Week 4
+
+### Changed
+- Added figure title support.
+- Added X-axis and Y-axis label support.
+- Added setters and getters for figure titles and axis labels.
+- Implemented `Figure::drawLabels()` using `TextRenderer`.
+- Added tests for figure label functionality.
+- Continued integration of `Drawable` with annotations and legends.
+
+### Why
+These changes improve figure presentation by providing titles and axis descriptions, while supporting consistent drawing behaviour across library components.
+
+### PR
+[Pull Request #94](https://github.com/kiwalabyeo/vizlib/pull/94)
+
+### Tested
+- Added tests for figure title and axis-label functionality.
+- Tested that empty labels do not draw anything.
+- Build and automated test checks passed.
