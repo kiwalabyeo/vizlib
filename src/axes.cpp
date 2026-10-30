@@ -1,7 +1,12 @@
 
 #include "vizlib/axes.hpp"
+#include "vizlib/ticks.hpp"
+
 #include <cmath>
+#include <iomanip>
+#include <sstream>
 #include <stdexcept>
+#include <vector>
 
 namespace vizlib {
 
@@ -72,4 +77,64 @@ Rect Axes::getPlotArea() const {
     return plotArea_;
 }
 
+void Axes::drawTickLabels(
+    Canvas& canvas,
+    const TextRenderer& renderer
+) const {
+    constexpr double fontSize = 11.0;
+    constexpr double labelPadding = 8.0;
+
+    const Color black{0, 0, 0};
+
+    const std::vector<double> xTicks =
+        generateTicks(xMin_, xMax_);
+
+    const std::vector<double> yTicks =
+        generateTicks(yMin_, yMax_);
+
+    // Draw X-axis tick labels.
+    for (double tick : xTicks) {
+        const Point position = dataToPixel(tick, yMin_);
+
+        std::ostringstream label;
+        label << std::setprecision(4) << tick;
+
+        const TextMetrics metrics =
+            renderer.measure_text(label.str(), fontSize);
+
+        renderer.draw_text(
+            canvas,
+            label.str(),
+            Point{
+                position.x - metrics.width / 2.0,
+                plotArea_.y + plotArea_.height + labelPadding
+            },
+            fontSize,
+            black
+        );
+    }
+
+    // Draw Y-axis tick labels.
+    for (double tick : yTicks) {
+        const Point position = dataToPixel(xMin_, tick);
+
+        std::ostringstream label;
+        label << std::setprecision(4) << tick;
+
+        const TextMetrics metrics =
+            renderer.measure_text(label.str(), fontSize);
+
+        renderer.draw_text(
+            canvas,
+            label.str(),
+            Point{
+                plotArea_.x - metrics.width - labelPadding,
+                position.y
+            },
+            fontSize,
+            black
+        );
+    }
 }
+
+} // namespace vizlib
