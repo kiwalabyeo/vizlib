@@ -37,7 +37,7 @@ reports/: weekly progress reports
 docs/: detailed documentation for each module
 
 ## Requirements
-A C++17 compiler (tested on GCC 13.3, Ubuntu, Windows and MacOS)
+A C++20 compiler (tested on GCC 13.3, Ubuntu, Windows and MacOS)
 CMake 3.16 or newer
 
 doctest is included in third_party/, so there's nothing else to install.
