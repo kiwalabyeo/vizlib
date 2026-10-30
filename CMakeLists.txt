@@ -1,3 +1,4 @@
+
 cmake_minimum_required(VERSION 3.16)
 project(vizlib VERSION 0.1.0 LANGUAGES CXX)
 
@@ -16,6 +17,7 @@ add_library(vizlib
     src/canvas_export.cpp
     src/scatter.cpp
     src/scale.cpp
+    src/ticks.cpp
     src/axes.cpp
     src/figure.cpp
     src/histogram.cpp
