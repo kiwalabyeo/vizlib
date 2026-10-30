@@ -1,8 +1,9 @@
-
 #pragma once
 
 #include "vizlib/geometry.hpp"
 #include "vizlib/scale.hpp"
+#include "vizlib/canvas.hpp"
+#include "vizlib/text.hpp"
 
 namespace vizlib {
 
@@ -31,6 +32,11 @@ public:
     Point pixelToData(double x, double y) const;
 
     Rect getPlotArea() const;
+
+    void drawTickLabels(
+        Canvas& canvas,
+        const TextRenderer& renderer
+    ) const;
 };
 
 }
