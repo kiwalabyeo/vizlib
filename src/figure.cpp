@@ -104,7 +104,6 @@ int Figure::getHeight() const {
     return height_;
 }
 
-// Figure title
 void Figure::setTitle(const std::string& title) {
     title_ = title;
 }
@@ -113,7 +112,6 @@ const std::string& Figure::getTitle() const {
     return title_;
 }
 
-// Horizontal axis label
 void Figure::setXLabel(const std::string& label) {
     xLabel_ = label;
 }
@@ -122,7 +120,6 @@ const std::string& Figure::getXLabel() const {
     return xLabel_;
 }
 
-// Vertical axis label
 void Figure::setYLabel(const std::string& label) {
     yLabel_ = label;
 }
@@ -131,14 +128,24 @@ const std::string& Figure::getYLabel() const {
     return yLabel_;
 }
 
-// Draw the figure title and axis labels.
 void Figure::drawLabels(
     Canvas& canvas,
     const TextRenderer& renderer
 ) const {
     const Color black{0, 0, 0};
 
-    // Draw the title, centered near the top of the figure.
+    Rect plotArea{
+        leftMargin_,
+        topMargin_,
+        width_ - leftMargin_ - rightMargin_,
+        height_ - topMargin_ - bottomMargin_
+    };
+
+    if (!axes_.empty()) {
+        plotArea = axes_.front().getPlotArea();
+    }
+
+    // Draw the figure title centred over the plot area.
     if (!title_.empty()) {
         constexpr double titleFontSize = 18.0;
 
@@ -146,10 +153,9 @@ void Figure::drawLabels(
             renderer.measure_text(title_, titleFontSize);
 
         const double x =
-            (width_ - metrics.width) / 2.0;
+            plotArea.x + (plotArea.width - metrics.width) / 2.0;
 
-        const double baseline =
-            topMargin_ - 5.0;
+        const double baseline = topMargin_ - 5.0;
 
         renderer.draw_text(
             canvas,
@@ -160,7 +166,7 @@ void Figure::drawLabels(
         );
     }
 
-    // Draw the X-axis label, centered near the bottom.
+    // Draw the X-axis label centred over the plot area.
     if (!xLabel_.empty()) {
         constexpr double labelFontSize = 12.0;
 
@@ -168,7 +174,7 @@ void Figure::drawLabels(
             renderer.measure_text(xLabel_, labelFontSize);
 
         const double x =
-            (width_ - metrics.width) / 2.0;
+            plotArea.x + (plotArea.width - metrics.width) / 2.0;
 
         const double baseline =
             height_ - bottomMargin_ / 2.0 +
@@ -183,20 +189,18 @@ void Figure::drawLabels(
         );
     }
 
-    // Draw the Y-axis label horizontally on the left.
-    // Text rotation is not currently supported.
+    // Place the Y-axis label above the vertical axis.
     if (!yLabel_.empty()) {
         constexpr double labelFontSize = 12.0;
 
         const TextMetrics metrics =
             renderer.measure_text(yLabel_, labelFontSize);
 
-        const double x = 5.0;
+        const double x =
+            plotArea.x - metrics.width;
 
         const double baseline =
-            topMargin_ +
-            (height_ - topMargin_ - bottomMargin_) / 2.0 +
-            metrics.height / 2.0;
+            plotArea.y - 5.0;
 
         renderer.draw_text(
             canvas,
@@ -205,6 +209,11 @@ void Figure::drawLabels(
             labelFontSize,
             black
         );
+    }
+
+    // Draw numerical tick labels for every axes object.
+    for (const Axes& axes : axes_) {
+        axes.drawTickLabels(canvas, renderer);
     }
 }
 
