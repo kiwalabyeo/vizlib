@@ -14,23 +14,18 @@ JointPlot::JointPlot(std::unique_ptr<Plot> center, std::unique_ptr<Plot> top,
     }
 }
 
+// The double versions call the templates with the types written out,
+// otherwise they would call themselves forever.
 JointPlot JointPlot::with_histograms(const std::vector<double>& x, const std::vector<double>& y,
                                      const std::vector<double>& x_edges,
                                      const std::vector<double>& y_edges,
                                      const ScatterStyle& style) {
-    HistogramStyle top_style;
-    top_style.color = style.color;
-    HistogramStyle right_style = top_style;
-    right_style.orientation = Orientation::Horizontal;
-
-    return JointPlot(std::make_unique<ScatterPlot>(x, y, style),
-                     std::make_unique<HistogramPlot>(x, x_edges, top_style),
-                     std::make_unique<HistogramPlot>(y, y_edges, right_style));
+    return with_histograms<double, double>(x, y, x_edges, y_edges, style);
 }
 
 JointPlot JointPlot::with_histograms(const std::vector<double>& x, const std::vector<double>& y,
                                      const ScatterStyle& style) {
-    return with_histograms(x, y, auto_bin_edges(x), auto_bin_edges(y), style);
+    return with_histograms<double, double>(x, y, style);
 }
 
 JointAxes JointPlot::layout(Rect area, const JointLayout& layout) const {

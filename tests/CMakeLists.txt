@@ -10,6 +10,7 @@ add_executable(vizlib_tests
     test_scatter.cpp
     test_histogram.cpp
     test_joint_plot.cpp
+    test_plot_templates.cpp
     test_text.cpp
     test_annotations.cpp
     test_legend.cpp

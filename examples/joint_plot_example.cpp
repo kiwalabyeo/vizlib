@@ -85,7 +85,7 @@ int main()
         right_style.orientation = vizlib::Orientation::Horizontal;
 
         const vizlib::JointPlot with_kde(
-            std::make_unique<vizlib::ScatterPlot>(x, y, style),
+            std::make_unique<vizlib::ScatterPlot<>>(x, y, style),
             std::make_unique<vizlib::KdePlot>(x_grid, x_density, top_style),
             std::make_unique<vizlib::KdePlot>(y_grid, y_density, right_style));
         with_kde.draw(canvas, {470, 50, 400, 380});
