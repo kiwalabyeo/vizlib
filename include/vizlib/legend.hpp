@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <string>
@@ -29,15 +30,15 @@ public:
     Point get_position() const;
 
     void draw(
-    Canvas& canvas,
-    const TextRenderer& renderer
-) const override;
+        Canvas& canvas,
+        const TextRenderer& renderer
+    ) const override;
 
-void draw(
-    Canvas& canvas,
-    const TextRenderer& renderer,
-    double fontSize = 12.0
-) const;
+    void draw(
+        Canvas& canvas,
+        const TextRenderer& renderer,
+        double fontSize
+    ) const;
 
 private:
     std::vector<LegendEntry> entries_;
