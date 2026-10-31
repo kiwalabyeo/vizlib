@@ -12,8 +12,8 @@ class summaryStatistics {
 
 public:
     summaryStatistics(const std::vector<double>& data)
-        : Data(data), Sorted_data(data) {
-        std::sort(Sorted_data.begin(), Sorted_data.end());
+    {
+        collect_data(data);
     }
 
     void collect_data(const std::vector<double>& data) {
