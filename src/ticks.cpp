@@ -50,4 +50,28 @@ std::vector<double> generateTicks(double min, double max,
     return ticks;
 }
 
+std::vector<double> generateLogTicks(double min, double max) {
+    if (!std::isfinite(min) || !std::isfinite(max) ||
+        min <= 0 || min >= max) {
+        throw std::invalid_argument("Invalid logarithmic tick range");
+    }
+
+    std::vector<double> ticks;
+
+    int firstExponent =
+        static_cast<int>(std::ceil(std::log10(min)));
+
+    int lastExponent =
+        static_cast<int>(std::floor(std::log10(max)));
+
+    for (int exponent = firstExponent;
+         exponent <= lastExponent;
+         ++exponent) {
+        ticks.push_back(std::pow(10.0, exponent));
+    }
+
+    return ticks;
 }
+
+}
+
