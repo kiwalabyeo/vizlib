@@ -6,6 +6,11 @@
 
 namespace vizlib {
 
+enum class ScaleType {
+    Linear,
+    Logarithmic
+};
+
 class Axes {
 private:
     double xMin_;
@@ -18,6 +23,12 @@ private:
     LinearScale xScale_;
     LinearScale yScale_;
 
+    LogScale xLogScale_;
+    LogScale yLogScale_;
+
+    ScaleType xScaleType_;
+    ScaleType yScaleType_;
+
 public:
     Axes();
 
@@ -25,6 +36,9 @@ public:
                       double yMin, double yMax);
 
     void setPlotArea(Rect area);
+
+    void setXScale(ScaleType type);
+    void setYScale(ScaleType type);
 
     Point dataToPixel(double x, double y) const;
 
