@@ -29,8 +29,9 @@ TEST_CASE_TEMPLATE("summaryStatistics gives the same results for every number ty
     check_vectors_approx(stats.histogram_bin_edges(), {1.0, 2.16961, 3.33921, 4.50882});
     //CHECK(stats.histogram_bin_edges() == std::vector<double>{1, 2.16961, 3.33921, 4.50882});
 }
-TEST_CASE("Testing FreedmanDiaconisBinning and SturgesBinning classes") {
-    std::vector<double> data = {1, 2, 2, 3, 4};
+TEST_CASE_TEMPLATE("binning classes give the same edges for every number type", T, VIZLIB_NUMERIC_TYPES) {
+    std::vector<T> typed = {1, 2, 2, 3, 4};
+    std::vector<double> data = vizlib::to_doubles(typed);
     vizlib::FreedmanDiaconisBinning fd_binning(data);
     vizlib::SturgesBinning sturges_binning(data);
 
