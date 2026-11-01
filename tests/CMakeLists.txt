@@ -5,6 +5,8 @@ add_executable(vizlib_tests
     test_axis.cpp
     test_ticks.cpp
     test_log_scale.cpp
+    test_stats.cpp
+    test_kde.cpp
     test_concepts.cpp
     test_ecdf.cpp
     test_image_export.cpp

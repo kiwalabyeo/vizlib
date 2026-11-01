@@ -1,6 +1,7 @@
 #pragma once
-#include <type_traits>
 #include <vector>
+
+#include "vizlib/concepts.hpp"
 
 namespace vizlib {
 
@@ -21,15 +22,12 @@ KdeResult kde_from_doubles(const std::vector<double>& values, int grid_points, d
 
 
 
-template <typename T>
+// KDE of data of any number type (int, float, double, ...). The maths is done in
+// double, so the data is converted once and passed to kde_from_doubles.
+// bandwidth = 0 means "choose it with Silverman's rule".
+template <Numeric T>
 KdeResult kde(const std::vector<T>& data, int grid_points = 200, double bandwidth = 0.0) {
-concept Numeric=std::integral<T> || std::floating_point<T>;
-.
-    std::vector<double> values;
-    for (T x : data) {
-        values.push_back(static_cast<double>(x));
-    }
-    return kde_from_doubles(values, grid_points, bandwidth);
+    return kde_from_doubles(to_doubles(data), grid_points, bandwidth);
 }
 
 }  // namespace vizlib

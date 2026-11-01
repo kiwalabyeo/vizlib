@@ -1,5 +1,5 @@
-#include "kde.hpp"
-#include "stats.hpp"
+#include "vizlib/kde.hpp"
+#include "vizlib/stats.hpp"
 #include <cmath>
 #include <stdexcept>
 
