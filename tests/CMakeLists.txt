@@ -7,6 +7,9 @@ add_executable(vizlib_tests
     test_log_scale.cpp
     test_stats.cpp
     test_kde.cpp
+    test_csv_reader.cpp
+    tests_dataframe.cpp
+    test_preprocessor.cpp
     test_concepts.cpp
     test_ecdf.cpp
     test_image_export.cpp
