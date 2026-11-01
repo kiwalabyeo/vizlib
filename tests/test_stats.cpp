@@ -1,4 +1,6 @@
 #include "doctest.h"
+#include "numeric_types.hpp"
+#include "vizlib/concepts.hpp"
 #include "vizlib/stats.hpp"
 #include <vector>
 void check_vectors_approx(const std::vector<double>& actual, const std::vector<double>& expected) {
@@ -10,8 +12,9 @@ void check_vectors_approx(const std::vector<double>& actual, const std::vector<d
         CHECK(actual[i] == doctest::Approx(expected[i]));
     }
 }
-TEST_CASE("Testing summaryStatistics class") {
-    std::vector<double> data = {1, 2, 2, 3, 4};
+TEST_CASE_TEMPLATE("summaryStatistics gives the same results for every number type", T, VIZLIB_NUMERIC_TYPES) {
+    std::vector<T> typed = {1, 2, 2, 3, 4};
+    std::vector<double> data = vizlib::to_doubles(typed);
     vizlib::summaryStatistics stats(data);
 
     CHECK(stats.mean() == doctest::Approx(2.4));
