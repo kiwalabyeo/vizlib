@@ -4,6 +4,13 @@
 **GitHub:** @NamagandaNorah-Margret20
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
+
+## 2026-11-01
+- **Changed:** Fixed `README.md`: replaced the placeholder description with a real one, filled in Main features, Using the library, Examples and Limitations, corrected the Windows test command to `ctest -C Debug`, and fixed a typo. Added the missing `LICENSE` file (MIT), which the README already referred to. Rewrote both tests in `tests/test_stats.cpp` with `TEST_CASE_TEMPLATE` and `VIZLIB_NUMERIC_TYPES`, so each test now runs once for `short`, `int`, `long`, `long long`, `unsigned int`, `float` and `double`. The data is built as `std::vector<T>` and converted with `vizlib::to_doubles` before it goes to `summaryStatistics` and the binning classes, because they only accept `std::vector<double>`.
+- **Why:** Week 4 and Week 5 tasks: test the build and tests on a clean environment, check the repository structure and documentation, and make the final changes before submission. Also my part of the group work: set up the test pattern for the other members to copy into their own tests.
+- **PR:** #109 (README and LICENSE), #110 (stats tests)
+- **Tested:** Cloned `main` fresh into a new folder (before and after merging both PRs), built with CMake and g++ on Windows, and ran CTest: all tests pass. Ran `pipeline.exe` and checked that `data/output/pipeline.png` has both plots, titles and labels. Compiled and ran the example from the README's "Using the library" section. Each rewritten test runs 7 times and all 7 pass. `CI / linux` passes on both pull requests.
+
 ## 2026-10-28
 - **Changed:** `.github/workflows/ci.yml`: the `linux` job now runs `./build/examples/pipeline` after the tests and then checks that `data/output/pipeline.png` exists and is not empty (`test -s`). `examples/pipeline.cpp` now reads `data/input/iris.csv` with `read_csv` instead of generating random data, using a new helper `column_as_doubles` that turns a `DataFrame` column into a `std::vector<double>` (`sepal_length` for x, `petal_length` for y).
 - **Why:** Week 4 tasks: complete GitHub Actions CI, test the build and tests on a clean environment, and run the complete CSV-to-PNG pipeline. Running `pipeline` in CI on a fresh machine also checks that no required files (the font, `data/input`, `data/output`) are missing from the repo.
