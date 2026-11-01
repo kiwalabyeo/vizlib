@@ -1,82 +1,52 @@
+// Converted from a main() program with assert() into doctest checks.
+// Same values as the original.
+#include "doctest.h"
 
 #include "vizlib/axes.hpp"
 #include "vizlib/ticks.hpp"
 
-#include <cassert>
-#include <cmath>
-#include <iostream>
 #include <stdexcept>
+#include <vector>
 
-int main() {
-    using namespace vizlib;
+using namespace vizlib;
 
+TEST_CASE("Logarithmic x axis maps data to pixels and back") {
     Axes axes;
-
     axes.setPlotArea(Rect{10.0, 20.0, 100.0, 200.0});
     axes.setDataRange(1.0, 1000.0, 0.0, 10.0);
     axes.setXScale(ScaleType::Logarithmic);
 
-    Point pixel = axes.dataToPixel(10.0, 5.0);
+    const Point pixel = axes.dataToPixel(10.0, 5.0);
+    CHECK(pixel.x == doctest::Approx(43.3333333333));   // 10 is one third of the way from 1 to 1000
+    CHECK(pixel.y == doctest::Approx(120.0));
 
-    assert(std::abs(pixel.x - 43.3333333333) < 1e-6);
-    assert(std::abs(pixel.y - 120.0) < 1e-6);
+    const Point data = axes.pixelToData(pixel.x, pixel.y);
+    CHECK(data.x == doctest::Approx(10.0));
+    CHECK(data.y == doctest::Approx(5.0));
+}
 
-    Point data = axes.pixelToData(pixel.x, pixel.y);
+TEST_CASE("Logarithmic y axis maps data to pixels") {
+    Axes axes;
+    axes.setPlotArea(Rect{10.0, 20.0, 100.0, 200.0});
+    axes.setDataRange(0.0, 10.0, 1.0, 1000.0);
+    axes.setYScale(ScaleType::Logarithmic);
 
-    assert(std::abs(data.x - 10.0) < 1e-6);
-    assert(std::abs(data.y - 5.0) < 1e-6);
+    const Point pixel = axes.dataToPixel(5.0, 10.0);
+    CHECK(pixel.x == doctest::Approx(60.0));
+    CHECK(pixel.y == doctest::Approx(153.3333333333));
+}
 
-    Axes yAxes;
+TEST_CASE("generateLogTicks gives the powers of 10") {
+    CHECK(generateLogTicks(1.0, 1000.0) == std::vector<double>{1.0, 10.0, 100.0, 1000.0});
+    CHECK_THROWS_AS(generateLogTicks(-1.0, 100.0), std::invalid_argument);
+}
 
-    yAxes.setPlotArea(Rect{10.0, 20.0, 100.0, 200.0});
-    yAxes.setDataRange(0.0, 10.0, 1.0, 1000.0);
-    yAxes.setYScale(ScaleType::Logarithmic);
+TEST_CASE("Logarithmic axis rejects zero and negative values") {
+    Axes axes;
+    axes.setPlotArea(Rect{10.0, 20.0, 100.0, 200.0});
+    axes.setDataRange(1.0, 1000.0, 0.0, 10.0);
+    axes.setXScale(ScaleType::Logarithmic);
 
-    Point yPixel = yAxes.dataToPixel(5.0, 10.0);
-
-    assert(std::abs(yPixel.x - 60.0) < 1e-6);
-    assert(std::abs(yPixel.y - 153.3333333333) < 1e-6);
-
-    std::vector<double> ticks = generateLogTicks(1.0, 1000.0);
-
-    assert(ticks.size() == 4);
-    assert(ticks[0] == 1.0);
-    assert(ticks[1] == 10.0);
-    assert(ticks[2] == 100.0);
-    assert(ticks[3] == 1000.0);
-
-    bool zeroRejected = false;
-
-    try {
-        axes.dataToPixel(0.0, 5.0);
-    } catch (const std::invalid_argument&) {
-        zeroRejected = true;
-    }
-
-    assert(zeroRejected);
-
-    bool negativeRejected = false;
-
-    try {
-        axes.dataToPixel(-5.0, 5.0);
-    } catch (const std::invalid_argument&) {
-        negativeRejected = true;
-    }
-
-    assert(negativeRejected);
-
-    bool invalidTicksRejected = false;
-
-    try {
-        generateLogTicks(-1.0, 100.0);
-    } catch (const std::invalid_argument&) {
-        invalidTicksRejected = true;
-    }
-
-    assert(invalidTicksRejected);
-
-    std::cout << "All logarithmic scaling tests passed!"
-              << std::endl;
-
-    return 0;
+    CHECK_THROWS_AS(axes.dataToPixel(0.0, 5.0), std::invalid_argument);
+    CHECK_THROWS_AS(axes.dataToPixel(-5.0, 5.0), std::invalid_argument);
 }
