@@ -12,6 +12,7 @@ add_library(vizlib
     src/image_export.cpp
     src/csv_reader.cpp
     src/dataframe.cpp
+    src/preprocessing.cpp
     src/stats.cpp
     src/canvas.cpp
     src/canvas_export.cpp

@@ -12,3 +12,6 @@ target_link_libraries(joint_plot_example PRIVATE vizlib)
 
 add_executable(ecdf_example ecdf_example.cpp)
 target_link_libraries(ecdf_example PRIVATE vizlib)
+
+add_executable(data_examples data_examples.cpp)
+target_link_libraries(data_examples PRIVATE vizlib)
