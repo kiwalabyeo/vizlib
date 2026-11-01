@@ -1,5 +1,5 @@
 #include "doctest.h"
-#include"../include/vizlib/stats.hpp"
+#include "vizlib/stats.hpp"
 #include <vector>
 void check_vectors_approx(const std::vector<double>& actual, const std::vector<double>& expected) {
     // Stop the test immediately if sizes don't match to prevent out-of-bounds errors

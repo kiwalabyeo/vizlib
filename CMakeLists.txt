@@ -21,6 +21,7 @@ add_library(vizlib
     src/axes.cpp
     src/figure.cpp
     src/histogram.cpp
+    src/kde.cpp
     src/kde_plot.cpp
     src/joint_plot.cpp
     src/text.cpp
