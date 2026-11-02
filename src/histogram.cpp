@@ -26,27 +26,6 @@ void check_edges(const std::vector<double>& edges) {
 
 }  // namespace detail
 
-namespace {
-
-// Colours every pixel whose top-left corner lies inside the rectangle spanned
-// by the two corners. Rounding both sides the same way means neighbouring bars
-// never overlap and never leave a gap. Temporary: to be replaced by
-// Canvas::fill_rect once Member 6's implementation is merged.
-void fill_box(Canvas& canvas, Point a, Point b, Color c) {
-    const int x0 = static_cast<int>(std::lround(std::min(a.x, b.x)));
-    const int x1 = static_cast<int>(std::lround(std::max(a.x, b.x)));
-    const int y0 = static_cast<int>(std::lround(std::min(a.y, b.y)));
-    const int y1 = static_cast<int>(std::lround(std::max(a.y, b.y)));
-
-    for (int y = y0; y < y1; ++y) {
-        for (int x = x0; x < x1; ++x) {
-            canvas.set_pixel(x, y, c);   // set_pixel ignores off-canvas pixels
-        }
-    }
-}
-
-}  // end of unnamed namespace
-
 // The double versions call the template with the type written out, otherwise
 // they would call themselves forever.
 std::vector<std::size_t> histogram_counts(const std::vector<double>& data,
@@ -125,7 +104,12 @@ void HistogramPlot::draw(Canvas& canvas, const Axes& axes) const {
                                     : axes.dataToPixel(0.0, edges_[i]);
         const Point top = vertical ? axes.dataToPixel(edges_[i + 1], count)
                                    : axes.dataToPixel(count, edges_[i + 1]);
-        fill_box(canvas, base, top, style_.color);
+        // Member 6's fill_rect rounds both sides of the bar the same way, so
+        // neighbouring bars never overlap and never leave a gap
+        const double left = std::min(base.x, top.x);
+        const double upper = std::min(base.y, top.y);
+        canvas.fill_rect(Rect{left, upper, std::abs(top.x - base.x), std::abs(top.y - base.y)},
+                         style_.color);
     }
 }
 

@@ -5,6 +5,12 @@
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 
+## 02-11-2026
+- **Changed:** Added `JointPlot::with_kde(x, y)`: scatter in the centre and KDE curves of x and y in the margins, from Member 2's `kde()` (any number type, NaN left out of the curves). `KdePlot` can now be built straight from a `KdeResult`. Replaced my temporary drawing helpers with Member 6's Canvas: `KdePlot` uses `draw_line`, scatter uses `fill_circle`, histogram uses `fill_rect`. `joint_plot_example.cpp` now uses `with_kde` instead of its own stand-in KDE.
+- **Why:** Week 4 goal (joint plot with KDE margins), finished now that Member 2's KDE is merged. The plots now depend on the shared Canvas instead of copies of the same drawing code.
+- **PR:** #115
+- **Tested:** 5 new test cases (`with_kde` draws in all three panels, skips NaN, rejects bad input, same pixels for every number type, `KdePlot` from `kde()`). All 227 test cases pass, the joint plot and KDE tests also under AddressSanitizer + UBSan. Ran all examples and checked the joint plot PNG.
+
 ## 30-10-2026
 - **Changed:** Switched the project to C++20 and added `include/vizlib/concepts.hpp` (`Numeric` concept and `to_doubles()`) plus `tests/numeric_types.hpp` for the whole team (#92). Made `ScatterPlot<TX, TY>` a class template, gave `HistogramPlot` a template constructor, and made `histogram_counts`, `auto_bin_edges`, `histogram`, `scatter` and `JointPlot::with_histograms` templates over any number type. Each keeps a `double` version for brace-list calls.
 - **Why:** Lecturer's templates task: plots should accept every numeric type (int, short, float, double, ...) with an appropriate concept. ScatterPlot keeps its data, so the whole class is a template; HistogramPlot only keeps counts, so only its constructor is.

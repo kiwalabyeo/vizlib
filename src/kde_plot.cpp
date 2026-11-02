@@ -7,32 +7,6 @@
 
 namespace vizlib {
 
-namespace {
-
-// Draws a thick straight line by stamping a square of `thickness` pixels at
-// every pixel step from `a` to `b`. Temporary: to be replaced by
-// Canvas::draw_line once Member 6's implementation is merged.
-void draw_segment(Canvas& canvas, Point a, Point b, double thickness, Color c) {
-    const double dx = b.x - a.x;
-    const double dy = b.y - a.y;
-    const int steps = std::max(1, static_cast<int>(std::ceil(std::max(std::abs(dx), std::abs(dy)))));
-    const int half = static_cast<int>(std::floor(thickness / 2));
-    const int extra = static_cast<int>(std::lround(thickness)) % 2 == 0 ? 1 : 0;   // even widths are one pixel lopsided
-
-    for (int s = 0; s <= steps; ++s) {
-        const double t = static_cast<double>(s) / steps;
-        const int x = static_cast<int>(std::lround(a.x + t * dx));
-        const int y = static_cast<int>(std::lround(a.y + t * dy));
-        for (int oy = -half + extra; oy <= half; ++oy) {
-            for (int ox = -half + extra; ox <= half; ++ox) {
-                canvas.set_pixel(x + ox, y + oy, c);   // set_pixel ignores off-canvas pixels
-            }
-        }
-    }
-}
-
-}  // end of unnamed namespace
-
 KdePlot::KdePlot(std::vector<double> grid, std::vector<double> density, KdeStyle style)
     : grid_(std::move(grid)), density_(std::move(density)), style_(style) {
     if (grid_.size() != density_.size()) {
@@ -54,6 +28,9 @@ KdePlot::KdePlot(std::vector<double> grid, std::vector<double> density, KdeStyle
     }
 }
 
+KdePlot::KdePlot(const KdeResult& result, KdeStyle style)
+    : KdePlot(result.grid, result.density, style) {}
+
 DataBounds KdePlot::bounds() const {
     const double highest = *std::max_element(density_.begin(), density_.end());
     // a curve that is 0 everywhere still gets a density axis of height 1
@@ -72,8 +49,10 @@ void KdePlot::draw(Canvas& canvas, const Axes& axes) const {
                         : axes.dataToPixel(density_[i], grid_[i]);
     };
 
+    // Member 6's Canvas::draw_line takes a whole number of pixels for the thickness
+    const int thickness = std::max(1, static_cast<int>(std::lround(style_.thickness)));
     for (std::size_t i = 0; i + 1 < grid_.size(); ++i) {
-        draw_segment(canvas, to_pixel(i), to_pixel(i + 1), style_.thickness, style_.color);
+        canvas.draw_line(to_pixel(i), to_pixel(i + 1), style_.color, thickness);
     }
 }
 

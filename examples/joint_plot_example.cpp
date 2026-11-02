@@ -8,53 +8,12 @@
 #include <vizlib/canvas_export.hpp>
 #include <vizlib/csv_reader.hpp>
 #include <vizlib/joint_plot.hpp>
-#include <vizlib/kde_plot.hpp>
 #include <vizlib/scatter.hpp>
 #include <vizlib/text.hpp>
 
-#include <algorithm>
-#include <cmath>
 #include <exception>
 #include <iostream>
-#include <memory>
 #include <vector>
-
-namespace
-{
-    // Gaussian KDE on 200 evenly spaced points, with Scott's rule for the
-    // bandwidth. Temporary: to be replaced by Member 2's KDE in stats once it
-    // is merged (the stats module computes KDE values, the plot only draws them).
-    void gaussian_kde(const std::vector<double>& data,
-                      std::vector<double>& grid, std::vector<double>& density)
-    {
-        const double n = static_cast<double>(data.size());
-        double mean = 0;
-        for (double v : data)
-            mean += v / n;
-        double var = 0;
-        for (double v : data)
-            var += (v - mean) * (v - mean) / (n - 1);
-        const double h = 1.06 * std::sqrt(var) * std::pow(n, -0.2);
-
-        const auto [lo, hi] = std::minmax_element(data.begin(), data.end());
-        const double start = *lo - 3 * h;
-        const double step = (*hi - *lo + 6 * h) / 199;
-        const double pi = std::acos(-1.0);
-
-        grid.clear();
-        density.clear();
-        for (int i = 0; i < 200; ++i)
-        {
-            const double g = start + i * step;
-            double sum = 0;
-            for (double v : data)
-                sum += std::exp(-0.5 * ((g - v) / h) * ((g - v) / h));
-            grid.push_back(g);
-            density.push_back(sum / (n * h * std::sqrt(2 * pi)));
-        }
-    }
-
-}
 
 int main()
 {
@@ -75,19 +34,9 @@ int main()
         const vizlib::JointPlot with_histograms = vizlib::JointPlot::with_histograms(x, y, style);
         with_histograms.draw(canvas, {30, 50, 400, 380});
 
-        // right: the same scatter with KDE margins. JointPlot does not know or
-        // care which kind of Plot each panel is.
-        std::vector<double> x_grid, x_density, y_grid, y_density;
-        gaussian_kde(x, x_grid, x_density);
-        gaussian_kde(y, y_grid, y_density);
-        vizlib::KdeStyle top_style;
-        vizlib::KdeStyle right_style;
-        right_style.orientation = vizlib::Orientation::Horizontal;
-
-        const vizlib::JointPlot with_kde(
-            std::make_unique<vizlib::ScatterPlot<>>(x, y, style),
-            std::make_unique<vizlib::KdePlot>(x_grid, x_density, top_style),
-            std::make_unique<vizlib::KdePlot>(y_grid, y_density, right_style));
+        // right: the same scatter with KDE margins. The curves come from
+        // Member 2's kde() (Gaussian kernel, Silverman's bandwidth).
+        const vizlib::JointPlot with_kde = vizlib::JointPlot::with_kde(x, y, style);
         with_kde.draw(canvas, {470, 50, 400, 380});
 
         const vizlib::TextRenderer text("third_party/fonts/DejaVuSans.ttf");

@@ -154,3 +154,13 @@ TEST_CASE("JointPlot::with_histograms can mix types") {
 
     CHECK(same_pixels(canvas, expected));
 }
+
+TEST_CASE_TEMPLATE("JointPlot::with_kde draws the same for every type", T, VIZLIB_NUMERIC_TYPES) {
+    vizlib::Canvas canvas(200, 200, white);
+    vizlib::Canvas expected(200, 200, white);
+
+    vizlib::JointPlot::with_kde(as<T>(xs), as<T>(ys)).draw(canvas, {10, 10, 180, 180});
+    vizlib::JointPlot::with_kde(as<double>(xs), as<double>(ys)).draw(expected, {10, 10, 180, 180});
+
+    CHECK(same_pixels(canvas, expected));
+}
