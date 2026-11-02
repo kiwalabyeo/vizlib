@@ -1,6 +1,7 @@
 #include "vizlib/joint_plot.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <stdexcept>
 #include <utility>
 
@@ -27,6 +28,20 @@ JointPlot JointPlot::with_histograms(const std::vector<double>& x, const std::ve
                                      const ScatterStyle& style) {
     return with_histograms<double, double>(x, y, style);
 }
+
+JointPlot JointPlot::with_kde(const std::vector<double>& x, const std::vector<double>& y,
+                              const ScatterStyle& style, int grid_points) {
+    return with_kde<double, double>(x, y, style, grid_points);
+}
+
+namespace detail {
+std::vector<double> without_nan(std::vector<double> values) {
+    values.erase(std::remove_if(values.begin(), values.end(),
+                                [](double v) { return std::isnan(v); }),
+                 values.end());
+    return values;
+}
+}  // namespace detail
 
 JointAxes JointPlot::layout(Rect area, const JointLayout& layout) const {
     if (!(layout.margin_ratio > 0 && layout.margin_ratio < 1) || !(layout.gap >= 0)) {

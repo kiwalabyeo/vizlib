@@ -228,3 +228,47 @@ TEST_CASE("JointPlot rejects bad input")
     CHECK_THROWS_AS(vizlib::JointPlot::with_histograms({1, 2}, {1}, {0, 3}, {0, 3}), std::invalid_argument);
     CHECK_THROWS_AS(vizlib::JointPlot::with_histograms({1, 2}, {1, 2}, {3, 0}, {0, 3}), std::invalid_argument);
 }
+
+TEST_CASE("KdePlot can be built straight from kde()")
+{
+    const vizlib::KdeResult curve = vizlib::kde(std::vector<double>{1, 2, 2, 3, 5}, 50);
+    const vizlib::KdePlot from_result(curve);
+    const vizlib::KdePlot from_vectors(curve.grid, curve.density);
+
+    CHECK(from_result.bounds().x_min == doctest::Approx(curve.grid.front()));
+    CHECK(from_result.bounds().x_max == doctest::Approx(curve.grid.back()));
+    CHECK(from_result.bounds().y_max == doctest::Approx(from_vectors.bounds().y_max));
+}
+
+TEST_CASE("JointPlot::with_kde draws in all three panels")
+{
+    vizlib::ScatterStyle style;
+    style.color = red;
+    const vizlib::JointPlot joint = vizlib::JointPlot::with_kde(
+        {1, 2, 2, 3, 4, 6}, {4, 3, 3, 2, 1, 0.5}, style);
+
+    vizlib::Canvas canvas(200, 200, white);
+    joint.draw(canvas, {0, 0, 200, 200});
+    const vizlib::JointAxes axes = joint.layout({0, 0, 200, 200});
+
+    CHECK(count_color(canvas, axes.center.getPlotArea(), red) > 0);
+    CHECK(count_color(canvas, axes.top.getPlotArea(), red) > 0);     // the KDE curves use the scatter colour
+    CHECK(count_color(canvas, axes.right.getPlotArea(), red) > 0);
+    CHECK(count_color(canvas, {170, 0, 30, 30}, red) == 0);          // the corner belongs to no panel
+}
+
+TEST_CASE("JointPlot::with_kde leaves NaN out of the curves")
+{
+    // NaN in one point: the scatter skips it, and the curves are built from the rest
+    const vizlib::JointPlot joint = vizlib::JointPlot::with_kde({1, 2, NAN, 4}, {1, 2, 3, NAN});
+    vizlib::Canvas canvas(200, 200, white);
+    CHECK_NOTHROW(joint.draw(canvas, {0, 0, 200, 200}));
+}
+
+TEST_CASE("JointPlot::with_kde rejects bad input")
+{
+    CHECK_THROWS_AS(vizlib::JointPlot::with_kde({1, 2}, {1}), std::invalid_argument);            // lengths differ
+    CHECK_THROWS_AS(vizlib::JointPlot::with_kde({}, {}), std::invalid_argument);                 // empty
+    CHECK_THROWS_AS(vizlib::JointPlot::with_kde({1, NAN}, {NAN, 2}), std::invalid_argument);     // no point to draw
+    CHECK_THROWS_AS(vizlib::JointPlot::with_kde({1, 2}, {1, 2}, {}, 1), std::invalid_argument);  // grid too small
+}

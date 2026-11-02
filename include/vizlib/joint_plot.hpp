@@ -7,6 +7,8 @@
 #include "vizlib/concepts.hpp"
 #include "vizlib/geometry.hpp"
 #include "vizlib/histogram.hpp"
+#include "vizlib/kde.hpp"
+#include "vizlib/kde_plot.hpp"
 #include "vizlib/plot.hpp"
 #include "vizlib/scatter.hpp"
 
@@ -42,6 +44,13 @@ struct JointAxes {
 // Shared scales: the x range of center and top is the union of both plots'
 // x bounds, so a given x value lands in the same pixel column in both. The
 // same goes for y in center and right.
+namespace detail {
+// The values that are not NaN, as doubles. The KDE margins use this, because a
+// single NaN would make the whole curve NaN. (Scatter and histogram skip NaN
+// themselves.) In joint_plot.cpp.
+std::vector<double> without_nan(std::vector<double> values);
+}  // namespace detail
+
 class JointPlot {
 private:
     std::unique_ptr<Plot> center_;
@@ -87,6 +96,33 @@ public:
                                      const ScatterStyle& style = {});
     static JointPlot with_histograms(const std::vector<double>& x, const std::vector<double>& y,
                                      const ScatterStyle& style = {});
+
+    // Scatter in the centre, KDE curves of x and y in the margins. The curves
+    // come from Member 2's kde() (Gaussian kernel, Silverman's bandwidth) on
+    // `grid_points` points; NaN values are left out of the curves. x and y can
+    // be any number types. Throws std::invalid_argument like ScatterPlot, or if
+    // x or y has no value that is not NaN.
+    template <Numeric TX, Numeric TY>
+    static JointPlot with_kde(const std::vector<TX>& x, const std::vector<TY>& y,
+                              const ScatterStyle& style = {}, int grid_points = 200) {
+        KdeStyle top_style;
+        top_style.color = style.color;
+        KdeStyle right_style = top_style;
+        right_style.orientation = Orientation::Horizontal;
+
+        // the scatter is built first, so a length mismatch is reported as such
+        auto center = std::make_unique<ScatterPlot<TX, TY>>(x, y, style);
+        const KdeResult x_curve = kde(detail::without_nan(to_doubles(x)), grid_points);
+        const KdeResult y_curve = kde(detail::without_nan(to_doubles(y)), grid_points);
+
+        return JointPlot(std::move(center),
+                         std::make_unique<KdePlot>(x_curve, top_style),
+                         std::make_unique<KdePlot>(y_curve, right_style));
+    }
+
+    // double version, for brace lists
+    static JointPlot with_kde(const std::vector<double>& x, const std::vector<double>& y,
+                              const ScatterStyle& style = {}, int grid_points = 200);
 
     // Works out the three panel areas inside `area` and sets their data
     // ranges. Throws std::invalid_argument if the layout leaves no room for a

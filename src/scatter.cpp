@@ -24,20 +24,9 @@ DataBounds pad_bounds(DataBounds b) {
     return b;
 }
 
-// Draws a filled circle by colouring every pixel whose distance from the
-// centre is at most `radius`.
+// One filled dot, drawn with Member 6's Canvas::fill_circle.
 void draw_dot(Canvas& canvas, Point center, double radius, Color c) {
-    const int cx = static_cast<int>(std::lround(center.x));
-    const int cy = static_cast<int>(std::lround(center.y));
-    const int r = static_cast<int>(std::ceil(radius));
-
-    for (int dy = -r; dy <= r; ++dy) {
-        for (int dx = -r; dx <= r; ++dx) {
-            if (dx * dx + dy * dy <= radius * radius) {
-                canvas.set_pixel(cx + dx, cy + dy, c);   // set_pixel ignores off-canvas pixels
-            }
-        }
-    }
+    canvas.fill_circle(center, radius, c);
 }
 
 }  // namespace detail
