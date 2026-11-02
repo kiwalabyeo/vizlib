@@ -1,6 +1,7 @@
 
 #include "vizlib/figure.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 #include <string>
@@ -189,7 +190,7 @@ void Figure::drawLabels(
         );
     }
 
-    // Place the Y-axis label above the vertical axis.
+    // Keep the Y-axis label inside the canvas.
     if (!yLabel_.empty()) {
         constexpr double labelFontSize = 12.0;
 
@@ -197,7 +198,7 @@ void Figure::drawLabels(
             renderer.measure_text(yLabel_, labelFontSize);
 
         const double x =
-            plotArea.x - metrics.width;
+            std::max(5.0, plotArea.x - metrics.width);
 
         const double baseline =
             plotArea.y - 5.0;
