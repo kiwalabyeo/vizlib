@@ -1,0 +1,94 @@
+classDiagram
+    direction TB
+
+    class Plot {
+        <<abstract>>
+        +bounds() DataBounds*
+        +draw(Canvas&, const Axes&)*
+        +~Plot() virtual
+    }
+
+    class ScatterPlot~TX, TY~ {
+        <<template: TX, TY are Numeric>>
+        -vector~TX~ x_
+        -vector~TY~ y_
+        -ScatterStyle style_
+        -DataBounds bounds_
+        +ScatterPlot(vector~TX~ x, vector~TY~ y, ScatterStyle style)
+        +bounds() DataBounds
+        +draw(Canvas&, const Axes&)
+    }
+
+    class HistogramPlot {
+        -vector~double~ edges_
+        -vector~size_t~ counts_
+        -HistogramStyle style_
+        +HistogramPlot~T~(const vector~T~& data, vector~double~ edges, HistogramStyle style)
+        +counts() const vector~size_t~&
+        +bounds() DataBounds
+        +draw(Canvas&, const Axes&)
+    }
+
+    class KdePlot {
+        -vector~double~ grid_
+        -vector~double~ density_
+        -KdeStyle style_
+        +KdePlot(vector~double~ grid, vector~double~ density, KdeStyle style)
+        +KdePlot(const KdeResult& result, KdeStyle style)
+        +bounds() DataBounds
+        +draw(Canvas&, const Axes&)
+    }
+
+    class JointPlot {
+        -unique_ptr~Plot~ center_
+        -unique_ptr~Plot~ top_
+        -unique_ptr~Plot~ right_
+        +JointPlot(unique_ptr~Plot~ center, unique_ptr~Plot~ top, unique_ptr~Plot~ right)
+        +with_histograms~TX, TY~(x, y, style)$ JointPlot
+        +with_kde~TX, TY~(x, y, style, grid_points)$ JointPlot
+        +layout(Rect area, JointLayout layout) JointAxes
+        +draw(Canvas&, Rect area, JointLayout layout)
+    }
+
+    class DataBounds {
+        <<struct>>
+        +double x_min, x_max
+        +double y_min, y_max
+    }
+
+    class JointAxes {
+        <<struct>>
+        +Axes center
+        +Axes top
+        +Axes right
+    }
+
+    class KdeResult {
+        <<struct, Member 2>>
+        +vector~double~ grid
+        +vector~double~ density
+        +double bandwidth
+    }
+
+    class Canvas {
+        <<Member 6>>
+        +draw_line(Point, Point, Color, int)
+        +fill_rect(Rect, Color)
+        +fill_circle(Point, double, Color)
+    }
+
+    class Axes {
+        <<Member 5>>
+        +setDataRange(...)
+        +dataToPixel(double x, double y) Point
+    }
+
+    Plot <|-- ScatterPlot : inherits
+    Plot <|-- HistogramPlot : inherits
+    Plot <|-- KdePlot : inherits
+    JointPlot *-- "3" Plot : owns
+    JointPlot ..> JointAxes : returns
+    Plot ..> DataBounds : returns
+    KdePlot ..> KdeResult : built from
+    Plot ..> Canvas : draws on
+    Plot ..> Axes : maps data with
