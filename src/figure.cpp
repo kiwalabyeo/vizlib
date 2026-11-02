@@ -167,7 +167,7 @@ void Figure::drawLabels(
         );
     }
 
-    // Draw the X-axis label centred over the plot area.
+    // Draw the X-axis label closer to the plot.
     if (!xLabel_.empty()) {
         constexpr double labelFontSize = 12.0;
 
@@ -178,8 +178,7 @@ void Figure::drawLabels(
             plotArea.x + (plotArea.width - metrics.width) / 2.0;
 
         const double baseline =
-            height_ - bottomMargin_ / 2.0 +
-            labelFontSize / 2.0;
+            plotArea.y + plotArea.height + 25.0;
 
         renderer.draw_text(
             canvas,
