@@ -8,7 +8,7 @@
 ## 03-11-2026
 - **Changed:** Built two missing pieces at the group's request before the deadline. Member 3's ECDF: `ECDFPlot` is now a `Plot` that draws the ECDF as a step line (her `compute_coordinates` is kept, and now skips NaN, which `std::sort` cannot handle), plus a new `RugPlot`; both take any number type; `ecdf_example.cpp` now also draws iris petal length with a rug and saves a PNG. Member 5's axes: `Axes::drawAxisLines()` draws the x and y axis lines with tick marks, `Axes::xTicks()`/`yTicks()` give the tick values (linear or log), and `Figure::drawAxes()` draws them for every axes. Moved Member 8's tick numbers below the tick marks and centred the y ones on their ticks; moved the x label below them. The pipeline now draws axis lines.
 - **Why:** The ECDF could not be drawn and no plot had axis lines, and the submission is due on 5 November.
-- **PR:** #117
+- **PR:** #120
 - **Tested:** 21 new test cases (ECDF steps and bounds, NaN, bad input, every number type, rug marks, log axis, axis lines, tick marks, `Figure::drawAxes`). All 248 test cases pass, also under AddressSanitizer + UBSan, and all six examples run. Checked the ECDF and pipeline PNGs.
 
 ## 02-11-2026
