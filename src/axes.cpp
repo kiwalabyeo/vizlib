@@ -182,18 +182,11 @@ void Axes::drawTickLabels(
 
     const Color black{0, 0, 0};
 
-    const std::vector<double> xTicks =
-        xScaleType_ == ScaleType::Logarithmic
-            ? generateLogTicks(xMin_, xMax_)    // 1, 10, 100, ...
-            : generateTicks(xMin_, xMax_);
-
-    const std::vector<double> yTicks =
-        yScaleType_ == ScaleType::Logarithmic
-            ? generateLogTicks(yMin_, yMax_)
-            : generateTicks(yMin_, yMax_);
+    const std::vector<double> xTickValues = xTicks();
+    const std::vector<double> yTickValues = yTicks();
 
     // Draw X-axis tick labels.
-    for (double tick : xTicks) {
+    for (double tick : xTickValues) {
         const Point position = dataToPixel(tick, yMin_);
 
         std::ostringstream label;
@@ -207,7 +200,9 @@ void Axes::drawTickLabels(
             label.str(),
             Point{
                 position.x - metrics.width / 2.0,
-                plotArea_.y + plotArea_.height + labelPadding
+                // the point is the text's baseline, so add the font size to
+                // keep the whole number below the tick marks
+                plotArea_.y + plotArea_.height + labelPadding + fontSize
             },
             fontSize,
             black
@@ -215,7 +210,7 @@ void Axes::drawTickLabels(
     }
 
     // Draw Y-axis tick labels.
-    for (double tick : yTicks) {
+    for (double tick : yTickValues) {
         const Point position = dataToPixel(xMin_, tick);
 
         std::ostringstream label;
@@ -229,11 +224,52 @@ void Axes::drawTickLabels(
             label.str(),
             Point{
                 plotArea_.x - metrics.width - labelPadding,
-                position.y
+                position.y + fontSize * 0.35   // centre the digits on the tick
             },
             fontSize,
             black
         );
+    }
+}
+
+std::vector<double> Axes::xTicks() const {
+    return xScaleType_ == ScaleType::Logarithmic
+               ? generateLogTicks(xMin_, xMax_)    // 1, 10, 100, ...
+               : generateTicks(xMin_, xMax_);
+}
+
+std::vector<double> Axes::yTicks() const {
+    return yScaleType_ == ScaleType::Logarithmic
+               ? generateLogTicks(yMin_, yMax_)
+               : generateTicks(yMin_, yMax_);
+}
+
+void Axes::drawAxisLines(Canvas& canvas, Color color, int tickLength) const {
+    if (tickLength < 0) {
+        throw std::invalid_argument("tickLength must not be negative");
+    }
+
+    const double left = plotArea_.x;
+    const double right = plotArea_.x + plotArea_.width;
+    const double top = plotArea_.y;
+    const double bottom = plotArea_.y + plotArea_.height;
+
+    // the two axis lines meet in the bottom-left corner of the plot area
+    canvas.draw_line(Point{left, bottom}, Point{right, bottom}, color);   // x axis
+    canvas.draw_line(Point{left, top}, Point{left, bottom}, color);       // y axis
+
+    if (tickLength == 0) {
+        return;
+    }
+
+    // tick marks point outwards: down from the x axis, left from the y axis
+    for (double tick : xTicks()) {
+        const double x = dataToPixel(tick, yMin_).x;
+        canvas.draw_line(Point{x, bottom}, Point{x, bottom + tickLength}, color);
+    }
+    for (double tick : yTicks()) {
+        const double y = dataToPixel(xMin_, tick).y;
+        canvas.draw_line(Point{left - tickLength, y}, Point{left, y}, color);
     }
 }
 

@@ -165,7 +165,9 @@ int main()
 
     legend.draw(canvas, text, 12.0);
 
-    // Step 13: Draw figure labels and tick labels for both axes.
+    // Step 13: Draw the axis lines and tick marks, then the figure labels
+    // and tick labels for both axes.
+    figure.drawAxes(canvas);
     figure.drawLabels(canvas, text);
 
     // Step 14: Save the completed figure as a PNG.

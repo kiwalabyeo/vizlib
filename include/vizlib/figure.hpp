@@ -65,6 +65,11 @@ public:
         Canvas& canvas,
         const TextRenderer& renderer
     ) const;
+
+    // Draw the axis lines and tick marks of every axes object
+    // (see Axes::drawAxisLines). Call it after drawing the plots, so the
+    // axes are on top.
+    void drawAxes(Canvas& canvas) const;
 };
 
 } // namespace vizlib
