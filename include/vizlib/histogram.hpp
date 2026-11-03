@@ -83,10 +83,11 @@ std::vector<std::size_t> histogram_counts(const std::vector<double>& data,
                                           const std::vector<double>& edges);
 
 // Bin edges for `data`, evenly spaced from its min to its max. The number of
-// bins comes from the Freedman–Diaconis rule (Member 2's
-// summaryStatistics::histogram_bin_edges). If the IQR is 0, Sturges' rule
-// (log2(n) + 1 bins) is used instead, and if every value is the same there is
-// one bin of width 1 around it. NaN values are ignored.
+// bins comes from Member 2's summaryStatistics::histogram_bin_edges(), which
+// uses Sturges' rule for 31 to 199 values and Freedman–Diaconis otherwise. If
+// that gives no bins (Freedman–Diaconis with an IQR of 0), Sturges' rule
+// (log2(n) + 1 bins) is used here instead, and if every value is the same there
+// is one bin of width 1 around it. NaN values are ignored.
 //
 // Throws std::invalid_argument if `data` has no value that is not NaN.
 std::vector<double> auto_bin_edges(const std::vector<double>& data);
@@ -140,7 +141,7 @@ public:
 // Draws a histogram into `axes`, after setting its data range to the
 // HistogramPlot bounds. Throws like the HistogramPlot constructor.
 //
-// Pass auto_bin_edges(data) as `edges` for Freedman–Diaconis bins.
+// Pass auto_bin_edges(data) as `edges` to let the library choose the bins.
 template <Numeric T>
 void histogram(Canvas& canvas, Axes& axes,
                const std::vector<T>& data, const std::vector<double>& edges,

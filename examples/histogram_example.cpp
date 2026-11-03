@@ -27,8 +27,8 @@ int main()
     for (int i = 0; i < 500; ++i)
         data.push_back(normal(rng));
 
-    // fixed edges for now: 0 to 10 in steps of 0.5
-    // (to be replaced by the Freedman–Diaconis edges from stats once fixed)
+    // edges chosen by hand: 0 to 10 in steps of 0.5
+    // (auto_bin_edges(data) would choose them from the data instead)
     std::vector<double> edges;
     for (int i = 0; i <= 20; ++i)
         edges.push_back(i * 0.5);
