@@ -30,7 +30,7 @@ int main()
         style.radius = 3;
 
         // left: the usual joint plot, scatter with histogram margins
-        // (Freedman–Diaconis bins, worked out by auto_bin_edges)
+        // (bins chosen by auto_bin_edges from Member 2's binning rules)
         const vizlib::JointPlot with_histograms = vizlib::JointPlot::with_histograms(x, y, style);
         with_histograms.draw(canvas, {30, 50, 400, 380});
 

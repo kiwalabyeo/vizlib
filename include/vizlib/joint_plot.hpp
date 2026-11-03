@@ -81,7 +81,7 @@ public:
                          std::make_unique<HistogramPlot>(y, y_edges, right_style));
     }
 
-    // Same, with the bin edges from auto_bin_edges() (Freedman–Diaconis).
+    // Same, with the bin edges from auto_bin_edges() (Member 2's binning rules).
     template <Numeric TX, Numeric TY>
     static JointPlot with_histograms(const std::vector<TX>& x, const std::vector<TY>& y,
                                      const ScatterStyle& style = {}) {

@@ -77,7 +77,7 @@ TEST_CASE("drawAxes puts a tick mark outside the axes at every tick") {
         const int y = static_cast<int>(std::lround(axes.dataToPixel(0, tick).y));
         CHECK(is_red(canvas, 16, y));    // left of the y axis
     }
-    // the ticks are at 0, 2, 4, ... so 1 has no mark
+    // the ticks for 0..10 are 0, 5 and 10, so 1 has no mark
     const int between = static_cast<int>(std::lround(axes.dataToPixel(1, 0).x));
     CHECK_FALSE(is_red(canvas, between, 114));
 }

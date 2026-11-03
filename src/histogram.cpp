@@ -50,14 +50,15 @@ std::vector<double> auto_bin_edges(const std::vector<double>& data) {
         return {lo - 0.5, hi + 0.5};
     }
 
-    // Freedman–Diaconis gives the bin width, and with it the number of bins.
-    // Its last edge can overshoot the max, so the edges are spread evenly
-    // from min to max instead (same as numpy).
+    // Member 2's binning (Sturges for 31 to 199 values, Freedman–Diaconis
+    // otherwise) gives the number of bins. Freedman–Diaconis's last edge can
+    // overshoot the max, so the edges are spread evenly from min to max
+    // instead (same as numpy).
     const summaryStatistics stats(sorted);
     std::size_t bins = stats.histogram_bin_edges().size();
     bins = bins >= 2 ? bins - 1 : 0;
     if (bins == 0) {
-        // IQR is 0: Freedman–Diaconis cannot pick a width, use Sturges' rule
+        // no bins (Freedman–Diaconis with an IQR of 0): use Sturges' rule
         bins = static_cast<std::size_t>(std::ceil(std::log2(static_cast<double>(sorted.size())))) + 1;
     }
 
