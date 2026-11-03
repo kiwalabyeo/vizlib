@@ -47,6 +47,12 @@ public:
 
     Rect getPlotArea() const;
 
+    void drawAxes(
+        Canvas& canvas,
+        Color color,
+        int tickLength = 5
+    ) const;
+
     void drawTickLabels(
         Canvas& canvas,
         const TextRenderer& renderer

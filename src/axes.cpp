@@ -237,4 +237,55 @@ void Axes::drawTickLabels(
     }
 }
 
+void Axes::drawAxes(
+    Canvas& canvas,
+    Color color,
+    int tickLength
+) const {
+    if (tickLength < 0) {
+        throw std::invalid_argument("Tick length cannot be negative");
+    }
+
+    const double left = plotArea_.x;
+    const double right = left + plotArea_.width;
+    const double top = plotArea_.y;
+    const double bottom = top + plotArea_.height;
+
+    // Draw X-axis and Y-axis.
+    canvas.draw_line(Point{left, bottom}, Point{right, bottom}, color);
+    canvas.draw_line(Point{left, bottom}, Point{left, top}, color);
+
+    // Generate and draw X-axis tick marks.
+    std::vector<double> xTicks =
+        xScaleType_ == ScaleType::Logarithmic
+        ? generateLogTicks(xMin_, xMax_)
+        : generateTicks(xMin_, xMax_);
+
+    for (double value : xTicks) {
+        double x = dataToPixel(value, yMin_).x;
+
+        canvas.draw_line(
+            Point{x, bottom},
+            Point{x, bottom + tickLength},
+            color
+        );
+    }
+
+    // Generate and draw Y-axis tick marks.
+    std::vector<double> yTicks =
+        yScaleType_ == ScaleType::Logarithmic
+        ? generateLogTicks(yMin_, yMax_)
+        : generateTicks(yMin_, yMax_);
+
+    for (double value : yTicks) {
+        double y = dataToPixel(xMin_, value).y;
+
+        canvas.draw_line(
+            Point{left - tickLength, y},
+            Point{left, y},
+            color
+        );
+    }
+}
+
 } // namespace vizlib
