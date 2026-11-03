@@ -79,7 +79,7 @@ Each member shows their header, one key function, and what it produces.
    - [`ECDFPlot`](../include/vizlib/ecdf.hpp#L32), [drawing the steps](../src/ecdf.cpp#L84)
    - Show: `data/output/ecdf_example.png`
 7. **Scatter, histogram and joint plots, Member 4 (Oscar)**
-   - [`ScatterPlot<TX, TY>`](../include/vizlib/scatter.hpp#L52), [`HistogramPlot`](../include/vizlib/histogram.hpp#L115)
+   - [`ScatterPlot<TX, TY>`](../include/vizlib/scatter.hpp#L52), [`HistogramPlot`](../include/vizlib/histogram.hpp#L116)
    - [`JointPlot`](../include/vizlib/joint_plot.hpp#L54), [`with_kde`](../include/vizlib/joint_plot.hpp#L106)
    - Show: `data/output/joint_plot_example.png`
 8. **Export and the full pipeline, Member 7 (Norah)**
@@ -135,7 +135,7 @@ Rehearse each change once, so you know exactly which line to edit.
 - **Show one test per idea:**
   - [a pixel check on the ECDF steps](../tests/test_ecdf.cpp#L109)
   - [the same test run once per number type](../tests/test_plot_templates.cpp#L62)
-  - [bad CSV input](../tests/test_csv_reader.cpp#L13)
+  - [bad CSV input](../tests/test_csv_reader.cpp#L83)
   - [the KDE's area is 1](../tests/test_kde.cpp#L22)
 - **Results:** 248 test cases pass. A fresh clone builds and passes by following the README. Run `ctest --test-dir build --output-on-failure` live.
 
