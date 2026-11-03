@@ -44,6 +44,14 @@ This declaration collects what each member declared in the weekly reports in `re
   - Combined Member 3's ECDF pull requests (#90).
   - Fixed the build after merges (#71).
 - **Purpose, 3 November:** Claude Code built a missing piece of Member 3's module: `ECDFPlot` drawing as a `Plot`, and `RugPlot`, with their tests and the drawn part of `ecdf_example.cpp` (#122). It also added `Figure::drawAxes` and tests for Member 5's `drawAxes`, and drafted the Week 3 to 5 group reports, this declaration, the final report, the presentation guide and the UML diagram.
+- **Purpose, end of project (3 November):** Claude Code was used to test the whole library for errors and to fix them. It:
+  - built the code with strict warnings and sanitizers
+  - fed bad input to about 80 public functions
+  - found 6 bugs and 5 smaller problems
+  - fixed them and added `tests/test_edge_cases.cpp`
+  - wrote `docs/bug-report.md`
+  
+  The fixes changed code in other members' modules: statistics and KDE (Member 2), Canvas (Member 6), ticks (Member 5) and text (Member 8). `docs/bug-report.md` lists every change.
 - **Reason:** To finish his module despite missing dependencies, and to get the whole team's work integrated, tested and building on Linux, Windows and macOS before the deadline.
 
 ### Member 5: Mugabe Destiny (axis scaling and layout)
@@ -77,6 +85,14 @@ This declaration collects what each member declared in the weekly reports in `re
 - **Reason:** To learn the topic and plan the work.
 - **Note:** There is no AI section in her Week 4 or Week 5 report.
 
+## End-of-project testing and bug fixing
+
+At the end of the project, on 3 November 2026, we used AI (Claude Code) to test the finished library for errors and to fix the issues it found:
+- 6 bugs, for example wrong statistics when data has missing values, and a histogram that could ask for 10 million bins
+- 5 smaller problems, for example tick labels that printed the same text
+
+The AI wrote the fixes and the tests for them. Member 4 reviewed them and merged them after all 263 tests passed. The full list of bugs, causes and fixes is in `docs/bug-report.md`. Each member whose module was changed should read their part of it, because they are responsible for explaining that code.
+
 ## Group statement
 
-AI tools were used as support. They explained topics, drafted code and reports for review, and helped find and fix build problems. Every member is responsible for understanding and explaining the code in their module, including any part that was drafted with AI or written for them by another member, as noted above.
+AI tools were used as support. They explained topics, drafted code and reports for review, helped find and fix build problems, and at the end of the project were used to test the library and fix the issues found. Every member is responsible for understanding and explaining the code in their module, including any part that was drafted with AI or written for them by another member, as noted above.

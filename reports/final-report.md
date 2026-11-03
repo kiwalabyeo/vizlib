@@ -81,7 +81,13 @@ The six example programs are in `examples/`: `pipeline`, `scatter_example`, `his
   - normal use, edge cases (empty data, NaN, equal values, values on bin edges) and invalid input
   - pixel checks on the drawing
   - the templates, where each test runs once for each of 7 number types and must give exactly the same result as `double`
-- **Results:** 248 test cases (about 1.45 million assertions) pass in a Release build. The plot tests were also run under AddressSanitizer and UndefinedBehaviorSanitizer.
+- **Results:** 263 test cases (about 1.45 million assertions) pass in a Release build, with GCC and Clang. The whole suite and all six examples also run cleanly under AddressSanitizer and UndefinedBehaviorSanitizer.
+- **End-of-project testing with AI:** on 3 November we used Claude Code to test the library with bad input on purpose: missing values, infinity, all-equal values, one far outlier, huge sizes and tiny ranges. This found 6 bugs and 5 smaller problems, which were fixed with a new test for each (`tests/test_edge_cases.cpp`). The worst bugs were:
+  - wrong statistics when the data had a missing value
+  - a histogram that could ask for 10 million bins because of one outlier
+  - no bins at all when most values were equal
+  
+  The full list is in `docs/bug-report.md`.
 - **Clean environment:** on 3 November, a fresh clone built, passed every test and ran all six examples by following the README exactly.
 
 ## 7. Challenges and how we addressed them
@@ -116,6 +122,7 @@ The commit history and the pull requests on GitHub are the full record. Each mem
   - the ECDF drawing and rug plot (#122)
   - the repo, its rules, templates and CI setup in Week 1, and coordination
   - integrating and fixing the team's pull requests, and the Week 1 and Week 3 to 5 group reports
+  - end-of-project testing and bug fixing with Claude Code (`docs/bug-report.md`)
 - **Member 5, Mugabe Destiny:**
   - `LinearScale`, `Axes` and `Figure` (Week 2)
   - `generateTicks()` (#60)
@@ -137,7 +144,7 @@ The commit history and the pull requests on GitHub are the full record. Each mem
 
 ## 9. AI tools used
 
-Every member used AI tools as support at some point in the project. The full declaration, by member and by week, is in `reports/ai-use-declaration.md`. The main tools were Claude (including Claude Code), ChatGPT and Gemini. They were used to explain topics, draft code and reports for review, and find and fix build problems. Code written for one member by another, or with AI, is named there.
+Every member used AI tools as support at some point in the project. At the end of the project, AI (Claude Code) was also used to test the finished library and fix the issues found (`docs/bug-report.md`). The full declaration, by member and by week, is in `reports/ai-use-declaration.md`. The main tools were Claude (including Claude Code), ChatGPT and Gemini. They were used to explain topics, draft code and reports for review, and find and fix build problems. Code written for one member by another, or with AI, is named there.
 
 ## 10. Lessons learned
 

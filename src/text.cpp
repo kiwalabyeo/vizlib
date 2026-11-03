@@ -65,7 +65,7 @@ TextMetrics TextRenderer::measure_text(
         throw std::runtime_error("Font is not loaded");
     }
 
-    if (fontSize <= 0.0) {
+    if (!(fontSize > 0.0) || std::isinf(fontSize)) {  // also refuses NaN
         throw std::invalid_argument("Font size must be positive");
     }
 
@@ -130,7 +130,7 @@ void TextRenderer::draw_text(
         throw std::runtime_error("Font is not loaded");
     }
 
-    if (fontSize <= 0.0) {
+    if (!(fontSize > 0.0) || std::isinf(fontSize)) {  // also refuses NaN
         throw std::invalid_argument("Font size must be positive");
     }
 

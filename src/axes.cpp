@@ -2,13 +2,16 @@
 #include "vizlib/axes.hpp"
 #include "vizlib/ticks.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace vizlib {
+
 
 Axes::Axes()
     : xMin_(0.0),
@@ -196,15 +199,15 @@ void Axes::drawTickLabels(
     for (double tick : xTicks) {
         const Point position = dataToPixel(tick, yMin_);
 
-        std::ostringstream label;
-        label << std::setprecision(4) << tick;
+        const std::string label =
+            formatTickLabel(tick, xTicks, xScaleType_ == ScaleType::Logarithmic);
 
         const TextMetrics metrics =
-            renderer.measure_text(label.str(), fontSize);
+            renderer.measure_text(label, fontSize);
 
         renderer.draw_text(
             canvas,
-            label.str(),
+            label,
             Point{
                 position.x - metrics.width / 2.0,
                 // the point is the text's baseline, so add the font size to
@@ -220,15 +223,15 @@ void Axes::drawTickLabels(
     for (double tick : yTicks) {
         const Point position = dataToPixel(xMin_, tick);
 
-        std::ostringstream label;
-        label << std::setprecision(4) << tick;
+        const std::string label =
+            formatTickLabel(tick, yTicks, yScaleType_ == ScaleType::Logarithmic);
 
         const TextMetrics metrics =
-            renderer.measure_text(label.str(), fontSize);
+            renderer.measure_text(label, fontSize);
 
         renderer.draw_text(
             canvas,
-            label.str(),
+            label,
             Point{
                 plotArea_.x - metrics.width - labelPadding,
                 position.y + fontSize * 0.35   // centre the digits on the tick

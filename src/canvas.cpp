@@ -13,8 +13,14 @@ Canvas::Canvas(int width, int height, Color background)
     if (width <= 0 || height <= 0) {
         throw std::invalid_argument("Width and height must be positive integers.");
     }
-    // creates width*height boxes and fills every one with the background colour
-    pixels_.assign(width * height, background);
+    // a side longer than this is a mistake (20000 x 20000 is already 1.6 GB)
+    constexpr int kMaxSide = 20000;
+    if (width > kMaxSide || height > kMaxSide) {
+        throw std::invalid_argument("Width and height must be at most 20000 pixels.");
+    }
+    // creates width*height boxes and fills every one with the background colour.
+    // The product is worked out as std::size_t: as int, 50000 * 50000 would overflow.
+    pixels_.assign(static_cast<std::size_t>(width) * static_cast<std::size_t>(height), background);
 }
 
 // stores the colour of a specific pixel in the vector. The vector is a

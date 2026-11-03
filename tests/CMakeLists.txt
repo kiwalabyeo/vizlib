@@ -24,6 +24,7 @@ add_executable(vizlib_tests
     test_legend.cpp
     test_drawable.cpp
     test_figure_labels.cpp
+    test_edge_cases.cpp
 )
 
 target_link_libraries(vizlib_tests PRIVATE vizlib)

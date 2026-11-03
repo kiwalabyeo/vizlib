@@ -36,6 +36,9 @@ std::vector<std::size_t> histogram_counts(const std::vector<double>& data,
 std::vector<double> auto_bin_edges(const std::vector<double>& data) {
     std::vector<double> sorted;
     for (double v : data) {
+        if (std::isinf(v)) {
+            throw std::invalid_argument("histogram: data must not contain infinity.");
+        }
         if (!std::isnan(v)) {
             sorted.push_back(v);
         }
