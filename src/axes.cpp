@@ -207,7 +207,9 @@ void Axes::drawTickLabels(
             label.str(),
             Point{
                 position.x - metrics.width / 2.0,
-                plotArea_.y + plotArea_.height + labelPadding
+                // the point is the text's baseline, so add the font size to
+                // keep the whole number below the tick marks
+                plotArea_.y + plotArea_.height + labelPadding + fontSize
             },
             fontSize,
             black
@@ -229,7 +231,7 @@ void Axes::drawTickLabels(
             label.str(),
             Point{
                 plotArea_.x - metrics.width - labelPadding,
-                position.y
+                position.y + fontSize * 0.35   // centre the digits on the tick
             },
             fontSize,
             black

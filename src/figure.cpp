@@ -178,7 +178,7 @@ void Figure::drawLabels(
             plotArea.x + (plotArea.width - metrics.width) / 2.0;
 
         const double baseline =
-            plotArea.y + plotArea.height + 25.0;
+            plotArea.y + plotArea.height + 40.0;   // below the tick marks and tick numbers
 
         renderer.draw_text(
             canvas,
@@ -214,6 +214,13 @@ void Figure::drawLabels(
     // Draw numerical tick labels for every axes object.
     for (const Axes& axes : axes_) {
         axes.drawTickLabels(canvas, renderer);
+    }
+}
+
+void Figure::drawAxes(Canvas& canvas) const {
+    const Color axisColor{60, 60, 60, 255};   // dark grey
+    for (const Axes& axes : axes_) {
+        axes.drawAxes(canvas, axisColor);      // Member 5's axis lines and tick marks
     }
 }
 

@@ -5,6 +5,12 @@
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 
+## 03-11-2026
+- **Changed:** Built a missing piece of Member 3's ECDF at the group's request before the deadline: `ECDFPlot` is now a `Plot` that draws the ECDF as a step line (her `compute_coordinates` is kept, and now skips NaN, which `std::sort` cannot handle), plus a new `RugPlot`; both take any number type; `ecdf_example.cpp` now also draws iris petal length with a rug and saves a PNG. Added `Figure::drawAxes()`, which calls Member 5's `Axes::drawAxes` for every axes, and used it in the pipeline and the ECDF example. Moved Member 8's tick numbers below the tick marks and centred the y ones on their ticks.
+- **Why:** The ECDF could not be drawn, and the submission is due on 5 November. Member 5's axis lines were merged in #121, so the figure now draws them.
+- **PR:** #122
+- **Tested:** New test cases for the ECDF (steps, bounds, NaN, bad input, every number type, through a `Plot*`), the rug plot (marks, log axis, bad input) and the axes (Member 5's `drawAxes` lines, tick marks, log ticks, bad tick length, and `Figure::drawAxes`). All tests pass, also under AddressSanitizer + UBSan, and all six examples run. Checked the ECDF and pipeline PNGs.
+
 ## 02-11-2026
 - **Changed:** Added `JointPlot::with_kde(x, y)`: scatter in the centre and KDE curves of x and y in the margins, from Member 2's `kde()` (any number type, NaN left out of the curves). `KdePlot` can now be built straight from a `KdeResult`. Replaced my temporary drawing helpers with Member 6's Canvas: `KdePlot` uses `draw_line`, scatter uses `fill_circle`, histogram uses `fill_rect`. `joint_plot_example.cpp` now uses `with_kde` instead of its own stand-in KDE.
 - **Why:** Week 4 goal (joint plot with KDE margins), finished now that Member 2's KDE is merged. The plots now depend on the shared Canvas instead of copies of the same drawing code.
