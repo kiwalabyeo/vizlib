@@ -9,8 +9,8 @@ double gaussian_density_at(const std::vector<double>& values, double x, double h
     if (values.empty()) {
         throw std::invalid_argument("data cannot be empty");
     }
-    if (h <= 0) {
-        throw std::invalid_argument("bandwidth must be bigger than 0");
+    if (!(h > 0) || std::isinf(h)) {  // !(h > 0) is also true for NaN
+        throw std::invalid_argument("bandwidth must be a finite number bigger than 0");
     }
 
     const double PI = 3.14159265358979323846; 
@@ -27,8 +27,10 @@ double gaussian_density_at(const std::vector<double>& values, double x, double h
     return sum / (values.size() * h * std::sqrt(2 * PI));
 }
 
-double silverman_bandwidth(const std::vector<double>& values) {
-    summaryStatistics stats(values);  // throws if values is empty
+double silverman_bandwidth(const std::vector<double>& data) {
+    // NaN (missing) values are left out, so n counts only real values
+    const std::vector<double> values = values_without_nan(data);
+    summaryStatistics stats(values);  // throws if no value is left
 
     // For bell-shaped data the standard deviation is a good measure of spread. The IQR
     // divided by 1.34 estimates the same thing but ignores outliers. Use the smaller one.
@@ -48,13 +50,20 @@ double silverman_bandwidth(const std::vector<double>& values) {
     return 0.9 * spread * std::pow(values.size(), -0.2);
 }
 
-KdeResult kde_from_doubles(const std::vector<double>& values, int grid_points, double bandwidth) {
+KdeResult kde_from_doubles(const std::vector<double>& data, int grid_points, double bandwidth) {
     if (grid_points < 2) {
         throw std::invalid_argument("grid_points must be at least 2");
     }
     if (bandwidth < 0) {
         throw std::invalid_argument("bandwidth cannot be negative");
     }
+    if (!std::isfinite(bandwidth)) {
+        throw std::invalid_argument("bandwidth must be a finite number");
+    }
+
+    // NaN (missing) values are left out; one NaN would otherwise make the
+    // whole curve NaN
+    const std::vector<double> values = values_without_nan(data);
 
     summaryStatistics stats(values);  // throws if values is empty; gives us minimum/maximum
 

@@ -5,6 +5,17 @@
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 
+## 03-11-2026 (end-of-project testing)
+- **Changed:**
+  - Fixed 6 bugs and 5 smaller problems found by testing the whole library with bad input: NaN in the statistics and KDE, a far outlier asking for millions of bins, no bins for nearly-equal data, `int` overflow in `Canvas`, infinity in `auto_bin_edges`, and tick and label problems.
+  - Added `tests/test_edge_cases.cpp` and `docs/bug-report.md`.
+- **Why:** These were final checks before submission. The normal tests only used good data, and a lecturer could easily try a CSV with an empty cell.
+- **PR:** "Fix bugs found in edge-case testing"
+- **Tested:**
+  - 263 test cases pass with GCC and Clang, and under AddressSanitizer and UndefinedBehaviorSanitizer.
+  - All six examples run cleanly, and I checked their PNGs.
+  - Done with Claude Code, as declared in `reports/ai-use-declaration.md`.
+
 ## 03-11-2026
 - **Changed:** Built a missing piece of Member 3's ECDF at the group's request before the deadline: `ECDFPlot` is now a `Plot` that draws the ECDF as a step line (her `compute_coordinates` is kept, and now skips NaN, which `std::sort` cannot handle), plus a new `RugPlot`; both take any number type; `ecdf_example.cpp` now also draws iris petal length with a rug and saves a PNG. Added `Figure::drawAxes()`, which calls Member 5's `Axes::drawAxes` for every axes, and used it in the pipeline and the ECDF example. Moved Member 8's tick numbers below the tick marks and centred the y ones on their ticks.
 - **Why:** The ECDF could not be drawn, and the submission is due on 5 November. Member 5's axis lines were merged in #121, so the figure now draws them.

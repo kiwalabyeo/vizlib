@@ -99,14 +99,28 @@ int summaryStatistics::count(double value) const {
 std::vector<double> FreedmanDiaconisBinning::histogram_bin_edges() const {
     std::vector<double> bin_edges;
 
+    const double data_range = summaryStatistics(Sorted_data).range();
+    if (data_range == 0) {
+        return single_bin();
+    }
+
     // Freedman-Diaconis rule for bin width
     double bin_width = 2 * summaryStatistics(Sorted_data).interquartile_range() / std::cbrt(static_cast<double>(Sorted_data.size()));
     if (bin_width == 0) {
-        bin_edges.push_back(Sorted_data.front());
-        return bin_edges;
+        // the middle half of the data is one value (IQR = 0), so the rule
+        // gives no width: use Sturges' rule instead
+        return SturgesBinning(Sorted_data).histogram_bin_edges();
     }
 
-    int number_of_bins = static_cast<int>(std::ceil(summaryStatistics(Sorted_data).range() / bin_width));
+    // the count is worked out as a double first, so a huge count cannot
+    // overflow the int; too many bins are capped and made wider
+    const double wanted_bins = std::ceil(data_range / bin_width);
+    int number_of_bins = max_bins;
+    if (wanted_bins <= max_bins) {
+        number_of_bins = static_cast<int>(wanted_bins);
+    } else {
+        bin_width = data_range / max_bins;
+    }
     for (int i = 0; i <= number_of_bins; i++) {
         bin_edges.push_back(Sorted_data.front() + i * bin_width);
     }
@@ -114,6 +128,9 @@ std::vector<double> FreedmanDiaconisBinning::histogram_bin_edges() const {
 }
 std::vector<double> SturgesBinning::histogram_bin_edges() const {
     std::vector<double> bin_edges;
+    if (summaryStatistics(Sorted_data).range() == 0) {
+        return single_bin();  // equal values: Sturges would give equal edges
+    }
     // Sturges' formula for number of bins
     int number_of_bins = static_cast<int>(std::ceil( 1 + std::log2(Sorted_data.size())));
     double bin_width = summaryStatistics(Sorted_data).range() / number_of_bins;

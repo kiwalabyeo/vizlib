@@ -39,7 +39,7 @@ Then:
 
 ## Member 2, Melissa: statistics and KDE
 
-- **Show:** [`summaryStatistics`](../include/vizlib/stats.hpp#L9), [`binningStrategy`](../include/vizlib/stats.hpp#L38), [`kde()`](../include/vizlib/kde.hpp#L29), with [the Gaussian density at one point](../src/kde.cpp#L8) and [Silverman's bandwidth](../src/kde.cpp#L30).
+- **Show:** [`summaryStatistics`](../include/vizlib/stats.hpp#L29), [`binningStrategy`](../include/vizlib/stats.hpp#L63), [`kde()`](../include/vizlib/kde.hpp#L29), with [the Gaussian density at one point](../src/kde.cpp#L8) and [Silverman's bandwidth](../src/kde.cpp#L30).
 - **Run:** `./build/examples/joint_plot_example`. The KDE margins on the right are your curves.
 - **OOP to point at:** the strategy pattern. `binningStrategy` is abstract, with `FreedmanDiaconisBinning` and `SturgesBinning` deriving from it.
 - **A test to show:** [the KDE's area is 1](../tests/test_kde.cpp#L22).
@@ -63,7 +63,7 @@ Then:
 
 ## Member 5, Destiny: axes and scaling
 
-- **Show:** [`Axes`](../include/vizlib/axes.hpp#L15), [`LogScale`](../include/vizlib/scale.hpp#L25), [nice ticks](../src/ticks.cpp#L9), [log ticks](../src/ticks.cpp#L53), and [axis lines and tick marks](../src/axes.cpp#L242).
+- **Show:** [`Axes`](../include/vizlib/axes.hpp#L15), [`LogScale`](../include/vizlib/scale.hpp#L25), [nice ticks](../src/ticks.cpp#L12), [log ticks](../src/ticks.cpp#L65), and [axis lines and tick marks](../src/axes.cpp#L245).
 - **Run:** `./build/examples/pipeline` and point at the axes. Then the log-axis program below.
 - **OOP to point at:** encapsulation in the scales, `addAxes()` and `addAxes(Rect)` (overloading), and `std::deque` in `Figure`.
 - **A test to show:** `tests/test_log_scale.cpp`.
@@ -83,7 +83,7 @@ Then:
 
 ## Member 6, Flavia: Canvas rendering
 
-- **Show:** [`Canvas`](../include/vizlib/canvas.hpp#L8), [Bresenham line](../src/canvas.cpp#L72), [filled circle](../src/canvas.cpp#L171), and the shared `Color`, `Point` and `Rect` types.
+- **Show:** [`Canvas`](../include/vizlib/canvas.hpp#L8), [Bresenham line](../src/canvas.cpp#L78), [filled circle](../src/canvas.cpp#L177), and the shared `Color`, `Point` and `Rect` types.
 - **Run:** any example. Every dot, bar and line on the picture is drawn by your functions.
 - **OOP to point at:** encapsulation. The pixels are private, `set_pixel` clips, `get_pixel` throws, and every coordinate is checked.
 - **A test to show:** one from `tests/test_canvas.cpp` that checks individual pixels.
@@ -100,7 +100,7 @@ Then:
 
 ## Member 8, Joy: text, labels, legends and annotations
 
-- **Show:** [`TextRenderer`](../include/vizlib/text.hpp#L19), its [private `Impl`](../include/vizlib/text.hpp#L45), [drawing letters](../src/text.cpp#L122), [tick labels](../src/axes.cpp#L176), [`Drawable`](../include/vizlib/drawable.hpp#L10), [`Legend`](../include/vizlib/legend.hpp#L21) and [`Annotations`](../include/vizlib/annotations.hpp#L23).
+- **Show:** [`TextRenderer`](../include/vizlib/text.hpp#L19), its [private `Impl`](../include/vizlib/text.hpp#L45), [drawing letters](../src/text.cpp#L122), [tick labels](../src/axes.cpp#L179), [`Drawable`](../include/vizlib/drawable.hpp#L10), [`Legend`](../include/vizlib/legend.hpp#L21) and [`Annotations`](../include/vizlib/annotations.hpp#L23).
 - **Run:** `./build/examples/pipeline`. Point at the title, the labels, the tick numbers, the legend and the note.
 - **OOP to point at:**
   - `Drawable` is abstract, with `Legend` and `Annotations` deriving from it.
