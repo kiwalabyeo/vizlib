@@ -107,6 +107,28 @@ We also renamed a constructor parameter `Data` to `data` in `stats.hpp`, because
 
 There is one new file, `tests/test_edge_cases.cpp`, with 15 test cases: one or more per bug and per smaller fix. Each test names the bug it checks. The full suite is now **263 test cases**. They all pass with GCC and Clang, and under AddressSanitizer and UndefinedBehaviorSanitizer.
 
+## Second check (4 November)
+
+The first round left the pictures without axes in three examples. We had listed that as "looks only", which was wrong: a plot with no axes cannot be read. So we checked again, more widely, and fixed what we found:
+
+1. **Three examples drew no axes** (`scatter_example`, `histogram_example`, `joint_plot_example`).
+   - **Cause:** the library had `drawAxes` and `drawTickLabels`, but these examples never called them.
+   - **Fix:** they now draw axis lines, tick marks, tick numbers, a title and axis labels. The joint plots get axes on their centre panel through `JointPlot::layout()`.
+2. **The Windows run command could not work.**
+   - **Cause:** with Visual Studio, the usual Windows setup, the programs were built into `build\examples\Debug\`. So `.\build\examples\pipeline.exe`, as the README and the presentation guide say, found nothing. CI did not catch it, because on Windows and macOS it ran the tests but not the pipeline.
+   - **Fix:** `examples/CMakeLists.txt` now puts every example straight in `build/examples` on every system. CI now runs the pipeline and checks its PNG on Windows and macOS too.
+3. **Every build printed 24 warnings**, all from the third-party file `stb_image_write.h`. They are not our code, but they look bad when building live. The `third_party/` folder is now included as a SYSTEM folder, so the build prints no warnings.
+4. **Code that no test ran.** A coverage report showed which lines the tests reach. Overall it was 92%, but some whole functions were never called by a test:
+   - `Axes::drawTickLabels` (the tick numbers)
+   - `RugPlot::bounds`
+   - the size and margin checks in `Figure`
+   - `Figure::getAxes` out of range
+   - `Legend::clear`
+   
+   New file: `tests/test_untested_parts.cpp`, with 7 test cases. The suite is now **270 test cases**.
+
+We also ran every live-coding drill in the prep docs and the presentation guide. Each one compiles and gives the answer the doc says.
+
 ## Known limitations not changed
 
 These are design limits, not crashes, so we left them as they are:

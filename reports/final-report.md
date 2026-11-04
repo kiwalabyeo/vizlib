@@ -81,7 +81,7 @@ The six example programs are in `examples/`: `pipeline`, `scatter_example`, `his
   - normal use, edge cases (empty data, NaN, equal values, values on bin edges) and invalid input
   - pixel checks on the drawing
   - the templates, where each test runs once for each of 7 number types and must give exactly the same result as `double`
-- **Results:** 263 test cases (about 1.45 million assertions) pass in a Release build, with GCC and Clang. The whole suite and all six examples also run cleanly under AddressSanitizer and UndefinedBehaviorSanitizer.
+- **Results:** 270 test cases (about 1.45 million assertions) pass in a Release build, with GCC and Clang. The whole suite and all six examples also run cleanly under AddressSanitizer and UndefinedBehaviorSanitizer.
 - **End-of-project testing with AI:** on 3 November we used Claude Code to test the library with bad input on purpose: missing values, infinity, all-equal values, one far outlier, huge sizes and tiny ranges. This found 6 bugs and 5 smaller problems, which were fixed with a new test for each (`tests/test_edge_cases.cpp`). The worst bugs were:
   - wrong statistics when the data had a missing value
   - a histogram that could ask for 10 million bins because of one outlier
