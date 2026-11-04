@@ -125,7 +125,18 @@ The first round left the pictures without axes in three examples. We had listed 
    - `Figure::getAxes` out of range
    - `Legend::clear`
    
-   New file: `tests/test_untested_parts.cpp`, with 7 test cases. The suite is now **270 test cases**.
+   New file: `tests/test_untested_parts.cpp`, with 8 test cases, including one for a custom `JointLayout`, which nothing had used. The suite is now **271 test cases**.
+5. **Features that worked but no example showed.** We listed every public function, then checked who calls it: the examples, the tests, other library code, or nothing.
+   - **Called by nothing:** only `TextRenderer`'s move assignment. It is there on purpose (the rule of five), so it stays.
+   - **Called only by tests:** these features worked, but no example ever showed them running:
+     - the log scale (Member 5)
+     - the statistics summaries and the two binning classes used directly (Member 2)
+     - `KdePlot` on its own and `histogram_counts` (Member 4)
+     - `draw_rect` and `draw_circle` (Member 6)
+     - `save_ppm` (Member 7)
+     - the filtering, column and missing-value functions (Member 1)
+
+   Three new examples show them: `stats_example`, `log_axis_example` and `shapes_example`. `data_examples` now also shows `filter_numeric`, `filter_rows`, `select_columns`, `drop_columns`, `fill_missing`, `fill_missing_mean`, `count_missing` and `parse_csv`.
 
 We also ran every live-coding drill in the prep docs and the presentation guide. Each one compiles and gives the answer the doc says.
 

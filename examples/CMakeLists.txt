@@ -25,3 +25,12 @@ target_link_libraries(ecdf_example PRIVATE vizlib)
 
 add_executable(data_examples data_examples.cpp)
 target_link_libraries(data_examples PRIVATE vizlib)
+
+add_executable(stats_example stats_example.cpp)
+target_link_libraries(stats_example PRIVATE vizlib)
+
+add_executable(log_axis_example log_axis_example.cpp)
+target_link_libraries(log_axis_example PRIVATE vizlib)
+
+add_executable(shapes_example shapes_example.cpp)
+target_link_libraries(shapes_example PRIVATE vizlib)

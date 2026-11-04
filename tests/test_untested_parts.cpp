@@ -6,6 +6,7 @@
 #include "vizlib/canvas.hpp"
 #include "vizlib/ecdf.hpp"
 #include "vizlib/figure.hpp"
+#include "vizlib/joint_plot.hpp"
 #include "vizlib/legend.hpp"
 #include "vizlib/text.hpp"
 
@@ -107,4 +108,25 @@ TEST_CASE("Legend::clear removes every entry, and the position can be read back"
     legend.set_position({25, 40});
     CHECK(legend.get_position().x == doctest::Approx(25));
     CHECK(legend.get_position().y == doctest::Approx(40));
+}
+
+TEST_CASE("JointPlot::layout follows a custom JointLayout") {
+    const vizlib::JointPlot plot =
+        vizlib::JointPlot::with_histograms(std::vector<double>{1, 2, 3, 4}, std::vector<double>{4, 3, 2, 1});
+    vizlib::JointLayout layout;
+    layout.margin_ratio = 0.3;   // margins take 30% of the width and the height
+    layout.gap = 10;
+    const vizlib::JointAxes axes = plot.layout({0, 0, 100, 100}, layout);
+
+    const vizlib::Rect c = axes.center.getPlotArea();
+    CHECK(c.x == doctest::Approx(0));
+    CHECK(c.y == doctest::Approx(40));       // 30 for the top margin + 10 gap
+    CHECK(c.width == doctest::Approx(60));   // 100 - 30 - 10
+    CHECK(c.height == doctest::Approx(60));
+    CHECK(axes.top.getPlotArea().height == doctest::Approx(30));
+    CHECK(axes.right.getPlotArea().x == doctest::Approx(70));
+
+    vizlib::JointLayout bad;
+    bad.margin_ratio = 1.0;
+    CHECK_THROWS_AS(plot.layout({0, 0, 100, 100}, bad), std::invalid_argument);
 }
