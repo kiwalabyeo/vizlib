@@ -1,3 +1,4 @@
+// ticks.cpp - tick values for the axes (Member 5). See ticks.hpp.
 
 #include "vizlib/ticks.hpp"
 
@@ -21,13 +22,20 @@ std::vector<double> generateTicks(double min, double max,
         throw std::invalid_argument("Invalid tick range");
     }
 
+    // Example for generateTicks(0, 20, 5):
+    // 1. the plain step that would give exactly targetCount ticks: 20 / 4 = 5
     double rawStep =
         (max - min) / (targetCount - 1);
 
+    // 2. split it into a power of ten and a fraction between 1 and 10:
+    //    magnitude = 10^floor(log10 5) = 1, fraction = 5 / 1 = 5
     double magnitude =
         std::pow(10.0, std::floor(std::log10(rawStep)));
 
     double fraction = rawStep / magnitude;
+
+    // 3. round the fraction UP to 1, 2, 5 or 10, so there are never more
+    //    ticks than asked for: 5 stays 5, so the step is 5
     double niceFraction;
 
     if (fraction <= 1.0) {
@@ -52,6 +60,8 @@ std::vector<double> generateTicks(double min, double max,
 
     for (double k = firstK; k <= lastK; k += 1.0) {
         double tick = k * step;
+        // a tick that should be 0 can come out as -1e-17 from rounding;
+        // snap it to exactly 0 so its label does not read "-1e-17"
         if (std::abs(tick) < step * 1e-12) {
             tick = 0.0;
         }
@@ -70,6 +80,9 @@ std::vector<double> generateLogTicks(double min, double max) {
 
     std::vector<double> ticks;
 
+    // the smallest and largest powers of 10 inside the range. Example for
+    // 2 to 500: ceil(log10 2) = ceil(0.30) = 1 and floor(log10 500) =
+    // floor(2.70) = 2, so the ticks are 10^1 = 10 and 10^2 = 100
     int firstExponent =
         static_cast<int>(std::ceil(std::log10(min)));
 
