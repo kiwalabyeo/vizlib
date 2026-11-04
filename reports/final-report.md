@@ -50,7 +50,7 @@ The class diagrams are in `docs/uml/`.
 - **Text:** title, axis labels, tick labels, legend and free-text annotations.
 - **Output:** `save_png()` and `save_ppm()` for a whole `Canvas`.
 
-The six example programs are in `examples/`: `pipeline`, `scatter_example`, `histogram_example`, `joint_plot_example`, `ecdf_example` and `data_examples`.
+The nine example programs are in `examples/`: `pipeline`, `scatter_example`, `histogram_example`, `joint_plot_example`, `ecdf_example`, `data_examples`, `stats_example` (summaries, both binning rules, a KDE curve on its own), `log_axis_example` (a linear and a log y axis side by side) and `shapes_example` (every Canvas drawing function, saved as PNG and PPM).
 
 ## 5. Important implementation decisions (OOP concepts)
 
@@ -81,7 +81,7 @@ The six example programs are in `examples/`: `pipeline`, `scatter_example`, `his
   - normal use, edge cases (empty data, NaN, equal values, values on bin edges) and invalid input
   - pixel checks on the drawing
   - the templates, where each test runs once for each of 7 number types and must give exactly the same result as `double`
-- **Results:** 270 test cases (about 1.45 million assertions) pass in a Release build, with GCC and Clang. The whole suite and all six examples also run cleanly under AddressSanitizer and UndefinedBehaviorSanitizer.
+- **Results:** 271 test cases (about 1.45 million assertions) pass in a Release build, with GCC and Clang. The whole suite and all nine examples also run cleanly under AddressSanitizer and UndefinedBehaviorSanitizer.
 - **End-of-project testing with AI:** on 3 November we used Claude Code to test the library with bad input on purpose: missing values, infinity, all-equal values, one far outlier, huge sizes and tiny ranges. This found 6 bugs and 5 smaller problems, which were fixed with a new test for each (`tests/test_edge_cases.cpp`). The worst bugs were:
   - wrong statistics when the data had a missing value
   - a histogram that could ask for 10 million bins because of one outlier

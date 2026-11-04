@@ -6,7 +6,7 @@ vizlib is a small C++20 library that turns a CSV file into a readable statistica
 
 **CSV file → `DataFrame` (James) → statistics and KDE (Melissa) → plots (Crystal, Oscar) → axes (Destiny) → `Canvas` (Flavia) → text and legends (Joy) → PNG file and the pipeline (Norah)**
 
-It draws scatter plots, histograms, KDE curves, ECDF and rug plots, and joint plots. It runs on Linux, Windows and macOS, and is checked by 270 tests on every push.
+It draws scatter plots, histograms, KDE curves, ECDF and rug plots, and joint plots. It runs on Linux, Windows and macOS, and is checked by 271 tests on every push.
 
 ## How the presentation runs
 
@@ -149,7 +149,7 @@ Rehearse each change once, so you know exactly which line to edit.
   - [the same test run once per number type](../tests/test_plot_templates.cpp#L62)
   - [bad CSV input](../tests/test_csv_reader.cpp#L83)
   - [the KDE's area is 1](../tests/test_kde.cpp#L22)
-- **Results:** 270 test cases pass, also under AddressSanitizer and UndefinedBehaviorSanitizer. A fresh clone builds and passes by following the README. Run `ctest --test-dir build --output-on-failure` live.
+- **Results:** 271 test cases pass, also under AddressSanitizer and UndefinedBehaviorSanitizer. A fresh clone builds and passes by following the README. Run `ctest --test-dir build --output-on-failure` live.
 - **End-of-project bug hunt (done with AI):** testing with bad input found 6 bugs, all fixed with a test each. See [`docs/bug-report.md`](bug-report.md).
 
 ## 8. Challenges and how we addressed them (2 min, Member 4, slide 21)
