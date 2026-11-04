@@ -34,7 +34,7 @@ The following components were implemented or integrated:
 - **Legends:** Implemented legend entries and their rendering.
 - **Font support:** Added the DejaVu Sans font under `third_party/fonts/`.
 - **Documentation:** Added `docs/text.md` and supporting design documentation.
-- **Example:** Added `examples/pipeline.cpp`, demonstrating a scatter plot, histogram, labels, tick labels, annotation, and legend.
+- **Example:** Restructured `examples/pipeline.cpp` (#100) into numbered steps, and added the title, axis labels, tick labels, annotation and legend to it. The file was created by Member 7 (Norah) in #74.
 
 ## 3. Testing and Verification
 
@@ -75,10 +75,12 @@ The pipeline example successfully generated `data/output/pipeline.png`, approxim
 
 ## 5. Remaining Verification
 
-The build, test suite, and example execution have succeeded. The generated image still needs visual inspection to confirm that the title, axis labels, tick labels, annotation, and legend are displayed correctly.
+The build, test suite, and example execution have succeeded. The generated image was inspected on 3 November: the title, axis labels, tick labels, annotation and legend all display correctly.
 
 ## 6. Conclusion
 
 The main Week 5 implementation tasks for Member 8 have been completed and successfully tested locally. The text-rendering, labels, annotations, and legend components are integrated with the plotting library, and an example demonstrates their use.
 
-**Final outstanding step:** Inspect `data/output/pipeline.png` and confirm that all rendered elements appear correctly before treating the work as fully verified.
+## 7. Use of AI
+
+No AI use was recorded for this week when the report was written. This section was added on 4 November by Member 4 (Oscar) because it was missing. The pipeline wording in section 2 was also corrected (restructured, not added).

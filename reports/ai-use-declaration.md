@@ -52,6 +52,11 @@ This declaration collects what each member declared in the weekly reports in `re
   - wrote `docs/bug-report.md`
   
   The fixes changed code in other members' modules: statistics and KDE (Member 2), Canvas (Member 6), ticks (Member 5) and text (Member 8). `docs/bug-report.md` lists every change.
+- **Purpose, 4 November:** Claude Code was used to:
+  - write the module guides `docs/modules/plots.md` and `docs/modules/text.md` (Member 8's)
+  - rewrite Member 8's Week 3 report, and add the missing AI sections to her Week 4 and 5 reports
+  - add comments to Member 5's code
+  - add three examples, axes on the examples, and the Windows build fix (`docs/bug-report.md`, "Second check")
 - **Reason:** To finish his module despite missing dependencies, and to get the whole team's work integrated, tested and building on Linux, Windows and macOS before the deadline.
 
 ### Member 5: Mugabe Destiny (axis scaling and layout)
@@ -83,7 +88,7 @@ This declaration collects what each member declared in the weekly reports in `re
 - **Tool:** ChatGPT (Weeks 1 and 2), and an AI assistant she did not name (Week 3)
 - **Purpose:** Understanding stb_truetype and text layout, and structuring her module (Weeks 1 and 2). Understanding build errors and failed CI checks (Week 3).
 - **Reason:** To learn the topic and plan the work.
-- **Note:** There is no AI section in her Week 4 or Week 5 report.
+- **Note:** Her Week 4 and Week 5 reports had no AI section. Member 4 added one to each on 4 November, saying no AI use was recorded for those weeks. Member 4 also rewrote her Week 3 report with Claude Code, because it described Member 7's module, and wrote her module guide `docs/modules/text.md` from her `docs/text.md` and her code.
 
 ## End-of-project testing and bug fixing
 
