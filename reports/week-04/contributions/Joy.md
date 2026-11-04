@@ -37,3 +37,7 @@ The figure can now display a title and descriptive X-axis and Y-axis labels. Thi
 
 - Continue checking the integration of labels, annotations and legends with the plotting pipeline.
 - Address any review feedback on the related changes.
+
+## 6. Use of AI
+
+No AI use was recorded for this week when the report was written. This section was added on 4 November by Member 4 (Oscar) because it was missing. My AI use for Weeks 1 to 3 is listed in `reports/ai-use-declaration.md`.

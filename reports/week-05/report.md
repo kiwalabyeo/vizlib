@@ -71,5 +71,5 @@ Final submission:
 - Reason: To speed up header design and the report
 - Used by: Member 1 (James)
 
-- No AI section in the contribution report: Member 8 (Joy)
+- No AI section in the contribution report: Member 8 (Joy). Added on 4 November, saying no AI use was recorded.
 - No Week 5 contribution report yet: Members 2, 3, 5, 6 and 7

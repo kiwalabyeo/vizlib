@@ -36,7 +36,7 @@ Most Week 3 code was opened from 19 to 25 October, after the week ended, and mer
 - **Duplicate pull requests.** The same tick generation work was opened four times (#56, #58, #59, #60). Only #60 was merged (Member 5).
 - **Code on `main` that was not compiled.** Several `.cpp` files were on `main` but not in `CMakeLists.txt`, so CI could not catch their errors. Members 4 and 7 added them. Everyone was reminded to add new files to CMake in the same pull request (All).
 - **The 3-approval rule was not kept.** The repo owner merged several pull requests without three approvals to keep `main` moving (Member 4).
-- **One contribution report describes another member's work.** Member 8's Week 3 report describes image export and build work, which is Member 7's module. It needs to be rewritten to describe her own text, annotation and legend work (Member 8).
+- **One contribution report describes another member's work.** Member 8's Week 3 report described image export and build work, which is Member 7's module. On 4 November Member 4 rewrote it from her pull requests to describe her own text, annotation and legend work.
 
 ## Next Week
 - Joint plot: scatter in the centre with histogram or KDE margins and shared scales, a `Plot` base class for inheritance and polymorphism, and the scatter plot on iris (Member 4)

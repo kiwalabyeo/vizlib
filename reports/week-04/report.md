@@ -71,5 +71,5 @@ Week 5 is the final week, with the code freeze on Saturday 31 October.
 - Reason: To speed up header design and the report
 - Used by: Member 1 (James)
 
-- No AI section in the contribution report: Member 8 (Joy)
+- No AI section in the contribution report: Member 8 (Joy). Added on 4 November, saying no AI use was recorded.
 - No Week 4 contribution report: Member 2 (Melissa), Member 3 (Crystal), Member 5 (Destiny)
