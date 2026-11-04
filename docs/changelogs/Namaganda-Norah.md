@@ -4,6 +4,7 @@
 **GitHub:** @NamagandaNorah-Margret20
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
+<!-- 4 November: Member 4, with Claude Code, checked the PR numbers against GitHub. The 26 October entry was merged in #74, not #61, and the second 23 October entry had no date heading. Both are fixed. -->
 
 ## 2026-11-01
 - **Changed:** Fixed `README.md`: replaced the placeholder description with a real one, filled in Main features, Using the library, Examples and Limitations, corrected the Windows test command to `ctest -C Debug`, and fixed a typo. Added the missing `LICENSE` file (MIT), which the README already referred to. Rewrote both tests in `tests/test_stats.cpp` with `TEST_CASE_TEMPLATE` and `VIZLIB_NUMERIC_TYPES`, so each test now runs once for `short`, `int`, `long`, `long long`, `unsigned int`, `float` and `double`. The data is built as `std::vector<T>` and converted with `vizlib::to_doubles` before it goes to `summaryStatistics` and the binning classes, because they only accept `std::vector<double>`.
@@ -19,7 +20,7 @@
 ## 2026-10-26
 - **Changed:** `examples/pipeline.cpp` now gets its histogram bin edges from `summaryStatistics::histogram_bin_edges` (data sorted first with `sorted`) and draws a title above each plot with `TextRenderer`. Fixed `include/vizlib/stats.hpp` and `src/stats.cpp`, which defined two different `summaryStatistics` classes (one global, one inside `vizlib`), so the linker could not find `histogram_bin_edges`. The header now holds the single class inside `namespace vizlib`, with `#pragma once`. In the root `CMakeLists.txt`, added `src/stats.cpp` and `ecdf.cpp` to the library and removed duplicate source lines; removed duplicate test lines in `tests/CMakeLists.txt`.
 - **Why:** Week 3 task: integrate the different modules into the pipeline. The stats code is now usable, so the pipeline no longer needs hand-made equal-width bins.
-- **PR:** #61
+- **PR:** #74
 - **Tested:** Rebuilt with MSVC; `pipeline.exe` saved `data/output/pipeline.png` with both plots and titles. All tests pass in CTest.
 ## 2026-10-23
 - **Changed:** Added `save_png(const Canvas&, path)` and `save_ppm(const Canvas&, path)` in `include/vizlib/canvas_export.hpp` and `src/canvas_export.cpp`, so a whole Canvas can be saved in one call. Added `tests/test_canvas_export.cpp` and registered the new source and test in both `CMakeLists.txt` files.
@@ -27,7 +28,7 @@
 - **PR:** #61
 - **Tested:** 2 new doctest cases check the PNG signature and size, and the PPM size and pixel order (top-left first). All 29 test cases pass in `vizlib_tests.exe` (MSVC, Windows).
 
-
+## 2026-10-23 (pipeline)
 - **Changed:** Added `examples/pipeline.cpp` and registered it in `examples/CMakeLists.txt`. It generates sample data, draws a scatter plot and a histogram side by side, and saves one PNG with the Canvas export adapter.
 - **Why:** Week 3 task: a first version of the pipeline that connects the modules. It uses generated data and equal-width bins for now, because the CSV loader and the stats code are not usable on `main` yet.
 - **PR:** #61

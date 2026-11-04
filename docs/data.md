@@ -85,7 +85,7 @@ All functions return a new `DataFrame`; the input is never changed.
 
 ## Tests
 
-`tests/test_dataframe.cpp`, `tests/test_csv_reader.cpp`, `tests/test_preprocessing.cpp`. Sample data: `data/input/iris.csv`, `tips.csv`, and `messy.csv` (quoted commas, a quoted quote, empty cells, `NA`, junk in a numeric column).
+`tests/tests_dataframe.cpp`, `tests/test_csv_reader.cpp`, `tests/test_preprocessor.cpp` (49 test cases). Sample data: `data/input/iris.csv`, `tips.csv`, and `messy.csv` (quoted commas, a quoted quote, empty cells, `NA`, junk in a numeric column).
 
 ## Names from the first version of the library
 

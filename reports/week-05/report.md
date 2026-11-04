@@ -38,7 +38,7 @@ This was the final week. It also covered the lecturer's templates task, given on
 - Week 5 contribution reports from Members 2, 3, 5, 6 and 7 (Members 2, 3, 5, 6, 7)
 - UML images for the templates task. Members 4 and 8 have theirs in `docs/uml/` (Members 1, 2, 3, 5, 6, 7)
 - Changelog files for Members 1, 5 and 6 in `docs/changelogs/` (Members 1, 5, 6)
-- Member 1's Week 3, 4 and 5 reports still contain placeholders, such as "[Confirm.]", that need to be filled in or removed (Member 1)
+- Member 1's Week 3, 4 and 5 reports contained placeholders, such as "[Confirm.]". On 4 November Member 4 replaced each one with the facts from GitHub (pull requests, dates and reviews), or removed it where it could not be checked.
 
 ## Challenges/Blockers
 - **Code that was never built or tested.**
