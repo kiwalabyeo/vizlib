@@ -6,12 +6,11 @@ KIZITO MARK JAMES
 
 BCCE
 
-> Square brackets [like this] are things I could not know. Check each one against your Git history, then correct or delete it before you submit.
-> Save this file as `reports/week-05/contributions/Mark.md`.
+> **Note on this report.** On 4 November Member 4 (Oscar), with Claude Code, replaced the placeholders left in this report (such as "[Confirm.]") with the facts from GitHub: pull request numbers, dates and reviews. Where something could not be checked, it was removed. The dates show when the work reached GitHub.
 
 ## 1. Introduction
 
-Week 5 was the finishing week, and the code freeze was on Saturday 31 October. The data loading and preprocessing module is complete: it reads a CSV file into a `DataFrame`, reports bad input with clear errors, and provides the cleaning functions that the statistics and plot modules rely on. After the freeze, only bug fixes are allowed. [PR #__ merged on __ October. Confirm.]
+Week 5 was the finishing week, and the code freeze was on Saturday 31 October. The data loading and preprocessing module is complete: it reads a CSV file into a `DataFrame`, reports bad input with clear errors, and provides the cleaning functions that the statistics and plot modules rely on. After the freeze, only bug fixes are allowed. The complete module was pushed on 1 November, one day after the freeze, in #105. Member 4 rebuilt it on the current `main` as #108, keeping my commits, and added `preprocessing.cpp` and my three test files to CMake. #108 was merged on 1 November.
 
 This report explains the final state of the module, how I applied object-oriented programming concepts in my code, the challenges I faced, and how I used artificial intelligence during development.
 
@@ -54,11 +53,11 @@ Two behaviours changed: an unknown column now throws `std::invalid_argument` and
 
 ### 2.4 Testing and quality
 
-The module has 49 test cases with 199 assertions, and all of them pass. They cover normal use, every error path, and the sample files: `iris.csv` loads as 150 rows and 5 columns, `tips.csv` as 244 rows and 7 columns (even though every value is in quotes), and `messy.csv` keeps its problems. The code compiles with `-Wall -Wextra -Wpedantic` without warnings, and it runs without errors under AddressSanitizer and UndefinedBehaviorSanitizer. The tests find the sample files from any build folder, because of the small helper in `tests/data_path.hpp`. [Confirm that CI is green on Linux, Windows and macOS.]
+The module has 49 test cases with 199 assertions, and all of them pass. They cover normal use, every error path, and the sample files: `iris.csv` loads as 150 rows and 5 columns, `tips.csv` as 244 rows and 7 columns (even though every value is in quotes), and `messy.csv` keeps its problems. The code compiles with `-Wall -Wextra -Wpedantic` without warnings, and it runs without errors under AddressSanitizer and UndefinedBehaviorSanitizer. The tests find the sample files from any build folder, because of the small helper in `tests/data_path.hpp`. CI is green on Linux, Windows and macOS.
 
 ### 2.5 Documentation and integration
 
-`docs/data.md` is complete: it has the errors table, every public function, the CSV rules, the limits and the tests. Every public function in the headers has a comment. [Checked that `read_csv()` works in `full_pipeline.cpp` with all the other modules: write what you tested and any problem you found.] [Reviewed pull requests from: names and PR numbers.] [Wrote my paragraph for the README Contributions section.]
+`docs/data.md` is complete: it has the errors table, every public function, the CSV rules, the limits and the tests. Every public function in the headers has a comment. `read_csv()` is used by `pipeline.cpp`, `scatter_example`, `joint_plot_example` and `ecdf_example`, and CI runs the pipeline on every push. My contribution line is in the README.
 
 ## 3. Application of Object-Oriented Programming Concepts
 
@@ -88,15 +87,15 @@ DataFrame filter_rows(const DataFrame& df,
 
 ### 3.3 Inheritance
 
-I did not use inheritance in the classes developed for my part of the project. `Column` and `DataFrame` are related by composition: a `DataFrame` contains a list of `Column` objects. Inheritance in this project is in the plot classes of the other members, for example the planned `Plot` base class. My module does not need a base class, because it has no group of different objects that must be used through one interface.
+I did not use inheritance in the classes developed for my part of the project. `Column` and `DataFrame` are related by composition: a `DataFrame` contains a list of `Column` objects. Inheritance in this project is in the plot classes of the other members, for example the `Plot` base class (Member 4). My module does not need a base class, because it has no group of different objects that must be used through one interface.
 
 ## 4. Challenges Faced
 
-[The data module was meant to be finished in Week 2, and some parts arrived late, so other members had to test with hand-made vectors for a while. Write the real reason in your own words.]
+The data module was meant to be finished early, because every other module reads its numbers from it. The complete module reached GitHub on 1 November, after the freeze, so until then the other members tested with hand-made vectors or with the first version from #68.
 
 The limits that remain are written in `docs/data.md`: the module reads CSV only (JSON was dropped in the project plan), the whole file is read into memory, dates stay as text, and a quoted `"NA"` stays as the text `NA`, because only unquoted NA words are missing.
 
-Other modules must skip NaN or call `drop_missing()` before they compute statistics. This was told to the group in Week 4. [Confirm.]
+Other modules must skip NaN or call `drop_missing()` before they compute statistics.
 
 The group rules say that every member is questioned on their own code, and that nobody may commit code that they cannot explain. I spent time reading the whole module again, including the quote-handling loop in the reader and the number check, so that I can explain it in the presentation.
 

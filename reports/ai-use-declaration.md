@@ -12,6 +12,7 @@ This declaration collects what each member declared in the weekly reports in `re
 - **Purpose:** Research on CSV parsing and data structures (Week 1). Header design with `std::optional` and the structure of the research file and reports (Weeks 2 to 5).
 - **Reason:** To speed up research and header design.
 - **Note:** The same text was declared in Weeks 3, 4 and 5. James should state what AI was used for in the full data loading module (#108) and in his Week 3 to 5 reports.
+- **Note (4 November):** Member 4, with Claude Code, replaced the placeholders in James's Week 3 to 5 reports with facts from GitHub, and wrote his changelog `docs/changelogs/Kizito-James.md` and his module guide `docs/modules/data.md` from his `docs/data.md` and his code.
 
 ### Member 2: Natukunda Melissa (statistics)
 - **Tools:** Gemini, Claude
@@ -83,6 +84,7 @@ This declaration collects what each member declared in the weekly reports in `re
   - Week 5: her report was prepared with help from AI tools she did not name.
 - **Reason:** To learn the build tools and write the reports.
 - **Note:** There is no AI section in her Week 3 report.
+- **Note (4 November):** Member 4, with Claude Code, wrote her module guide `docs/modules/export.md` from her changelog and her code, and corrected one PR number in her changelog (#74, not #61).
 
 ### Member 8: Kabahamba Joy A Maria (text, labels, legends, annotations)
 - **Tool:** ChatGPT (Weeks 1 and 2), and an AI assistant she did not name (Week 3)

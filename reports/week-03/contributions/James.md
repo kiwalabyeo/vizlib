@@ -6,12 +6,11 @@ KIZITO MARK JAMES
 
 BCCE
 
-> Square brackets [like this] are things I could not know. Check each one against your Git history, then correct or delete it before you submit.
-> Save this file as `reports/week-03/contributions/Mark.md`.
+> **Note on this report.** On 4 November Member 4 (Oscar), with Claude Code, replaced the placeholders left in this report (such as "[Confirm.]") with the facts from GitHub: pull request numbers, dates and reviews. Where something could not be checked, it was removed. The dates show when the work reached GitHub.
 
 ## 1. Introduction
 
-During Week 3, I worked on proving that the data loading and preprocessing part of the data visualisation library works on real files. My module is the first step of the pipeline, because every statistic and every plot takes its numbers from the `DataFrame` and `Column` classes that I built in Week 2. The Week 3 goal for the group was a CSV file going in and an ECDF plot with axes coming out as a PNG, so the data module had to be reliable first. [State here how far this got: merged, open pull request, or still on a local branch.]
+During Week 3, I worked on proving that the data loading and preprocessing part of the data visualisation library works on real files. My module is the first step of the pipeline, because every statistic and every plot takes its numbers from the `DataFrame` and `Column` classes that I built in Week 2. The Week 3 goal for the group was a CSV file going in and an ECDF plot with axes coming out as a PNG, so the data module had to be reliable first. On GitHub, the first version of the module (#68: the reader, `DataFrame`, the cleaning functions and the sample files) was opened on 24 October and merged on 25 October, after this week ended. The tests, the quote-handling reader and `parse_number()` described below reached GitHub on 1 November, in #105, which was rebuilt as #108.
 
 This report explains the work completed during Week 3, how I applied object-oriented programming concepts in my code, the challenges I faced, and how I used artificial intelligence during development.
 
@@ -88,7 +87,7 @@ return df.take_rows(keep);
 
 ### 2.5 Sample data
 
-I added `iris.csv` (150 rows) next to `tips.csv` (244 rows) in `data/input/`, so that the plots can be tried on two different datasets. [Confirm.] [Reviewed pull requests from: names and PR numbers.]
+I added `iris.csv` (150 rows) next to `tips.csv` (244 rows) in `data/input/`, so that the plots can be tried on two different datasets. Both files came in #68.
 
 ## 3. Application of Object-Oriented Programming Concepts
 
@@ -124,13 +123,13 @@ I did not use inheritance in the classes developed for my part of the project. `
 
 ## 4. Challenges Faced
 
-The first challenge was that the data module blocks the other members. Members 2, 3 and 4 take their numbers from a `DataFrame`, so until my tests passed and my pull request was merged they could only test with hand-made vectors. I told the group about this. [Confirm when.]
+The first challenge was that the data module blocks the other members. Members 2, 3 and 4 take their numbers from a `DataFrame`, so until my tests passed and my pull request was merged they could only test with hand-made vectors.
 
 The second challenge was that real files are messier than my research file assumed. A reader that only splits on commas fails on `tips.csv`. Finding this with a test, and not in the final demonstration, is the reason why I wrote the tests early.
 
 The third challenge was deciding what counts as a number. If `0x1A` or `inf` is silently turned into a number, the plots would show wrong data without any error, so I made the check strict.
 
-I also had to learn to keep each pull request small (about 300 lines) and to wait for three approvals. [Add anything else that really slowed you down: CI failing, exams.]
+I also had to learn the pull request workflow. My first pull requests (#42 to #44) only renamed my research file.
 
 ## 5. Use of AI
 
@@ -141,6 +140,6 @@ I also had to learn to keep each pull request small (about 300 lines) and to wai
 
 ## 6. Conclusion and Next Steps
 
-During Week 3, I wrote the unit tests for the data module, rewrote the CSV reader so that it handles quoted cells, added a strict `parse_number()` function, and added the cleaning functions. My code shows encapsulation in `Column` and `DataFrame`, and compile-time polymorphism through the overloaded `fill_missing()` and `drop_missing()` functions. I did not use inheritance.
+For the data module I wrote the unit tests, rewrote the CSV reader so that it handles quoted cells, added a strict `parse_number()` function, and added the cleaning functions. My code shows encapsulation in `Column` and `DataFrame`, and compile-time polymorphism through the overloaded `fill_missing()` and `drop_missing()` functions. I did not use inheritance.
 
 My next steps are to handle every kind of invalid input and test it, write `docs/data.md` and a comment on every public function, and help Members 2, 3 and 4 connect their code to `df["column"]`. I will also review at least one pull request from another member.

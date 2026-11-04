@@ -6,12 +6,11 @@ KIZITO MARK JAMES
 
 BCCE
 
-> Square brackets [like this] are things I could not know. Check each one against your Git history, then correct or delete it before you submit.
-> Save this file as `reports/week-04/contributions/Mark.md`.
+> **Note on this report.** On 4 November Member 4 (Oscar), with Claude Code, replaced the placeholders left in this report (such as "[Confirm.]") with the facts from GitHub: pull request numbers, dates and reviews. Where something could not be checked, it was removed. The dates show when the work reached GitHub.
 
 ## 1. Introduction
 
-During Week 4, I worked on invalid-input handling and edge cases in the data loading and preprocessing module, and on supporting the other members as they connected their plots and statistics to my `DataFrame`. The aim was that every kind of bad input ends in a clear error message, and never in a crash or in silently wrong numbers. This work builds on the reader and the cleaning functions from Week 3. [State here whether the data module was merged this week.]
+During Week 4, I worked on invalid-input handling and edge cases in the data loading and preprocessing module, and on supporting the other members as they connected their plots and statistics to my `DataFrame`. The aim was that every kind of bad input ends in a clear error message, and never in a crash or in silently wrong numbers. This work builds on the reader and the cleaning functions from Week 3. The first version of the module was merged this week, on 25 October (#68). Most of the work described below reached GitHub later, on 1 November (#105, rebuilt as #108), after this week ended.
 
 This report explains the work completed during Week 4, how I applied object-oriented programming concepts in my code, the challenges I faced, and how I used artificial intelligence during development.
 
@@ -69,17 +68,17 @@ bool Column::is_missing(std::size_t i) const {
 }
 ```
 
-The advantage is that a column can be passed directly to a function that takes `std::vector<double>`. The risk is that a function which does not skip NaN returns NaN, so the other members must call `drop_missing()` first or skip NaN themselves. I told the group about this. [Confirm. My Week 2 research file described `std::optional<double>`. If the code you submit uses NaN, this is a change from the plan, and it must have gone through a pull request with the affected members as reviewers.]
+The advantage is that a column can be passed directly to a function that takes `std::vector<double>`. The risk is that a function which does not skip NaN returns NaN, so the other members must call `drop_missing()` first or skip NaN themselves. My Week 2 research file planned `std::optional<double>` instead. NaN was simpler for the other modules, because their functions already take `std::vector<double>`, so this is a change from the plan.
 
 If a column has a few bad cells, for example `n/a` in an `age` column, the reader makes the whole column text instead of guessing. `to_numeric(df, "age", true)` then turns the bad cells into missing values when the user wants that.
 
 ### 2.4 Documentation, example and sample file
 
-I wrote `docs/data.md`, which explains every public function with the errors that it throws and the limits of the module. Every public function in the three headers has a comment that says what it takes, returns and throws. I also wrote `examples/data_example.cpp`, which loads a messy file, converts and fills a column, drops the rows with no score, and loads `tips.csv` into a vector that is ready for the ECDF plot. I added `data/input/messy.csv`, a small file with a name that contains a comma, a name with quotes inside it, empty cells, `NA`, and text in a numeric column. [Confirm.]
+I wrote `docs/data.md`, which explains every public function with the errors that it throws and the limits of the module. Every public function in the three headers has a comment that says what it takes, returns and throws. I also wrote `examples/data_examples.cpp`, which loads a messy file, converts and fills a column, drops the rows with no score, and loads `tips.csv` into a vector that is ready for the ECDF plot. I added `data/input/messy.csv`, a small file with a name that contains a comma, a name with quotes inside it, empty cells, `NA`, and text in a numeric column. These came in #108.
 
 ### 2.5 Support for other members
 
-[Helped Members 2, 3 and 4 to read their columns from `df["column"]` and tested with their real inputs: write the names and what you changed.] [Reviewed pull requests from: names and PR numbers.]
+I reviewed and approved pull requests from other members on 24 and 25 October: Member 5's tick generation (#60), Member 7's Canvas export (#61), Member 8's annotations (#62, #64), Member 4's Week 3 report (#66) and Member 2's binning fixes (#67).
 
 ## 3. Application of Object-Oriented Programming Concepts
 
@@ -119,13 +118,13 @@ I did not use inheritance in the classes developed for my part of the project du
 
 ## 4. Challenges Faced
 
-[If the pull request was late, say why in your own words: waiting for reviews, CI failing on Windows, or a redesign.]
+The complete module reached GitHub late, on 1 November, after the Week 4 deadline and the code freeze. Until then the other members used hand-made vectors, or the first version from #68.
 
 The main challenge was agreeing one meaning of "missing" for the whole library. If one function skips a missing value and the next function turns it into a wrong result, the plot is wrong without any error. Writing the rule down once, and giving `drop_missing()` as the standard way to deal with it, took more effort than the code.
 
 Another challenge was error messages. When something goes wrong deep inside a plot, the user should see which file and which line caused it, so the messages from my module name the line, the column or the value.
 
-A third challenge was the size of the work. The module is large, so I planned to split it into several small pull requests (headers, `DataFrame`, the reader, the cleaning functions), each with its own tests, so that reviewers could read them within 24 hours.
+A third challenge was the size of the work. I had planned to split it into several small pull requests (headers, `DataFrame`, the reader, the cleaning functions), each with its own tests. In the end it came as one large pull request (#108, about 2,100 lines), which is harder to review.
 
 ## 5. Use of AI
 - Tool: Gemini / AI Assistant
@@ -135,6 +134,6 @@ A third challenge was the size of the work. The module is large, so I planned to
 
 ## 6. Conclusion and Next Steps
 
-During Week 4, I completed the invalid-input handling of the data module, added `CsvOptions`, fixed one rule for missing values, and wrote the documentation, the example and the `messy.csv` sample file. My code shows encapsulation in `DataFrame::add_column()` and compile-time polymorphism through the overloaded `read_csv()` and `fill_missing()` functions. I did not use inheritance.
+For the data module I completed the invalid-input handling, added `CsvOptions`, fixed one rule for missing values, and wrote the documentation, the example and the `messy.csv` sample file. My code shows encapsulation in `DataFrame::add_column()` and compile-time polymorphism through the overloaded `read_csv()` and `fill_missing()` functions. I did not use inheritance.
 
-My next steps are to finish anything still open and then only fix bugs after the code freeze on Saturday 31 October, to write my own paragraph for the README Contributions section, to make sure `read_csv()` works inside `full_pipeline.cpp` together with every other module on Linux, Windows and macOS, and to review at least one pull request from another member.
+My next steps are to finish anything still open and then only fix bugs after the code freeze on Saturday 31 October, to write my own paragraph for the README Contributions section, to make sure `read_csv()` works inside `pipeline.cpp` together with every other module on Linux, Windows and macOS, and to review at least one pull request from another member.
