@@ -37,3 +37,9 @@ jobs:
         run: cmake --build build --config Release
       - name: Test
         run: ctest --test-dir build -C Release --output-on-failure
+      - name: Run pipeline
+        shell: bash
+        run: ./build/examples/pipeline
+      - name: Check the PNG was created
+        shell: bash
+        run: test -s data/output/pipeline.png

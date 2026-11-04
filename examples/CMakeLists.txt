@@ -1,3 +1,13 @@
+# Put every example program straight in build/examples, on every system.
+# Visual Studio (the usual Windows setup) would otherwise put them in
+# build/examples/Debug or build/examples/Release, and the README command
+# .\build\examples\pipeline.exe would not find them.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+foreach(config Debug Release RelWithDebInfo MinSizeRel)
+    string(TOUPPER ${config} config_upper)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${config_upper} ${CMAKE_CURRENT_BINARY_DIR})
+endforeach()
+
 add_executable(scatter_example scatter_example.cpp)
 target_link_libraries(scatter_example PRIVATE vizlib)
 

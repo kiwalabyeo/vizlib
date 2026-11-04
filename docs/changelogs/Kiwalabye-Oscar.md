@@ -5,6 +5,15 @@
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 
+## 04-11-2026
+- **Changed:**
+  - Added axes, tick numbers and labels to `scatter_example`, `histogram_example` and `joint_plot_example`.
+  - Programs now build straight into `build/examples` on Windows too, and CI runs the pipeline on Windows and macOS.
+  - `third_party/` warnings are silenced, and `tests/test_untested_parts.cpp` was added.
+- **Why:** These came from a second, wider check: coverage, a fresh clone, and every drill in the prep docs (`docs/bug-report.md`, "Second check").
+- **PR:** "Windows program folder, no third-party warnings, tests for untested code" and #129
+- **Tested:** 270 test cases pass under the sanitizers, the build prints no warnings, and all six examples run. Done with Claude Code.
+
 ## 03-11-2026 (end-of-project testing)
 - **Changed:**
   - Fixed 6 bugs and 5 smaller problems found by testing the whole library with bad input: NaN in the statistics and KDE, a far outlier asking for millions of bins, no bins for nearly-equal data, `int` overflow in `Canvas`, infinity in `auto_bin_edges`, and tick and label problems.
