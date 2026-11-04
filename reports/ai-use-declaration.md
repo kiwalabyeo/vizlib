@@ -21,6 +21,7 @@ This declaration collects what each member declared in the weekly reports in `re
   - Week 2: the header skeleton (Claude) and help with the mode function (Gemini).
   - Week 3: understanding encapsulation in `summaryStatistics` (Claude).
   - Week 4: creating parts of the kde.cpp and kde.hpp files
+  - Week 5: designing and drafting the module detailing how her code is to be used.
   - She also used Wikipedia to understand the Freedman–Diaconis rule. That is not an AI tool.
 - **Reason:** To understand the topics and the OOP design.
               To use correct and efficient c++ code
