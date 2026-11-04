@@ -9,6 +9,7 @@
 #include <vizlib/canvas_export.hpp>
 #include <vizlib/csv_reader.hpp>
 #include <vizlib/scatter.hpp>
+#include <vizlib/text.hpp>
 
 #include <exception>
 #include <iostream>
@@ -24,19 +25,26 @@ int main()
 
         const vizlib::Color white{255, 255, 255, 255};
         const vizlib::Color light_grey{235, 235, 235, 255};
-        vizlib::Canvas canvas(400, 300, white);
+        const vizlib::Color dark{60, 60, 60, 255};
+        vizlib::Canvas canvas(480, 360, white);
 
-        // grey plot area, 40 px margin all round, so we can see where the dots should stay
-        const vizlib::Rect area{40, 40, 320, 220};
-        for (int y_px = 40; y_px < 260; ++y_px)
-            for (int x_px = 40; x_px < 360; ++x_px)
-                canvas.set_pixel(x_px, y_px, light_grey);
+        // grey plot area, with room on the left and below for the tick numbers
+        const vizlib::Rect area{60, 40, 390, 260};
+        canvas.fill_rect(area, light_grey);
 
         vizlib::Axes axes;
         axes.setPlotArea(area);
         vizlib::ScatterStyle style;
         style.radius = 3;
         vizlib::scatter(canvas, axes, x, y, style);
+
+        // axis lines, tick marks and tick numbers, then a title and axis labels
+        const vizlib::TextRenderer text("third_party/fonts/DejaVuSans.ttf");
+        axes.drawAxes(canvas, dark);
+        axes.drawTickLabels(canvas, text);
+        text.draw_text(canvas, "Iris: sepal length vs petal length", {60, 20}, 16, dark);
+        text.draw_text(canvas, "Sepal length (cm)", {200, 345}, 13, dark);
+        text.draw_text(canvas, "Petal length (cm)", {8, 36}, 12, dark);
 
         const char* path = "data/output/scatter_example.png";
         if (!vizlib::save_png(canvas, path))
