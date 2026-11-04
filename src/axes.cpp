@@ -1,3 +1,4 @@
+// axes.cpp - Axes (Member 5); drawTickLabels by Member 8. See axes.hpp.
 
 #include "vizlib/axes.hpp"
 #include "vizlib/ticks.hpp"
@@ -13,6 +14,9 @@
 namespace vizlib {
 
 
+// The y scales map data 0..1 to pixels 1..0 (bottom to top), which flips the
+// y axis. The log scales start at 1..10 because a log range cannot include 0;
+// they are only used after setXScale / setYScale switches to them.
 Axes::Axes()
     : xMin_(0.0),
       xMax_(1.0),
@@ -35,18 +39,23 @@ void Axes::setDataRange(double xMin, double xMax,
         throw std::invalid_argument("Invalid data range");
     }
 
+    // x: data min goes to the left edge, data max to the right edge
     xScale_.setRange(
         xMin, xMax,
         plotArea_.x,
         plotArea_.x + plotArea_.width
     );
 
+    // y: data min goes to the BOTTOM edge (y + height) and data max to the
+    // top, because pixel y grows downwards on an image
     yScale_.setRange(
         yMin, yMax,
         plotArea_.y + plotArea_.height,
         plotArea_.y
     );
 
+    // the log scales are only updated when they are in use, because a
+    // linear range may include 0 or negative values
     if (xScaleType_ == ScaleType::Logarithmic) {
         xLogScale_.setRange(
             xMin, xMax,
@@ -63,12 +72,15 @@ void Axes::setDataRange(double xMin, double xMax,
         );
     }
 
+    // stored last, so a range that was refused above changes nothing
     xMin_ = xMin;
     xMax_ = xMax;
     yMin_ = yMin;
     yMax_ = yMax;
 }
 
+// The same as setDataRange, but this time the pixel range changes and the
+// data range stays.
 void Axes::setPlotArea(Rect area) {
     if (!std::isfinite(area.x) || !std::isfinite(area.y) ||
         !std::isfinite(area.width) ||
@@ -110,6 +122,9 @@ void Axes::setPlotArea(Rect area) {
     plotArea_ = area;
 }
 
+// Switching to log sets up the log scale with the current data range. If
+// that range includes 0 (like the default 0..1), LogScale::setRange throws
+// and the axis stays linear.
 void Axes::setXScale(ScaleType type) {
     if (type == ScaleType::Logarithmic) {
         xLogScale_.setRange(
@@ -134,6 +149,8 @@ void Axes::setYScale(ScaleType type) {
     yScaleType_ = type;
 }
 
+// Each axis uses its own scale type, so one axis can be log and the other
+// linear (as in log_axis_example).
 Point Axes::dataToPixel(double x, double y) const {
     double pixelX;
     double pixelY;
@@ -251,6 +268,7 @@ void Axes::drawAxes(
         throw std::invalid_argument("Tick length cannot be negative");
     }
 
+    // the four edges of the plot area, in pixels
     const double left = plotArea_.x;
     const double right = left + plotArea_.width;
     const double top = plotArea_.y;
@@ -266,6 +284,8 @@ void Axes::drawAxes(
         ? generateLogTicks(xMin_, xMax_)
         : generateTicks(xMin_, xMax_);
 
+    // each x tick mark hangs down from the x axis line; only its pixel x
+    // is needed, so any valid y (yMin_) is passed with it
     for (double value : xTicks) {
         double x = dataToPixel(value, yMin_).x;
 
@@ -282,6 +302,7 @@ void Axes::drawAxes(
         ? generateLogTicks(yMin_, yMax_)
         : generateTicks(yMin_, yMax_);
 
+    // each y tick mark sticks out to the left of the y axis line
     for (double value : yTicks) {
         double y = dataToPixel(xMin_, value).y;
 

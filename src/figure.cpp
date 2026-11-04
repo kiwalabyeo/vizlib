@@ -1,3 +1,4 @@
+// figure.cpp - Figure (Member 5); title and labels by Member 8. See figure.hpp.
 
 #include "vizlib/figure.hpp"
 
@@ -53,6 +54,9 @@ Axes& Figure::addAxes() {
     });
 }
 
+// The plot area is the given area minus the margins on each side.
+// Example: Figure(800, 600).addAxes() gives the plot area x 60, y 30,
+// 710 wide (800 - 60 - 30) and 520 high (600 - 30 - 50).
 Axes& Figure::addAxes(Rect area) {
     if (!std::isfinite(area.x) || !std::isfinite(area.y) ||
         !std::isfinite(area.width) ||
