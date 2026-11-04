@@ -19,9 +19,11 @@ This declaration collects what each member declared in the weekly reports in `re
   - Week 1: research on the statistics module (Gemini).
   - Week 2: the header skeleton (Claude) and help with the mode function (Gemini).
   - Week 3: understanding encapsulation in `summaryStatistics` (Claude).
+  - Week 4: creating parts of the kde.cpp and kde.hpp files
   - She also used Wikipedia to understand the Freedman–Diaconis rule. That is not an AI tool.
 - **Reason:** To understand the topics and the OOP design.
-- **Note:** No AI use is declared for the KDE (#107), because she has no Week 4 or 5 report yet.
+              To use correct and efficient c++ code
+
 
 ### Member 3: Zawedde Crystal (ECDF and rug plots)
 - **Tool:** Gemini

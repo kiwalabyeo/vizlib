@@ -8,9 +8,9 @@
 - **Changed:**
 I created two files;kde.cpp and kde.hpp that will work together with kde_plot.cpp to create the Kernel Distribution Estimation(KDE) which is used to estimate the probabilty density function(PDF) of the data.
 - **Why**
-kde_plot only creates the densisty it is handed ,it does not compute one itself. kde.cpp does that and hands it over to kde_plot to draw it out.
+kde_plot only creates the density it is handed ,it does not compute one itself. kde.cpp does that and hands it over to kde_plot to draw it out.
 - **PR:** 
-- **Tested:** Not yet done
+- **Tested:** Tested the code for getting the density together with the plot for various instances
 ## 2026-10-28
 - **Changed:**
 I included a base class binningStrategy with derived classes FreedmanDiaconis and Sturges to handle the different methods of histogram binning.
