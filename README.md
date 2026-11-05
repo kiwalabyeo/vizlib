@@ -13,6 +13,7 @@ Group 7, Programming project, Makerere University, 2026.
 - [Building](#building)
 - [Using the library](#using-the-library)
 - [Examples](#examples)
+- [Sample output](#sample-output)
 - [Running the tests](#running-the-tests)
 - [Documentation](#documentation)
 - [Limitations](#limitations)
@@ -67,7 +68,7 @@ tests/            unit tests using doctest
 examples/         small programs showing how to use the library
 data/input/       sample CSV files (iris, tips, and a messy one)
 data/output/      where the examples save their PNG images
-docs/             documentation: module guides, design decisions, UML, changelogs, bug report
+docs/             documentation: module guides, design decisions, UML, changelogs, bug report, sample images
 reports/          weekly progress reports, final report and AI use declaration
 third_party/      doctest, stb_image_write, stb_truetype and the DejaVu Sans font
 ```
@@ -158,6 +159,34 @@ On Linux or macOS:
 ```
 ./build/examples/pipeline
 ```
+
+## Sample output
+
+These images were made by the example programs on 5 November 2026. Running an example saves a fresh copy in `data/output/`. That folder is not stored in git, so these copies are kept in `docs/images/`.
+
+**`pipeline`:** a scatter plot and a histogram of the iris data, with titles, axis labels, tick numbers, a legend and a note.
+
+![Scatter plot and histogram of the iris data](docs/images/pipeline.png)
+
+**`ecdf_example`:** the ECDF of iris petal length, with a rug of one mark per flower.
+
+![ECDF and rug plot of iris petal length](docs/images/ecdf_example.png)
+
+**`joint_plot_example`:** joint plots with histogram margins and with KDE margins.
+
+![Joint plots of iris sepal and petal length](docs/images/joint_plot_example.png)
+
+**`histogram_example`:** the same data as an upright and a sideways histogram.
+
+![Histogram example](docs/images/histogram_example.png)
+
+**`stats_example`:** the KDE curve of iris petal length.
+
+![KDE curve of iris petal length](docs/images/stats_example.png)
+
+**`log_axis_example`:** the same doubling data on a linear and a log y axis. On the log axis it becomes a straight line.
+
+![Plot on a log axis](docs/images/log_axis_example.png)
 
 ## Running the tests
 
