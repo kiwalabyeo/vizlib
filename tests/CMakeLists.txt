@@ -10,6 +10,7 @@ add_executable(vizlib_tests
     test_csv_reader.cpp
     tests_dataframe.cpp
     test_preprocessor.cpp
+    test_numeric_types.cpp
     test_concepts.cpp
     test_ecdf.cpp
     test_image_export.cpp

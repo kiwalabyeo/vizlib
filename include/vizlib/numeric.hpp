@@ -5,16 +5,10 @@
 // short, float, double, unsigned, ...). This header decides which types are
 // allowed and converts between them without silently losing information.
 //
-// Concepts: when the code is compiled as C++20 the constraint is the real
-// concept `vizlib::Numeric`. The project is built as C++17, which has no
-// concepts, so there the same rule is enforced with std::enable_if. Both are
-// written once, in the macro VIZLIB_NUMERIC_TEMPLATE(T), so every template in
-// the module reads the same way:
-//
-//     VIZLIB_NUMERIC_TEMPLATE(T)
-//     std::vector<T> as() const;
-//
-// means "template <Numeric T>" in C++20 and the enable_if form in C++17.
+// The constraint is the project's one C++20 concept, vizlib::Numeric from
+// concepts.hpp (any integer or floating-point type except bool and char), so
+// the data module accepts exactly the same types as the plots and statistics.
+// VIZLIB_NUMERIC_TEMPLATE(T) is short for "template <Numeric T>".
 #pragma once
 
 #include <cmath>
@@ -24,23 +18,18 @@
 #include <string>
 #include <type_traits>
 
+#include "vizlib/concepts.hpp"
+
 namespace vizlib {
 
-// A numeric type is any arithmetic type except bool.
+// Any arithmetic type except bool. Used by the conversion helpers below; the
+// template constraint itself is the stricter Numeric concept.
 template <typename T>
 inline constexpr bool is_numeric_type_v =
     std::is_arithmetic_v<T> && !std::is_same_v<std::remove_cv_t<T>, bool>;
 
-#if defined(__cpp_concepts) && __cpp_concepts >= 201907L
 #define VIZLIB_HAS_CONCEPTS 1
-template <typename T>
-concept Numeric = is_numeric_type_v<T>;
 #define VIZLIB_NUMERIC_TEMPLATE(T) template <::vizlib::Numeric T>
-#else
-#define VIZLIB_HAS_CONCEPTS 0
-#define VIZLIB_NUMERIC_TEMPLATE(T) \
-    template <typename T, typename = std::enable_if_t<::vizlib::is_numeric_type_v<T>>>
-#endif
 
 // True if the double `x` can be stored in a T without changing its value.
 //  - Integer types: x must be finite, have no fractional part and be in range.

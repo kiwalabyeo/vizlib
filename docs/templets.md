@@ -1,5 +1,7 @@
 # Templates and numeric types in the data module
 
+> **Note (5 November):** Member 4 merged this onto the current `main` (#152 was based on an old version of `main`). The data module now uses the project's shared `Numeric` concept from `concepts.hpp` instead of defining its own, and `tests/test_numeric_types.cpp` is registered in CMake.
+
 Lecturer's request: matrices, models and data classes must accept all numeric
 types (int, double, float, short, ...), using appropriate concepts. This page
 documents what the data module now does about it.
@@ -17,16 +19,17 @@ or wrapped silently. If a value does not fit the requested type, the code throws
 | Name | Kind | Meaning |
 |---|---|---|
 | `is_numeric_type_v<T>` | variable template | true for every arithmetic type except `bool` |
-| `Numeric` | concept (C++20) | `Numeric<T>` is `is_numeric_type_v<T>` |
-| `VIZLIB_NUMERIC_TEMPLATE(T)` | macro | writes `template <Numeric T>` in C++20, or the `std::enable_if` form in C++17 |
+| `Numeric` | concept (C++20) | the project's shared concept from `concepts.hpp`: any integer or floating-point type except `bool` and `char` |
+| `VIZLIB_NUMERIC_TEMPLATE(T)` | macro | short for `template <Numeric T>` |
 | `is_representable<T>(double x)` | function template | can `x` be stored in a `T` without changing it? |
 | `to_double_exact<T>(T x)` | function template | convert to `double`, throw if the double would not hold it exactly |
 
-**Why a macro?** Concepts only exist in C++20 and the project is built as C++17.
-Both forms say the same thing ("T must be numeric"), so the rule is written once
-and every template uses `VIZLIB_NUMERIC_TEMPLATE(T)`. Compiling with a type that
-is not numeric, such as `std::string`, is a compile error in both modes
-(tested with g++ and clang++, C++17 and C++20).
+**One concept for the whole library.** The project is built as C++20, and the
+data module uses the same `vizlib::Numeric` concept as the plots and the
+statistics (`concepts.hpp`), so every module accepts exactly the same types.
+`VIZLIB_NUMERIC_TEMPLATE(T)` is kept as a short name for `template <Numeric T>`.
+Compiling with a type that is not numeric, such as `std::string`, is a compile
+error.
 
 ## 3. The templates
 
@@ -90,9 +93,8 @@ floating types, constructing columns from many types, `as<T>` with NaN,
 fractions, range and text errors, `fill_missing` with int/long/unsigned/float/
 double/string, `parse_number` into several types, `filter_numeric<T>`,
 `read_csv_column<T>` on `tips.csv`, and `NumericColumn<T>`. Together with the
-earlier tests: 72 test cases, 319 assertions, all passing with g++ and clang++
-in C++17 and C++20, with no warnings under `-Wall -Wextra -Wpedantic`, and clean
-under AddressSanitizer and UndefinedBehaviorSanitizer.
+earlier data tests: 74 test cases, all passing, with no warnings under
+`-Wall -Wextra -Wpedantic`.
 
 ## 7. Limits
 
@@ -101,4 +103,3 @@ under AddressSanitizer and UndefinedBehaviorSanitizer.
 - `Column`/`DataFrame` themselves are not class templates; the templates are at
   the input/output edges. Making `Column<T>` generic would change the interface
   every other member uses.
-- Real C++20 concepts are used only when the project is compiled as C++20.
