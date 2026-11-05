@@ -5,6 +5,7 @@
 #include "vizlib/canvas.hpp"
 #include "vizlib/color.hpp"
 #include "vizlib/histogram.hpp"
+#include "vizlib/kde.hpp"
 #include "vizlib/plot.hpp"
 
 namespace vizlib {
@@ -35,6 +36,10 @@ private:
 
 public:
     KdePlot(std::vector<double> grid, std::vector<double> density, KdeStyle style = {});
+
+    // Draws the curve that Member 2's kde() worked out:
+    //     KdePlot plot(kde(data), style);
+    explicit KdePlot(const KdeResult& result, KdeStyle style = {});
 
     DataBounds bounds() const override;
     void draw(Canvas& canvas, const Axes& axes) const override;

@@ -2,6 +2,15 @@
 add_executable(vizlib_tests
     test_main.cpp
     test_version.cpp
+    test_axis.cpp
+    test_ticks.cpp
+    test_log_scale.cpp
+    test_stats.cpp
+    test_kde.cpp
+    test_csv_reader.cpp
+    tests_dataframe.cpp
+    test_preprocessor.cpp
+    test_concepts.cpp
     test_ecdf.cpp
     test_image_export.cpp
     test_canvas_export.cpp
@@ -9,15 +18,18 @@ add_executable(vizlib_tests
     test_scatter.cpp
     test_histogram.cpp
     test_joint_plot.cpp
+    test_plot_templates.cpp
     test_text.cpp
     test_annotations.cpp
     test_legend.cpp
     test_drawable.cpp
     test_figure_labels.cpp
+    test_edge_cases.cpp
+    test_untested_parts.cpp
 )
 
 target_link_libraries(vizlib_tests PRIVATE vizlib)
-target_include_directories(vizlib_tests PRIVATE ${PROJECT_SOURCE_DIR}/third_party)
+target_include_directories(vizlib_tests SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/third_party)
 
 add_test(NAME vizlib_tests COMMAND vizlib_tests)
 

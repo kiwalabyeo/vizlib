@@ -1,6 +1,7 @@
 #include "doctest.h"
 #include "vizlib/canvas.hpp"
 #include <stdexcept>
+#include <cmath>
 
 using namespace vizlib;
 
@@ -96,4 +97,63 @@ TEST_CASE("a negative radius throws") {
     Canvas cv(11, 11, BG);
     CHECK_THROWS_AS(cv.draw_circle({5, 5}, -1, RED), std::invalid_argument);
     CHECK_THROWS_AS(cv.fill_circle({5, 5}, -1, RED), std::invalid_argument);
+}
+
+TEST_CASE("fill_rect partly off the canvas is clipped") {
+    Canvas cv(5, 5, BG);
+    cv.fill_rect({-2, -2, 4, 4}, RED);     // covers x,y from -2 to 1; only 0..1 is visible
+    CHECK(same(cv.get_pixel(0, 0), RED));
+    CHECK(same(cv.get_pixel(1, 1), RED));
+    CHECK(same(cv.get_pixel(2, 2), BG));
+}
+
+TEST_CASE("circles partly or fully off the canvas do not crash") {
+    Canvas cv(5, 5, BG);
+    cv.fill_circle({-1, -1}, 3, RED);
+    CHECK(same(cv.get_pixel(0, 0), RED));
+    cv.fill_circle({100, 100}, 5, RED);    // completely off: draws nothing, no crash
+    cv.fill_circle({2, 2}, 100000, RED);   // huge circle covers the whole canvas
+    CHECK(same(cv.get_pixel(4, 4), RED));
+}
+
+TEST_CASE("NaN, infinity and huge values are rejected") {
+    Canvas cv(5, 5, BG);
+    CHECK_THROWS_AS(cv.draw_line({std::nan(""), 0}, {1, 1}, RED), std::invalid_argument);
+    CHECK_THROWS_AS(cv.draw_line({0, 0}, {INFINITY, 1}, RED), std::invalid_argument);
+    CHECK_THROWS_AS(cv.draw_line({0, 0}, {1e9, 1}, RED), std::invalid_argument);
+    CHECK_THROWS_AS(cv.draw_line({0, 0}, {4, 0}, RED, 5000), std::invalid_argument);
+    CHECK_THROWS_AS(cv.draw_circle({0, 0}, std::nan(""), RED), std::invalid_argument);
+    CHECK_THROWS_AS(cv.fill_circle({0, 0}, std::nan(""), RED), std::invalid_argument);
+}
+
+TEST_CASE("empty rectangles draw nothing") {
+    Canvas cv(5, 5, BG);
+    cv.fill_rect({1, 1, 0, 3}, RED);      // width 0
+    cv.fill_rect({1, 1, 3, -2}, RED);     // negative height
+    cv.draw_rect({1, 1, 0, 0}, RED);      // both zero
+    for (int y = 0; y < 5; ++y)
+        for (int x = 0; x < 5; ++x) CHECK(same(cv.get_pixel(x, y), BG));
+}
+
+TEST_CASE("one-pixel rectangle") {
+    Canvas cv(5, 5, BG);
+    cv.draw_rect({2, 2, 1, 1}, RED);
+    CHECK(same(cv.get_pixel(2, 2), RED));
+    CHECK(same(cv.get_pixel(1, 2), BG));
+}
+
+TEST_CASE("rectangles with NaN are rejected") {
+    Canvas cv(5, 5, BG);
+    CHECK_THROWS_AS(cv.fill_rect({std::nan(""), 0, 2, 2}, RED), std::invalid_argument);
+    CHECK_THROWS_AS(cv.draw_rect({0, 0, 2, std::nan("")}, RED), std::invalid_argument);
+}
+
+TEST_CASE("thick horizontal line covers rows above and below") {
+    Canvas cv(7, 7, BG);
+    cv.draw_line({0, 3}, {6, 3}, RED, 3);
+    CHECK(same(cv.get_pixel(3, 2), RED));   // one row above the line
+    CHECK(same(cv.get_pixel(3, 3), RED));   // the line itself
+    CHECK(same(cv.get_pixel(3, 4), RED));   // one row below
+    CHECK(same(cv.get_pixel(3, 1), BG));    // two rows above: untouched
+    CHECK(same(cv.get_pixel(3, 5), BG));    // two rows below: untouched
 }

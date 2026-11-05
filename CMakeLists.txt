@@ -1,7 +1,8 @@
+
 cmake_minimum_required(VERSION 3.16)
 project(vizlib VERSION 0.1.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -11,14 +12,17 @@ add_library(vizlib
     src/image_export.cpp
     src/csv_reader.cpp
     src/dataframe.cpp
+    src/preprocessing.cpp
     src/stats.cpp
     src/canvas.cpp
     src/canvas_export.cpp
     src/scatter.cpp
     src/scale.cpp
+    src/ticks.cpp
     src/axes.cpp
     src/figure.cpp
     src/histogram.cpp
+    src/kde.cpp
     src/kde_plot.cpp
     src/joint_plot.cpp
     src/text.cpp
@@ -28,6 +32,11 @@ add_library(vizlib
 
 target_include_directories(vizlib
     PUBLIC  ${PROJECT_SOURCE_DIR}/include
+)
+# SYSTEM: the single-header libraries in third_party (stb, doctest) are not
+# our code, so the compiler does not print their warnings. Before this, every
+# build printed 24 warnings from stb_image_write.h.
+target_include_directories(vizlib SYSTEM
     PRIVATE ${PROJECT_SOURCE_DIR}/third_party
 )
 
