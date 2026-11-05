@@ -65,6 +65,6 @@ So `{3, 1, 2}` gives (1, 0.333), (2, 0.667) and (3, 1). The last point is always
 - **Crystal:**
   - the first header (#33, merged 12 October) and `compute_coordinates` in `ecdf.cpp` (#53, merged 19 October)
   - the first ECDF tests and the example program (#87, #88, 28 October), combined in #90 by Oscar on 29 October, keeping her commits
-  - the `ECDFPlot` as a `Plot`, the `RugPlot`, the template constructors, and the helpers `without_nan` and `padded_range`, written with Oscar on his laptop on 3 November. So they reached GitHub in Oscar's commit (#122), which was made with Claude Code.
+  - the `ECDFPlot` as a `Plot`, the `RugPlot`, the template constructors, and the helpers `without_nan` and `padded_range`, which she wrote herself on Oscar's laptop on 3 November, using Claude Code. So they reached GitHub in a commit under Oscar's name (#122).
 - **Oscar:** fixed the ECDF build (the `vizlib` namespace, doctest tests, registering the example) on 29 October, and drew the axes in the ECDF example.
 - **This guide** was written by Member 4 with Claude Code, from the code and the tests.
