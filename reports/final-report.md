@@ -115,7 +115,7 @@ The commit history and the pull requests on GitHub are the full record. Each mem
 - **Member 3, Sengendo Crystal Zawedde:**
   - ECDF coordinates in `compute_coordinates()` (#53)
   - the ECDF tests and example, combined in #90
-  - drawing the ECDF as a `Plot`, and the `RugPlot`, which she wrote herself on Member 4's laptop on 3 November, using Claude Code, so the commit (#122) is under his name
+  - drawing the ECDF as a `Plot`, and the `RugPlot`, which she wrote herself on Member 4's laptop on 3 November; he committed them, so the commit (#122) is under his name
 - **Member 4, Kiwalabye Oscar Muwanguzi:**
   - the scatter plot, histogram, `Plot` base class, `KdePlot` and `JointPlot` (#51, #57, #73, #115)
   - C++20, the `Numeric` concept and the templated plots (#92, #93)
