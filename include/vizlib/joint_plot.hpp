@@ -10,6 +10,7 @@
 #include "vizlib/kde.hpp"
 #include "vizlib/kde_plot.hpp"
 #include "vizlib/plot.hpp"
+#include "vizlib/preprocessing.hpp"   // drop_nan (Member 1)
 #include "vizlib/scatter.hpp"
 
 namespace vizlib {
@@ -44,12 +45,6 @@ struct JointAxes {
 // Shared scales: the x range of center and top is the union of both plots'
 // x bounds, so a given x value lands in the same pixel column in both. The
 // same goes for y in center and right.
-namespace detail {
-// The values that are not NaN, as doubles. The KDE margins use this, because a
-// single NaN would make the whole curve NaN. (Scatter and histogram skip NaN
-// themselves.) In joint_plot.cpp.
-std::vector<double> without_nan(std::vector<double> values);
-}  // namespace detail
 
 class JointPlot {
 private:
@@ -112,8 +107,8 @@ public:
 
         // the scatter is built first, so a length mismatch is reported as such
         auto center = std::make_unique<ScatterPlot<TX, TY>>(x, y, style);
-        const KdeResult x_curve = kde(detail::without_nan(to_doubles(x)), grid_points);
-        const KdeResult y_curve = kde(detail::without_nan(to_doubles(y)), grid_points);
+        const KdeResult x_curve = kde(drop_nan(to_doubles(x)), grid_points);
+        const KdeResult y_curve = kde(drop_nan(to_doubles(y)), grid_points);
 
         return JointPlot(std::move(center),
                          std::make_unique<KdePlot>(x_curve, top_style),

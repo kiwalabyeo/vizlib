@@ -3,7 +3,7 @@
 - **Owner:** Kizito Mark James (Member 1)
 - **Headers:** `include/vizlib/dataframe.hpp`, `csv_reader.hpp`, `preprocessing.hpp`
 - **Sources:** `src/dataframe.cpp`, `src/csv_reader.cpp`, `src/preprocessing.cpp`
-- **Tests:** `tests/tests_dataframe.cpp`, `test_csv_reader.cpp` and `test_preprocessor.cpp` (49 test cases, 199 assertions)
+- **Tests:** `tests/tests_dataframe.cpp`, `test_csv_reader.cpp` and `test_preprocessor.cpp` (51 test cases)
 - **Example:** `data_examples`, and `pipeline`, which reads `data/input/iris.csv`
 - **User guide:** `docs/data.md` (every function and every error)
 
@@ -35,6 +35,10 @@ Before it starts, it skips the UTF-8 byte order mark that Excel adds. It accepts
 
 **Cleaning.** `drop_missing` removes rows with a missing cell. `fill_missing`, `fill_missing_mean` and `fill_missing_median` fill the gaps. `to_numeric` turns a text column into numbers. `filter_rows`, `select_columns` and `drop_columns` keep only the rows or columns you want. Each one returns a **new** `DataFrame`, so the original is never changed.
 
+**`drop_nan`.** It takes a plain list of numbers and leaves out the NaN values, in the same order. The rest of the library uses it: the ECDF and rug plot, the joint plot's KDE margins and the statistics all call it, so missing values are handled in one place.
+
+**Where the module is used.** `pipeline` and the scatter, ECDF and joint plot examples all start with `read_csv`, then `drop_missing`, then take each column with `df["name"]`. The plots themselves take `std::vector<double>`, so they also work with numbers that did not come from a CSV file.
+
 ## 3. Why it is written this way
 
 - **Classes and encapsulation.** `Column` and `DataFrame` keep their data private. `add_column` throws if the name is already used or the length is wrong, so a `DataFrame` always has columns of the same length.
@@ -52,7 +56,7 @@ Before it starts, it skips the UTF-8 byte order mark that Excel adds. It accepts
 - **Messy files** (`data/input/messy.csv`): commas and quotes inside quoted cells, empty cells, `NA`, and junk text in a numeric column.
 - **Edge cases:** a byte order mark, `\r\n` endings, blank lines, spaces around cells, line breaks inside quotes.
 - **Errors:** an empty file, a duplicate header, an unterminated quote, a row with too many cells, an unknown column, and a row index out of range all throw the right exception. With `BadRowPolicy::Skip`, a bad row is skipped instead.
-- **Cleaning:** each function is checked on a small table, and the input table is checked to be unchanged.
+- **Cleaning:** each function is checked on a small table, and the input table is checked to be unchanged. `drop_nan` is checked to keep the order and to give the same numbers as `drop_missing`.
 
 ## 5. Limitations
 
@@ -68,4 +72,5 @@ Before it starts, it skips the UTF-8 byte order mark that Excel adds. It accepts
   - the full module: the state machine, `CsvOptions`, the cleaning functions, `docs/data.md` and the 49 tests (#105, 1 November)
 - **Oscar:** rebuilt #105 on the current `main` as #108, keeping James's commits, and added `preprocessing.cpp` and the tests to CMake.
 - **End-of-project fixes, done with Claude Code:** `data_examples` now shows filtering, column selection and missing values (#131).
+- **End-of-project fix, done with Claude Code (5 November):** added `drop_nan`, used it in the ECDF, joint plot and statistics instead of three copies of the same code, and made the examples use `drop_missing` and `df["name"]` (`docs/bug-report.md`, third check).
 - **This guide** was written by Member 4 with Claude Code, from James's `docs/data.md` and his code.

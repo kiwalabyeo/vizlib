@@ -5,25 +5,22 @@
 #include <vector>
 #include <stdexcept>
 
+#include "vizlib/preprocessing.hpp"
+
 namespace vizlib {
 
 // The values that are not NaN. A missing value in a CSV column is stored as
 // NaN, so NaN means "no value here" and is left out of every statistic.
 // std::sort also needs values that can be compared, and NaN cannot be.
-// Infinity is refused, because no mean, spread or bin can be worked out from it.
+// Leaving NaN out is Member 1's drop_nan (preprocessing.hpp). On top of that,
+// infinity is refused, because no mean, spread or bin can be worked out from it.
 inline std::vector<double> values_without_nan(const std::vector<double>& data) {
-    std::vector<double> values;
-    values.reserve(data.size());
     for (double v : data) {
-        if (std::isnan(v)) {
-            continue;
-        }
         if (std::isinf(v)) {
             throw std::invalid_argument("Data must not contain infinity");
         }
-        values.push_back(v);
     }
-    return values;
+    return drop_nan(data);
 }
 
 class summaryStatistics {

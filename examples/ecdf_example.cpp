@@ -4,7 +4,7 @@
 // axis lines, tick numbers and labels, and saves data/output/ecdf_example.png.
 // Run from the project root: ./build/examples/ecdf_example
 
-#include "example_utils.hpp"
+#include <vizlib/preprocessing.hpp>
 
 #include <vizlib/canvas.hpp>
 #include <vizlib/canvas_export.hpp>
@@ -42,8 +42,9 @@ int main() {
         }
 
         // ---- Part 2: the picture ----
-        const vizlib::DataFrame iris = vizlib::read_csv("data/input/iris.csv");
-        const std::vector<double> petal = examples::numeric_column(iris, "petal_length");
+        // read the file, then drop rows with a missing value (Member 1's data module)
+        const vizlib::DataFrame iris = vizlib::drop_missing(vizlib::read_csv("data/input/iris.csv"));
+        const std::vector<double> petal = iris["petal_length"];
 
         const vizlib::Color white{255, 255, 255, 255};
         const vizlib::Color orange{255, 127, 14, 255};

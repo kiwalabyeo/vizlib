@@ -16,10 +16,10 @@
 #include <vizlib/annotations.hpp>
 #include <vizlib/legend.hpp>
 #include "vizlib/csv_reader.hpp"
+#include "vizlib/preprocessing.hpp"
 
 #include <iostream>
 #include <vector>
-#include <variant>
 
 namespace
 {
@@ -39,37 +39,17 @@ namespace
         }
     }
 
-    // Converts a DataFrame column into a list of numbers.
-    // Text cells are skipped.
-    std::vector<double> column_as_doubles(
-        const vizlib::DataFrame& df,
-        const std::string& name)
-    {
-        std::vector<double> values;
-
-        for (const vizlib::CellValue& cell : df.get_column(name))
-        {
-            if (const double* number = std::get_if<double>(&cell))
-            {
-                values.push_back(*number);
-            }
-        }
-
-        return values;
-    }
 }
 
 int main()
 {
-    // Step 1: Read data from the CSV file.
-    const vizlib::DataFrame df =
-        vizlib::read_csv("data/input/iris.csv");
+    // Step 1: Read data from the CSV file, and drop the rows that have a
+    // missing value in either column, so x and y stay paired (Member 1).
+    const vizlib::DataFrame df = vizlib::drop_missing(
+        vizlib::read_csv("data/input/iris.csv"), {"sepal_length", "petal_length"});
 
-    const std::vector<double> x =
-        column_as_doubles(df, "sepal_length");
-
-    const std::vector<double> y =
-        column_as_doubles(df, "petal_length");
+    const std::vector<double>& x = df["sepal_length"];
+    const std::vector<double>& y = df["petal_length"];
 
     if (x.empty() || y.empty() || x.size() != y.size())
     {

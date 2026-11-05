@@ -34,15 +34,6 @@ JointPlot JointPlot::with_kde(const std::vector<double>& x, const std::vector<do
     return with_kde<double, double>(x, y, style, grid_points);
 }
 
-namespace detail {
-std::vector<double> without_nan(std::vector<double> values) {
-    values.erase(std::remove_if(values.begin(), values.end(),
-                                [](double v) { return std::isnan(v); }),
-                 values.end());
-    return values;
-}
-}  // namespace detail
-
 JointAxes JointPlot::layout(Rect area, const JointLayout& layout) const {
     if (!(layout.margin_ratio > 0 && layout.margin_ratio < 1) || !(layout.gap >= 0)) {
         throw std::invalid_argument("joint plot: margin_ratio must be between 0 and 1, gap not negative.");

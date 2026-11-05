@@ -4,21 +4,11 @@
 #include <vector>
 
 #include <vizlib/ecdf.hpp>
+#include <vizlib/preprocessing.hpp>   // drop_nan (Member 1)
 
 namespace vizlib{
 
 namespace {
-
-// the values that are not NaN (NaN cannot be sorted or placed on an axis)
-std::vector<double> without_nan(const std::vector<double>& data) {
-    std::vector<double> values;
-    for (double v : data) {
-        if (!std::isnan(v)) {
-            values.push_back(v);
-        }
-    }
-    return values;
-}
 
 // x range of the data plus 5% padding on each side; a range of width 0 gets
 // a width of 1, so the axes never divide by zero
@@ -38,7 +28,7 @@ void padded_range(double lo, double hi, double& out_lo, double& out_hi) {
     std::vector<Point> ECDFPlot::compute_coordinates(const std::vector<double> &data) const{
     // making a copy of input data to sort, without NaN: std::sort needs values
     // that can be compared, and NaN is not smaller or bigger than anything
-    std::vector<double> sorted_data = without_nan(data);
+    std::vector<double> sorted_data = drop_nan(data);
     if (sorted_data.empty()){
         return {};
     }
@@ -103,7 +93,7 @@ void ECDFPlot::draw(Canvas& canvas, const Axes& axes) const {
 }
 
 RugPlot::RugPlot(const std::vector<double>& data, RugStyle style)
-    : values_(without_nan(data)), style_(style) {
+    : values_(drop_nan(data)), style_(style) {
     if (values_.empty()) {
         throw std::invalid_argument("rug: data has no value that is not NaN.");
     }

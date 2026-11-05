@@ -27,13 +27,19 @@ DataFrame with_replaced(const DataFrame& df, Column column) {
 }
 
 std::vector<double> non_missing(const Column& c) {
-    std::vector<double> v;
-    for (std::size_t i = 0; i < c.size(); ++i)
-        if (!c.is_missing(i)) v.push_back(c.values()[i]);
-    return v;
+    return drop_nan(c.values());   // a missing numeric cell is NaN
 }
 
 }  // namespace
+
+std::vector<double> drop_nan(const std::vector<double>& values) {
+    std::vector<double> out;
+    out.reserve(values.size());
+    for (double v : values) {
+        if (!std::isnan(v)) out.push_back(v);
+    }
+    return out;
+}
 
 bool parse_number(const std::string& s, double& out) {
     // Only plain decimal notation: this rejects "inf", "nan" and hex like 0x1A.

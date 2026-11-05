@@ -34,6 +34,12 @@ DataFrame fill_missing(const DataFrame& df, const std::string& column, const std
 DataFrame fill_missing_mean(const DataFrame& df, const std::string& column);
 DataFrame fill_missing_median(const DataFrame& df, const std::string& column);
 
+// The values that are not NaN, in the same order. A missing cell in a numeric
+// column is stored as NaN, so this is the one place the library leaves missing
+// values out of a plain list of numbers. The ECDF, rug plot, joint plot KDE
+// margins and the statistics all call it.
+std::vector<double> drop_nan(const std::vector<double>& values);
+
 // --- Types -----------------------------------------------------------------
 
 // Convert a text column to numbers. Cells that are not numbers throw

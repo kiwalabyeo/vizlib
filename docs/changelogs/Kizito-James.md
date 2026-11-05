@@ -6,6 +6,12 @@
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 <!-- Written on 4 November by Member 4 with Claude Code, from James's pull requests on GitHub. -->
 
+## 2026-11-05
+- **Changed:** Member 4, with Claude Code, added `drop_nan(values)` to `preprocessing.hpp` and made the ECDF, rug plot, joint plot and statistics use it instead of their own copies. `pipeline` and three examples now use `drop_missing` and `df["name"]` instead of hand-made column helpers.
+- **Why:** The data module was only used for reading files. Missing values were handled in four separate places, and one example helper could pair the wrong x and y.
+- **PR:** the PR that adds this entry
+- **Tested:** 2 new test cases (273 in total). Every example PNG is the same as before.
+
 ## 2026-11-04
 - **Changed:** Member 4 extended `examples/data_examples.cpp` to show filtering, column selection and missing values, and wrote this changelog and `docs/modules/data.md`.
 - **Why:** These functions worked, but no example showed them, and there was no changelog for Member 1.
