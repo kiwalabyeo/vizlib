@@ -6,10 +6,10 @@
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 ## 2026-11-04
 - **Changed:**
-I added the reports that were missing and included a moudule documneting how the files I created fit into the library and how the functions I made can be used
+I added the reports that were missing and included a moudule documenting how the files I created fit into the library and how the functions I made can be used
 - **Why**
 Users and anyone who would like to modify the library should know how it is used
-- **PR:** 
+- **PR:** 140
 - **Tested:**Not necessary
 
 ## 2026-10-31
