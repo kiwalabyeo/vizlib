@@ -172,6 +172,10 @@ One gap: `Drawable` was only used through a pointer in the tests. `pipeline` now
 
 What is left unused outside the tests is small: getters such as `Figure::getTitle`, options such as `CsvOptions` and `BadRowPolicy`, and the old names `get_column`, `row_count` and `handle_missing_values`, which are kept so code written for the first version still compiles.
 
+## Merged on 5 November: Member 1's templates (#152)
+
+#152 was based on `main` from 20 October, so merging it directly would have undone later work. Its newest commit was applied onto the current `main` instead. One real problem was fixed: `numeric.hpp` defined a second `vizlib::Numeric` concept with a different rule (it allowed `char`), which would have clashed with `concepts.hpp`. It now uses the shared one. The suite is now **296 test cases**, clean under AddressSanitizer and UndefinedBehaviorSanitizer.
+
 ## Known limitations not changed
 
 These are design limits, not crashes, so we left them as they are:

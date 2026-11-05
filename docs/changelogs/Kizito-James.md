@@ -6,6 +6,12 @@
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 <!-- Written on 4 November by Member 4 with Claude Code, from James's pull requests on GitHub. -->
 
+## 2026-11-05 (templates)
+- **Changed:** Added `include/vizlib/numeric.hpp` (`is_representable`, `to_double_exact`) and `include/vizlib/typed_column.hpp` (`NumericColumn<T>`). `Column` can be built from any numeric vector and read back with `as<T>()`; added `DataFrame::column_as<T>`, `read_csv_column<T>`, and template versions of `fill_missing`, `parse_number` and `filter_numeric`. Wrote `docs/templets.md` and two UML diagrams in `docs/uml/`.
+- **Why:** The lecturer's templates task: data classes must accept every numeric type, using concepts. Values that would change when converted throw instead of being rounded.
+- **PR:** #152. It was based on an old `main`, so Member 4 applied the commit onto the current `main`, switched it to the shared `Numeric` concept in `concepts.hpp`, removed a stray `third_party/CMakelists.txt`, and registered the tests.
+- **Tested:** `tests/test_numeric_types.cpp`, 23 test cases. 296 in total, all passing, also under AddressSanitizer and UndefinedBehaviorSanitizer.
+
 ## 2026-11-05
 - **Changed:** Member 4, with Claude Code, added `drop_nan(values)` to `preprocessing.hpp` and made the ECDF, rug plot, joint plot and statistics use it instead of their own copies. `pipeline` and three examples now use `drop_missing` and `df["name"]` instead of hand-made column helpers.
 - **Why:** The data module was only used for reading files. Missing values were handled in four separate places, and one example helper could pair the wrong x and y.

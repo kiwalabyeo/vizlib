@@ -3,7 +3,7 @@
 - **Owner:** Kizito Mark James (Member 1)
 - **Headers:** `include/vizlib/dataframe.hpp`, `csv_reader.hpp`, `preprocessing.hpp`
 - **Sources:** `src/dataframe.cpp`, `src/csv_reader.cpp`, `src/preprocessing.cpp`
-- **Tests:** `tests/tests_dataframe.cpp`, `test_csv_reader.cpp` and `test_preprocessor.cpp` (51 test cases)
+- **Tests:** `tests/tests_dataframe.cpp`, `test_csv_reader.cpp` and `test_preprocessor.cpp` and `test_numeric_types.cpp` (74 test cases)
 - **Example:** `data_examples`, and `pipeline`, which reads `data/input/iris.csv`
 - **User guide:** `docs/data.md` (every function and every error)
 
@@ -50,6 +50,8 @@ Before it starts, it skips the UTF-8 byte order mark that Excel adds. It accepts
 - **No templates.** CSV cells are always text or `double`, so a template would add nothing.
 - **Old names still work.** `row_count()`, `get_column()` and `handle_missing_values()` from the first version (#68) still compile, so older code did not break.
 
+**Any number type in and out (James, 5 November).** `numeric.hpp` and `typed_column.hpp` let callers use any number type at the edges, while a `Column` still stores `double`. A `Column` can be built from `std::vector<int>` or any other numeric type, `df["size"].as<int>()` and `read_csv_column<int>(path, "size")` read a column back as that type, and `fill_missing`, `parse_number` and `filter_numeric` accept any numeric type. A value that would change (a fraction into an `int`, a number out of range, a missing value into an integer) throws `std::invalid_argument` naming the column and row, so nothing is rounded silently. `NumericColumn<T>` is a class template holding one column as `T`. The constraint is the shared `Numeric` concept. Full details: `docs/templets.md`.
+
 ## 4. How it is tested
 
 - **Normal use:** `iris.csv` and `tips.csv` load with the right number of rows and columns.
@@ -73,4 +75,5 @@ Before it starts, it skips the UTF-8 byte order mark that Excel adds. It accepts
 - **Oscar:** rebuilt #105 on the current `main` as #108, keeping James's commits, and added `preprocessing.cpp` and the tests to CMake.
 - **End-of-project fixes, done with Claude Code:** `data_examples` now shows filtering, column selection and missing values (#131).
 - **End-of-project fix, done with Claude Code (5 November):** added `drop_nan`, used it in the ECDF, joint plot and statistics instead of three copies of the same code, and made the examples use `drop_missing` and `df["name"]` (`docs/bug-report.md`, third check).
+- **James (5 November):** templates for any numeric type: `numeric.hpp`, `typed_column.hpp`, `Column::as<T>`, `read_csv_column<T>`, the template versions of `fill_missing`, `parse_number` and `filter_numeric`, 23 tests and `docs/templets.md` (#152). Member 4 merged it onto the current `main`, made it use the shared `Numeric` concept, and registered the tests.
 - **This guide** was written by Member 4 with Claude Code, from James's `docs/data.md` and his code.
