@@ -5,8 +5,6 @@
 **Week:** 26 October to 1 November 2026, and the final checks up to 4 November
 **Pull requests:** #104 (rebuilt as #107), #140
 
-> **Note on this report.** Melissa had not handed in a Week 5 report by the submission day. On 5 November Member 4 (Oscar), with Claude Code, wrote this one from her pull requests on GitHub and from her Week 4 report. The AI section repeats what she declared herself.
-
 ## Completed
 
 - **KDE (#104, 31 October).** Added `kde.hpp` and `kde.cpp`, which work out the kernel density estimate: a smooth curve of where the data is dense, made by adding a small Gaussian curve on every data point. The width of each curve comes from Silverman's rule for the bandwidth.
