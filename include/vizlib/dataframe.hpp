@@ -49,7 +49,7 @@ public:
     const std::vector<double>& values() const;
 
     // A Column converts to its numbers, so a Column can be passed straight to
-    // functions that take std::vector<double>, e.g. ecdf_plot(ax, df["tip"]).
+    // functions that take std::vector<double>, e.g. vizlib::ECDFPlot(df["tip"]).
     // Throws std::invalid_argument on a text column.
     operator const std::vector<double>&() const { return values(); }
 

@@ -6,10 +6,11 @@ Headers: `dataframe.hpp`, `csv_reader.hpp`, `preprocessing.hpp`. Sources: `src/d
 This module turns a CSV file into a `DataFrame` and cleans it. Everything after it in the pipeline (stats, ECDF, rug, joint plot) takes the numbers from here.
 
 ```cpp
-#include <vizlib/vizlib.hpp>
+#include <vizlib/csv_reader.hpp>
+#include <vizlib/preprocessing.hpp>
 auto df = vizlib::read_csv("data/input/tips.csv");
 df = vizlib::drop_missing(df);
-const std::vector<double>& bill = df["total_bill"];   // ready for ecdf_plot / summary
+const std::vector<double>& bill = df["total_bill"];   // ready for ECDFPlot or summaryStatistics
 ```
 
 ## Errors
@@ -33,7 +34,7 @@ A column is **numeric** (`double`, `NaN` = missing) or **text** (`std::string` p
 | `text()` | the strings of a text column; throws on a numeric column |
 | `as_string(i)` | any cell as text (missing gives `""`) |
 | `take(rows)` | new column with only those rows |
-| implicit conversion | a `Column` converts to `const std::vector<double>&`, so `ecdf_plot(ax, df["tip"])` works |
+| implicit conversion | a `Column` converts to `const std::vector<double>&`, so `vizlib::ECDFPlot(df["tip"])` works |
 
 ## DataFrame
 

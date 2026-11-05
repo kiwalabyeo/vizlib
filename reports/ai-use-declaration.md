@@ -28,7 +28,8 @@ This declaration collects what each member declared in the weekly reports in `re
 - **Tool:** Gemini
 - **Purpose:** Debugging C++ syntax and type-casting errors, using `std::sort`, and safe casting with `static_cast<double>` (Week 3).
 - **Reason:** To write correct, standard C++.
-- **Note:** She declared no AI use in Week 1, and has no Week 4 or 5 report yet.
+- **Note:** She declared no AI use in Week 1. Her Week 4 and 5 reports (#136, #139) declare none.
+- **Note (5 November):** The `ECDFPlot` as a `Plot`, the `RugPlot` and the template constructors were written with Member 4 on his laptop, and reached GitHub in his commit of 3 November (#122), which was made with Claude Code. Member 4 wrote her module guide `docs/modules/ecdf.md` with Claude Code.
 
 ### Member 4: Kiwalabye Oscar Muwanguzi (scatter, histogram, joint plot; repo owner)
 - **Tool:** Claude (claude.ai and Claude Code)
@@ -74,6 +75,7 @@ This declaration collects what each member declared in the weekly reports in `re
   - Week 3: understanding and improving parts of her code, and organising her report (ChatGPT and Claude).
   - Week 4: understanding clipping, input validation and tests, and drafting code changes and test cases, which she reviewed, entered and tested herself (Claude). Reading build output, Git branch and stash steps, and improving her report (ChatGPT).
 - **Reason:** To understand the algorithms and write safer code and clearer reports.
+- **Note (5 November):** She had no Week 5 report or changelog by the submission day. Member 4, with Claude Code, wrote both from her pull requests, and wrote her module guide `docs/modules/canvas.md`.
 
 ### Member 7: Namaganda Norah Margret (image export, build, CI, pipeline)
 - **Tools:** ChatGPT, Claude
@@ -99,6 +101,8 @@ At the end of the project, on 3 November 2026, we used AI (Claude Code) to test 
 - 5 smaller problems, for example tick labels that printed the same text
 
 The AI wrote the fixes and the tests for them. Member 4 reviewed them and merged them after all 263 tests passed. The full list of bugs, causes and fixes is in `docs/bug-report.md`. Each member whose module was changed should read their part of it, because they are responsible for explaining that code.
+
+On 4 and 5 November Member 4 also used Claude Code to finish the documentation before submission: the module guides in `docs/modules/`, the whole-library class diagram `docs/uml/vizlib-library.md`, the missing changelogs for Members 1 and 6 and Week 5 reports for Members 2 and 6 (each with a note saying so), and the README, which the lecturer allowed to be written with AI. Every file written this way says so at the top or in its last section.
 
 ## Group statement
 

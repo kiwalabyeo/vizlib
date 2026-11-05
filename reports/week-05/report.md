@@ -33,9 +33,10 @@ This was the final week. It also covered the lecturer's templates task, given on
 - **Test count:** 126 test cases on 30 October, 227 on 2 November. CI passes on Linux, Windows and macOS.
 
 ## In Progress
-- Axis lines and tick marks. The plots show tick numbers but no axes (Member 5)
-- ECDF drawing. `ECDFPlot` works out the coordinates but nothing draws them yet, and the rug plot has not been started (Member 3)
-- Week 5 contribution reports from Members 2, 3, 5, 6 and 7 (Members 2, 3, 5, 6, 7)
+These were open at the end of the week. Their state on 5 November is given after each one.
+- Axis lines and tick marks. The plots showed tick numbers but no axes (Member 5). Done on 3 November: every example now draws its axes.
+- ECDF drawing. `ECDFPlot` worked out the coordinates but nothing drew them, and the rug plot had not been started (Member 3). Done on 3 November: `ECDFPlot` and `RugPlot` are both a `Plot`.
+- Week 5 contribution reports from Members 2, 3, 5, 6 and 7. Done: Members 3 and 5 sent theirs (#138, #139) and Member 7's was already in. Members 2 and 6 had none by 5 November, so Member 4 wrote theirs from GitHub, with a note saying so.
 - UML images for the templates task. Members 4 and 8 have theirs in `docs/uml/` (Members 1, 2, 3, 5, 6, 7)
 - Changelog files for Members 1, 5 and 6 in `docs/changelogs/` (Members 1, 5, 6)
 - Member 1's Week 3, 4 and 5 reports contained placeholders, such as "[Confirm.]". On 4 November Member 4 replaced each one with the facts from GitHub (pull requests, dates and reviews), or removed it where it could not be checked.
@@ -72,4 +73,4 @@ Final submission:
 - Used by: Member 1 (James)
 
 - No AI section in the contribution report: Member 8 (Joy). Added on 4 November, saying no AI use was recorded.
-- No Week 5 contribution report yet: Members 2, 3, 5, 6 and 7
+- Members 2 and 3 declared their Week 5 AI use in their own reports and in `reports/ai-use-declaration.md`. Member 6 recorded none.
