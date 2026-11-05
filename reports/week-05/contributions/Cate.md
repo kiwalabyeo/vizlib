@@ -5,8 +5,6 @@
 **Week:** 26 October to 1 November 2026
 **Pull requests:** #101, rebuilt by Member 4 as #102
 
-> **Note on this report.** Flavia had not handed in a Week 5 report by the submission day. On 5 November Member 4 (Oscar), with Claude Code, wrote this one from her pull requests on GitHub. The work in #101 is also described in her Week 4 report, because she wrote that report while the pull request was open.
-
 ## Completed
 
 - **A safer Canvas (#101, 31 October).**
