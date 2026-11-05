@@ -36,4 +36,4 @@ I also reviewed how other plotting components use the axis conversion functions 
 ## 4. Dependencies
 
 - **Member 4 — Kiwalabye Oscar Muwanguzi:** Used the axis coordinate conversion functionality for positioning scatter plots and joint plot elements.
-- **Member 6 — Namalirwa Flavia Cate:** Provided shared Canvas and Color components used in drawing axis lines and tick marks.
+- **Member 6 — Nambalirwa Flavia Cate:** Provided shared Canvas and Color components used in drawing axis lines and tick marks.
