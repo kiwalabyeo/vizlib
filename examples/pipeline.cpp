@@ -15,6 +15,7 @@
 #include <vizlib/text.hpp>
 #include <vizlib/annotations.hpp>
 #include <vizlib/legend.hpp>
+#include <vizlib/drawable.hpp>
 #include "vizlib/csv_reader.hpp"
 #include "vizlib/preprocessing.hpp"
 
@@ -129,8 +130,6 @@ int main()
         black
     );
 
-    annotations.draw(canvas, text);
-
     // Step 12: Add a legend to the scatter plot.
     vizlib::Legend legend;
 
@@ -143,7 +142,14 @@ int main()
         }
     );
 
-    legend.draw(canvas, text, 12.0);
+    // Draw the note and the legend through their shared base class
+    // (Member 8's Drawable): one loop, and each object's own draw() runs.
+    // That is runtime polymorphism.
+    const std::vector<const vizlib::Drawable*> overlays{&annotations, &legend};
+    for (const vizlib::Drawable* overlay : overlays)
+    {
+        overlay->draw(canvas, text);
+    }
 
     // Step 13: Draw the axis lines and tick marks, then the figure labels
     // and tick labels for both axes.

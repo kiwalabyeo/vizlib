@@ -5,7 +5,7 @@
 - **Sources:** `src/text.cpp`, `src/legend.cpp`, `src/annotations.cpp`, `drawLabels` in `src/figure.cpp`, `drawTickLabels` in `src/axes.cpp`
 - **Third party:** `third_party/stb_truetype.h` and the font `third_party/fonts/DejaVuSans.ttf`
 - **Tests:** `tests/test_text.cpp`, `test_annotations.cpp`, `test_legend.cpp`, `test_drawable.cpp` and `test_figure_labels.cpp` (14 test cases)
-- **Example:** `pipeline`, which shows a title, axis labels, tick numbers, a legend and a note
+- **Example:** `pipeline`, which shows a title, axis labels, tick numbers, a legend and a note. It draws the legend and the note in one loop through `Drawable` pointers.
 - **User guide:** `docs/text.md`
 
 ## 1. What it does

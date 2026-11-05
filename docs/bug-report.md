@@ -155,6 +155,23 @@ A team member noticed that Member 1's data module looked like it stood on its ow
   - Two new tests for `drop_nan`. The suite is now **273 test cases**. Every example PNG is byte-for-byte the same as before, because the sample files have no missing values.
 - **Why the plots still take `std::vector<double>`:** a plot should not need a `DataFrame`. Someone with numbers from anywhere else can still plot them. The data module sits at the front of the pipeline, the same way pandas feeds matplotlib in Python.
 
+## Fourth check (5 November): is everyone's code used?
+
+For each member's headers we checked which other modules and which examples include them.
+
+- **Member 1 (data):** `read_csv` starts six examples, `drop_missing` cleans the data in five, and `drop_nan` is called by the ECDF, joint plot and statistics.
+- **Member 2 (statistics):** the histogram gets its bins from `summaryStatistics`, the KDE plot and joint plot use `kde()`, and `pipeline` and `stats_example` use both.
+- **Member 3 (ECDF):** `ECDFPlot` and `RugPlot` are drawn in `ecdf_example`. Because they are a `Plot`, a `JointPlot` could also use them as a panel.
+- **Member 4 (plots):** every plot derives from `Plot`, and the scatter and histogram are reused inside the joint plot.
+- **Member 5 (axes):** every plot draws through `Axes`, `Axes` uses the scales and the tick functions, and three examples use `Figure`.
+- **Member 6 (Canvas):** every drawing module draws on the `Canvas`, and every example creates one.
+- **Member 7 (export):** every example saves its picture with `save_png`, which calls `image_export`.
+- **Member 8 (text):** the axes and the figure draw their numbers and labels with `TextRenderer`, and every example uses it.
+
+One gap: `Drawable` was only used through a pointer in the tests. `pipeline` now draws its note and legend in one loop through `Drawable` pointers, so the polymorphism runs in a real program too. The PNG is byte-for-byte the same.
+
+What is left unused outside the tests is small: getters such as `Figure::getTitle`, options such as `CsvOptions` and `BadRowPolicy`, and the old names `get_column`, `row_count` and `handle_missing_values`, which are kept so code written for the first version still compiles.
+
 ## Known limitations not changed
 
 These are design limits, not crashes, so we left them as they are:
