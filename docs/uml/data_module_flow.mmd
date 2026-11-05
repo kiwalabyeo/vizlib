@@ -1,0 +1,11 @@
+flowchart LR
+    F[("CSV file<br/>tips.csv")] -->|"read_csv(path)"| S["split_records()<br/>state machine<br/>Field, Record"]
+    S -->|"parse_csv()"| P{"parse_number()<br/>every cell a number?"}
+    P -->|yes| NC["numeric Column<br/>vector&lt;double&gt;, NaN = missing"]
+    P -->|no| TC["text Column<br/>strings + missing flags"]
+    NC --> DF["DataFrame<br/>vector&lt;Column&gt;"]
+    TC --> DF
+    DF -->|"drop_missing / fill_missing<br/>filter_numeric / to_numeric"| DF2["new DataFrame<br/>(input unchanged)"]
+    DF2 -->|"df[&quot;size&quot;].as&lt;int&gt;()"| V1["vector&lt;int&gt;"]
+    DF2 -->|"df[&quot;tip&quot;] (implicit)"| V2["vector&lt;double&gt;<br/>to plots"]
+    DF2 -->|"NumericColumn&lt;float&gt;(col)"| V3["typed column"]
