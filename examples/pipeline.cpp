@@ -1,82 +1,171 @@
-// First version of the vizlib pipeline.
-// Generates sample data, draws a scatter plot and a histogram side by side,
-// and saves the picture as a PNG.
+
+// Vizlib pipeline example.
+// Reads Iris data, draws a scatter plot and histogram side by side,
+// adds titles, axis labels, tick labels, an annotation and a legend,
+// and saves the completed figure as a PNG.
+//
 // Run from the project root: ./build/examples/pipeline
 
-#include <vizlib/axes.hpp>
+#include <vizlib/figure.hpp>
 #include <vizlib/canvas.hpp>
 #include <vizlib/canvas_export.hpp>
 #include <vizlib/histogram.hpp>
 #include <vizlib/scatter.hpp>
 #include <vizlib/stats.hpp>
 #include <vizlib/text.hpp>
+#include <vizlib/annotations.hpp>
+#include <vizlib/legend.hpp>
+#include <vizlib/drawable.hpp>
+#include "vizlib/csv_reader.hpp"
+#include "vizlib/preprocessing.hpp"
 
-#include <algorithm>
 #include <iostream>
-#include <random>
 #include <vector>
 
 namespace
 {
-    // Paints a plot area so we can see where the plot should stay.
-    void fill_area(vizlib::Canvas& canvas, const vizlib::Rect& r,
+    // Paints a plot area with a background colour.
+    void fill_area(vizlib::Canvas& canvas,
+                   const vizlib::Rect& r,
                    const vizlib::Color& c)
     {
-        for (int y = static_cast<int>(r.y); y < r.y + r.height; ++y)
-            for (int x = static_cast<int>(r.x); x < r.x + r.width; ++x)
+        for (int y = static_cast<int>(r.y);
+             y < r.y + r.height; ++y)
+        {
+            for (int x = static_cast<int>(r.x);
+                 x < r.x + r.width; ++x)
+            {
                 canvas.set_pixel(x, y, c);
+            }
+        }
     }
+
 }
 
 int main()
 {
-    // Step 1: data. Later this will come from the CSV reader.
-    // A fixed seed gives the same picture every run.
-    std::mt19937 rng(42);
-    std::normal_distribution<double> noise(0.0, 2.0);
-    std::vector<double> x;
-    std::vector<double> y;
-    for (int i = 1; i <= 60; ++i)
+    // Step 1: Read data from the CSV file, and drop the rows that have a
+    // missing value in either column, so x and y stay paired (Member 1).
+    const vizlib::DataFrame df = vizlib::drop_missing(
+        vizlib::read_csv("data/input/iris.csv"), {"sepal_length", "petal_length"});
+
+    const std::vector<double>& x = df["sepal_length"];
+    const std::vector<double>& y = df["petal_length"];
+
+    if (x.empty() || y.empty() || x.size() != y.size())
     {
-        x.push_back(i);
-        y.push_back(0.5 * i + noise(rng));   // a rising line with noise
+        std::cerr << "Could not load valid plot data.\n";
+        return 1;
     }
 
-    // Step 2: bin edges from the stats module
-           // Step 2: bin edges from the stats module
+    // Step 2: Calculate histogram bin edges.
     vizlib::summaryStatistics stats(y);
-    const std::vector<double> edges = stats.histogram_bin_edges();
+    const std::vector<double> edges =
+        stats.histogram_bin_edges();
 
-    // Step 3: canvas with two plot areas side by side
+    // Step 3: Define colours and create the canvas.
     const vizlib::Color white{255, 255, 255, 255};
     const vizlib::Color light_grey{235, 235, 235, 255};
-    vizlib::Canvas canvas(700, 300, white);
+    const vizlib::Color black{0, 0, 0, 255};
+    const vizlib::Color blue{31, 119, 180, 255};
 
-    const vizlib::Rect left_area{40, 40, 290, 220};
-    const vizlib::Rect right_area{370, 40, 290, 220};
+    vizlib::Canvas canvas(700, 360, white);
+
+    // Step 4: Create a figure with two axes areas.
+    vizlib::Figure figure(700, 360);
+
+    vizlib::Axes& scatter_axes =
+        figure.addAxes(vizlib::Rect{0, 0, 340, 300});
+
+    vizlib::Axes& histogram_axes =
+        figure.addAxes(vizlib::Rect{360, 0, 340, 300});
+
+    // Step 5: Get the actual plot areas and colour their backgrounds.
+    const vizlib::Rect left_area =
+        scatter_axes.getPlotArea();
+
+    const vizlib::Rect right_area =
+        histogram_axes.getPlotArea();
+
     fill_area(canvas, left_area, light_grey);
     fill_area(canvas, right_area, light_grey);
 
-    // Step 4: draw the two plots
-    vizlib::scatter(canvas, left_area, x, y);
+    // Step 6: Draw the scatter plot.
+    vizlib::scatter(canvas, scatter_axes, x, y);
 
-    vizlib::Axes axes;
-    axes.setPlotArea(right_area);
-    vizlib::histogram(canvas, axes, y, edges);
+    // Step 7: Draw the histogram.
+    vizlib::histogram(canvas, histogram_axes, y, edges);
 
-    // Step 4b: titles with the text module
-    const vizlib::TextRenderer text("third_party/fonts/DejaVuSans.ttf");
-    const vizlib::Color black{0, 0, 0, 255};
-    text.draw_text(canvas, "Scatter plot", vizlib::Point{40, 30}, 16.0, black);
-    text.draw_text(canvas, "Histogram", vizlib::Point{370, 30}, 16.0, black);
+    // Step 8: Load the text renderer.
+    const vizlib::TextRenderer text(
+        "third_party/fonts/DejaVuSans.ttf");
 
-    // Step 5: save with the Canvas export adapter (one line)
+    // Step 9: Add the scatter plot title and axis labels.
+    figure.setTitle("Scatter Plot");
+    figure.setXLabel("Sepal Length");
+    figure.setYLabel("Petal Length");
+
+    // Step 10: Add a title above the histogram.
+    text.draw_text(
+        canvas,
+        "Histogram",
+        vizlib::Point{right_area.x, 25},
+        18.0,
+        black
+    );
+
+    // Step 11: Add an annotation to the first scatter point.
+    vizlib::Annotations annotations;
+
+    const vizlib::Point first_point =
+        scatter_axes.dataToPixel(x.front(), y.front());
+
+    annotations.add_text(
+        "Sample point",
+        vizlib::Point{
+            first_point.x + 8,
+            first_point.y - 8
+        },
+        12.0,
+        black
+    );
+
+    // Step 12: Add a legend to the scatter plot.
+    vizlib::Legend legend;
+
+    legend.add_entry("Iris samples", blue);
+
+    legend.set_position(
+        vizlib::Point{
+            left_area.x + 10,
+            left_area.y + 10
+        }
+    );
+
+    // Draw the note and the legend through their shared base class
+    // (Member 8's Drawable): one loop, and each object's own draw() runs.
+    // That is runtime polymorphism.
+    const std::vector<const vizlib::Drawable*> overlays{&annotations, &legend};
+    for (const vizlib::Drawable* overlay : overlays)
+    {
+        overlay->draw(canvas, text);
+    }
+
+    // Step 13: Draw the axis lines and tick marks, then the figure labels
+    // and tick labels for both axes.
+    figure.drawAxes(canvas);
+    figure.drawLabels(canvas, text);
+
+    // Step 14: Save the completed figure as a PNG.
     const char* path = "data/output/pipeline.png";
+
     if (!vizlib::save_png(canvas, path))
     {
         std::cerr << "Could not save " << path << "\n";
         return 1;
     }
+
     std::cout << "Saved " << path << "\n";
+
     return 0;
 }

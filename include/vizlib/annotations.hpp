@@ -6,6 +6,7 @@
 
 #include "vizlib/color.hpp"
 #include "vizlib/geometry.hpp"
+#include "vizlib/drawable.hpp"
 
 namespace vizlib {
 
@@ -19,7 +20,7 @@ struct Annotation {
     Color color{0, 0, 0};
 };
 
-class Annotations {
+class Annotations : public Drawable {
 public:
     void add_text(
         const std::string& text,
@@ -31,10 +32,10 @@ public:
     const std::vector<Annotation>& get_annotations() const;
 
     // Draw all stored annotations onto the canvas.
-    void draw(
-        Canvas& canvas,
-        const TextRenderer& renderer
-    ) const;
+   void draw(
+    Canvas& canvas,
+    const TextRenderer& renderer
+) const override;
 
     void clear();
 

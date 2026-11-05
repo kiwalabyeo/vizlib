@@ -9,9 +9,7 @@
 namespace vizlib {
 
 double summaryStatistics::mean() const {
-    if (Data.empty()) {
-        throw std::invalid_argument("data cannot be empty");
-    }
+
     double sum = 0;
     for (double number : Data) {
         sum += number;
@@ -20,9 +18,7 @@ double summaryStatistics::mean() const {
 }
 
 double summaryStatistics::median() const {
-    if (Sorted_data.empty()) {
-        throw std::invalid_argument("data cannot be empty");
-    }
+
     std::size_t n = Sorted_data.size();
     if (n % 2 == 0) {
         return (Sorted_data[n / 2 - 1] + Sorted_data[n / 2]) / 2;
@@ -31,9 +27,7 @@ double summaryStatistics::median() const {
 }
 
 double summaryStatistics::range() const {
-    if (Sorted_data.empty()) {
-        throw std::invalid_argument("data cannot be empty");
-    }
+
     return Sorted_data.back() - Sorted_data.front();
 }
 
@@ -71,11 +65,11 @@ double summaryStatistics::quantile(double q) const {  // q must be between 0 and
     if (q < 0 || q > 1) {
         throw std::invalid_argument("q must be between 0 and 1");
     }
-    if (Sorted_data.empty()) {
-        throw std::invalid_argument("data cannot be empty");
-    }
 
-    double rank = q * (Sorted_data.size() - 1);
+
+    double rank = q * (Sorted_data.size() - 1);/*The rank is calculated as q * (n - 1), where n is the number of data points.
+     This gives the position in the sorted data corresponding to the desired quantile. 
+     This formular is different from the (n+1) formula used in some other implementations, because c++ used zero indexed arrays */
     int lower_index = static_cast<int>(std::floor(rank));
     int upper_index = static_cast<int>(std::ceil(rank));
 
@@ -102,23 +96,56 @@ int summaryStatistics::count(double value) const {
     return total;
 }
 
-std::vector<double> summaryStatistics::histogram_bin_edges() const {
+std::vector<double> FreedmanDiaconisBinning::histogram_bin_edges() const {
     std::vector<double> bin_edges;
-    if (Sorted_data.empty()) {
-        return bin_edges;
-    }
-    // Freedman-Diaconis rule for bin width
-    double bin_width = 2 * interquartile_range() / std::cbrt(static_cast<double>(Sorted_data.size()));
-    if (bin_width == 0) {
-        bin_edges.push_back(Sorted_data.front());
-        return bin_edges;
+
+    const double data_range = summaryStatistics(Sorted_data).range();
+    if (data_range == 0) {
+        return single_bin();
     }
 
-    int number_of_bins = static_cast<int>(std::ceil(range() / bin_width));
+    // Freedman-Diaconis rule for bin width
+    double bin_width = 2 * summaryStatistics(Sorted_data).interquartile_range() / std::cbrt(static_cast<double>(Sorted_data.size()));
+    if (bin_width == 0) {
+        // the middle half of the data is one value (IQR = 0), so the rule
+        // gives no width: use Sturges' rule instead
+        return SturgesBinning(Sorted_data).histogram_bin_edges();
+    }
+
+    // the count is worked out as a double first, so a huge count cannot
+    // overflow the int; too many bins are capped and made wider
+    const double wanted_bins = std::ceil(data_range / bin_width);
+    int number_of_bins = max_bins;
+    if (wanted_bins <= max_bins) {
+        number_of_bins = static_cast<int>(wanted_bins);
+    } else {
+        bin_width = data_range / max_bins;
+    }
     for (int i = 0; i <= number_of_bins; i++) {
         bin_edges.push_back(Sorted_data.front() + i * bin_width);
     }
     return bin_edges;
 }
+std::vector<double> SturgesBinning::histogram_bin_edges() const {
+    std::vector<double> bin_edges;
+    if (summaryStatistics(Sorted_data).range() == 0) {
+        return single_bin();  // equal values: Sturges would give equal edges
+    }
+    // Sturges' formula for number of bins
+    int number_of_bins = static_cast<int>(std::ceil( 1 + std::log2(Sorted_data.size())));
+    double bin_width = summaryStatistics(Sorted_data).range() / number_of_bins;
 
-}  // namespace vizlib
+    for (int i = 0; i <= number_of_bins; i++) {
+        bin_edges.push_back(Sorted_data.front() + i * bin_width);
+    }
+    return bin_edges;
+
+}
+std::vector<double> summaryStatistics::histogram_bin_edges()const{
+    if (Sorted_data.size()>30&&Sorted_data.size()<200) {       //Sturges rule works best for moderate sized sample datasets
+        return SturgesBinning(Sorted_data).histogram_bin_edges();
+    }
+    else {
+        return FreedmanDiaconisBinning(Sorted_data).histogram_bin_edges();
+    }
+} } // namespace vizlib

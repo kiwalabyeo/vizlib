@@ -1,0 +1,116 @@
+classDiagram
+    direction LR
+
+    namespace Data_M1 {
+        class Column {
+            -string name_
+            -Type type_
+            +values() vector~double~&
+            +is_missing(i) bool
+        }
+        class DataFrame {
+            -vector~Column~ columns_
+            +operator[](name) Column&
+            +add_column(Column)
+            +n_rows() size_t
+        }
+    }
+
+    namespace Statistics_M2 {
+        class summaryStatistics {
+            +mean() double
+            +median() double
+            +standard_deviation() double
+            +histogram_bin_edges() vector~double~
+        }
+        class binningStrategy {
+            <<abstract>>
+            +histogram_bin_edges()* vector~double~
+        }
+        class FreedmanDiaconisBinning
+        class SturgesBinning
+        class KdeResult {
+            <<struct>>
+            +grid vector~double~
+            +density vector~double~
+        }
+    }
+
+    namespace Plots_M3_M4 {
+        class Plot {
+            <<abstract>>
+            +bounds()* DataBounds
+            +draw(Canvas&, const Axes&)*
+        }
+        class ScatterPlot~TX,TY~
+        class HistogramPlot
+        class KdePlot
+        class ECDFPlot
+        class RugPlot
+        class JointPlot {
+            -unique_ptr~Plot~ center_
+            -unique_ptr~Plot~ top_
+            -unique_ptr~Plot~ right_
+            +draw(Canvas&, Rect)
+        }
+    }
+
+    namespace Axes_M5 {
+        class LinearScale
+        class LogScale
+        class Axes {
+            +setDataRange()
+            +dataToPixel(x, y) Point
+            +drawAxes(Canvas&)
+            +drawTickLabels(Canvas&, TextRenderer&)
+        }
+        class Figure {
+            -deque~Axes~ axes_
+            +addAxes(Rect) Axes&
+            +drawLabels(Canvas&, TextRenderer&)
+        }
+    }
+
+    namespace Canvas_M6 {
+        class Canvas {
+            -vector~Color~ pixels_
+            +draw_line()
+            +fill_rect()
+            +fill_circle()
+        }
+    }
+
+    namespace Text_M8 {
+        class TextRenderer {
+            -unique_ptr~Impl~ impl_
+            +measure_text()
+            +draw_text()
+        }
+        class Drawable {
+            <<abstract>>
+            +draw(Canvas&, const TextRenderer&)*
+        }
+        class Legend
+        class Annotations
+    }
+
+    DataFrame *-- Column
+    binningStrategy <|-- FreedmanDiaconisBinning
+    binningStrategy <|-- SturgesBinning
+    Plot <|-- ScatterPlot
+    Plot <|-- HistogramPlot
+    Plot <|-- KdePlot
+    Plot <|-- ECDFPlot
+    Plot <|-- RugPlot
+    JointPlot *-- "3" Plot
+    KdePlot ..> KdeResult : drawn from
+    HistogramPlot ..> summaryStatistics : bin edges
+    Axes *-- LinearScale
+    Axes *-- LogScale
+    Figure *-- Axes
+    Plot ..> Axes : maps data to pixels
+    Plot ..> Canvas : draws on
+    Drawable <|-- Legend
+    Drawable <|-- Annotations
+    Drawable ..> Canvas : draws on
+    TextRenderer ..> Canvas : draws on

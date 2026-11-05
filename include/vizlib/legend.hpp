@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <string>
@@ -5,6 +6,7 @@
 
 #include "vizlib/color.hpp"
 #include "vizlib/geometry.hpp"
+#include "vizlib/drawable.hpp"
 
 namespace vizlib {
 
@@ -16,7 +18,7 @@ struct LegendEntry {
     Color color{0, 0, 0};
 };
 
-class Legend {
+class Legend : public Drawable {
 public:
     void add_entry(const std::string& label, Color color);
 
@@ -29,8 +31,13 @@ public:
 
     void draw(
         Canvas& canvas,
+        const TextRenderer& renderer
+    ) const override;
+
+    void draw(
+        Canvas& canvas,
         const TextRenderer& renderer,
-        double fontSize = 12.0
+        double fontSize
     ) const;
 
 private:

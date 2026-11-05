@@ -5,6 +5,44 @@
 
 <!-- Newest entries at the top. Add an entry in the same PR as the change. -->
 
+## 04-11-2026
+- **Changed:**
+  - Added axes, tick numbers and labels to `scatter_example`, `histogram_example` and `joint_plot_example`.
+  - Programs now build straight into `build/examples` on Windows too, and CI runs the pipeline on Windows and macOS.
+  - `third_party/` warnings are silenced, and `tests/test_untested_parts.cpp` was added.
+- **Why:** These came from a second, wider check: coverage, a fresh clone, and every drill in the prep docs (`docs/bug-report.md`, "Second check").
+- **PR:** "Windows program folder, no third-party warnings, tests for untested code" and #129
+- **Tested:** 270 test cases pass under the sanitizers, the build prints no warnings, and all six examples run. Done with Claude Code.
+
+## 03-11-2026 (end-of-project testing)
+- **Changed:**
+  - Fixed 6 bugs and 5 smaller problems found by testing the whole library with bad input: NaN in the statistics and KDE, a far outlier asking for millions of bins, no bins for nearly-equal data, `int` overflow in `Canvas`, infinity in `auto_bin_edges`, and tick and label problems.
+  - Added `tests/test_edge_cases.cpp` and `docs/bug-report.md`.
+- **Why:** These were final checks before submission. The normal tests only used good data, and a lecturer could easily try a CSV with an empty cell.
+- **PR:** "Fix bugs found in edge-case testing"
+- **Tested:**
+  - 263 test cases pass with GCC and Clang, and under AddressSanitizer and UndefinedBehaviorSanitizer.
+  - All six examples run cleanly, and I checked their PNGs.
+  - Done with Claude Code, as declared in `reports/ai-use-declaration.md`.
+
+## 03-11-2026
+- **Changed:** Built a missing piece of Member 3's ECDF at the group's request before the deadline: `ECDFPlot` is now a `Plot` that draws the ECDF as a step line (her `compute_coordinates` is kept, and now skips NaN, which `std::sort` cannot handle), plus a new `RugPlot`; both take any number type; `ecdf_example.cpp` now also draws iris petal length with a rug and saves a PNG. Added `Figure::drawAxes()`, which calls Member 5's `Axes::drawAxes` for every axes, and used it in the pipeline and the ECDF example. Moved Member 8's tick numbers below the tick marks and centred the y ones on their ticks.
+- **Why:** The ECDF could not be drawn, and the submission is due on 5 November. Member 5's axis lines were merged in #121, so the figure now draws them.
+- **PR:** #122
+- **Tested:** New test cases for the ECDF (steps, bounds, NaN, bad input, every number type, through a `Plot*`), the rug plot (marks, log axis, bad input) and the axes (Member 5's `drawAxes` lines, tick marks, log ticks, bad tick length, and `Figure::drawAxes`). All tests pass, also under AddressSanitizer + UBSan, and all six examples run. Checked the ECDF and pipeline PNGs.
+
+## 02-11-2026
+- **Changed:** Added `JointPlot::with_kde(x, y)`: scatter in the centre and KDE curves of x and y in the margins, from Member 2's `kde()` (any number type, NaN left out of the curves). `KdePlot` can now be built straight from a `KdeResult`. Replaced my temporary drawing helpers with Member 6's Canvas: `KdePlot` uses `draw_line`, scatter uses `fill_circle`, histogram uses `fill_rect`. `joint_plot_example.cpp` now uses `with_kde` instead of its own stand-in KDE.
+- **Why:** Week 4 goal (joint plot with KDE margins), finished now that Member 2's KDE is merged. The plots now depend on the shared Canvas instead of copies of the same drawing code.
+- **PR:** #115
+- **Tested:** 5 new test cases (`with_kde` draws in all three panels, skips NaN, rejects bad input, same pixels for every number type, `KdePlot` from `kde()`). All 227 test cases pass, the joint plot and KDE tests also under AddressSanitizer + UBSan. Ran all examples and checked the joint plot PNG.
+
+## 30-10-2026
+- **Changed:** Switched the project to C++20 and added `include/vizlib/concepts.hpp` (`Numeric` concept and `to_doubles()`) plus `tests/numeric_types.hpp` for the whole team (#92). Made `ScatterPlot<TX, TY>` a class template, gave `HistogramPlot` a template constructor, and made `histogram_counts`, `auto_bin_edges`, `histogram`, `scatter` and `JointPlot::with_histograms` templates over any number type. Each keeps a `double` version for brace-list calls.
+- **Why:** Lecturer's templates task: plots should accept every numeric type (int, short, float, double, ...) with an appropriate concept. ScatterPlot keeps its data, so the whole class is a template; HistogramPlot only keeps counts, so only its constructor is.
+- **PR:** #92, #93
+- **Tested:** Added `tests/test_concepts.cpp` and `tests/test_plot_templates.cpp` (52 test cases, `TEST_CASE_TEMPLATE` over 7 types, each must draw the same pixels as the double version). All 126 test cases pass on GCC 13 and Clang, the new ones also under AddressSanitizer + UBSan. All examples run.
+
 ## 25-10-2026
 - **Changed:** Added the `Plot` base class (`plot.hpp`) with `ScatterPlot`, `HistogramPlot` and `KdePlot` deriving from it, and `JointPlot` (`joint_plot.hpp`, `src/joint_plot.cpp`) with shared scales and any `Plot` in each panel. `scatter()` now also takes an `Axes`; the `Rect` version and `histogram()` still work as before. Added `auto_bin_edges()`, which uses Member 2's Freedman–Diaconis rule for the number of bins. Extended Member 1's `data/input/iris.csv` from 14 rows to the full 150, added `examples/joint_plot_example.cpp`, and switched `scatter_example.cpp` to iris read with `read_csv()`. CMake: added `stats.cpp`, `dataframe.cpp` and `csv_reader.cpp` to the library (they were not being built) and removed duplicate source entries.
 - **Why:** Week 3 goal (scatter on real CSV data) and Week 4 goal (joint plot with histogram or KDE margins). The `Plot` base class gives the project real inheritance and polymorphism.
