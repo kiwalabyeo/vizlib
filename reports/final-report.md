@@ -98,7 +98,7 @@ The nine example programs are in `examples/`: `pipeline`, `scatter_example`, `hi
 - **Dependencies between modules.** The plots needed the Canvas, the axes and the KDE before those were ready. Temporary helpers were used and then replaced by the real modules.
 - **The 3-approval rule.** We set a rule that every pull request needs three approvals. In Weeks 3 to 5 it was not kept: the repo owner merged with an override to meet the deadlines, after building and testing.
 - **A known limitation on log axes.** The plot helpers `scatter()` and `histogram()` set the axes range from the data plus 5% padding. On a log axis that padding can go below 0, which a log scale rejects. A plot can still be drawn on a log axis by setting the range and the scale first and then calling the plot's `draw()`, which `docs/presentation.md` shows. Making the padding scale-aware is the next fix.
-- **Missing features near the deadline.** The ECDF could not be drawn and the plots had no axis lines. Member 5 added the axis lines herself, and Member 4 built the ECDF drawing and the rug plot on 3 November (see section 8).
+- **Missing features near the deadline.** The ECDF could not be drawn and the plots had no axis lines. Member 5 added the axis lines herself. Member 3 wrote the ECDF drawing and the rug plot together with Member 4 on his laptop on 3 November, so the commit is under his name (see section 8).
 
 ## 8. Individual contributions
 
@@ -112,14 +112,14 @@ The commit history and the pull requests on GitHub are the full record. Each mem
   - `summaryStatistics` and Freedman–Diaconis binning (#54, #72)
   - the `binningStrategy` classes (#83)
   - `kde()` with Silverman's bandwidth (#107)
-- **Member 3, Zawedde Crystal:**
+- **Member 3, Sengendo Crystal Zawedde:**
   - ECDF coordinates in `compute_coordinates()` (#53)
   - the ECDF tests and example, combined in #90
-  - Drawing the ECDF as a `Plot` and the `RugPlot` were built by Member 4 on 3 November (#122).
+  - drawing the ECDF as a `Plot`, and the `RugPlot`, written with Member 4 on his laptop on 3 November, so the commit (#122) is under his name
 - **Member 4, Kiwalabye Oscar Muwanguzi:**
   - the scatter plot, histogram, `Plot` base class, `KdePlot` and `JointPlot` (#51, #57, #73, #115)
   - C++20, the `Numeric` concept and the templated plots (#92, #93)
-  - the ECDF drawing and rug plot (#122)
+  - the ECDF drawing and rug plot, with Member 3 (#122)
   - the repo, its rules, templates and CI setup in Week 1, and coordination
   - integrating and fixing the team's pull requests, and the Week 1 and Week 3 to 5 group reports
   - end-of-project testing and bug fixing with Claude Code (`docs/bug-report.md`)

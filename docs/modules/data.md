@@ -12,11 +12,12 @@
 It is the first step of the pipeline. It reads a CSV file into a `DataFrame` (a table of named columns), and cleans it. Every other module takes its numbers from here.
 
 ```cpp
-#include <vizlib/vizlib.hpp>
+#include <vizlib/csv_reader.hpp>
+#include <vizlib/preprocessing.hpp>
 
 auto df = vizlib::read_csv("data/input/tips.csv");
 df = vizlib::drop_missing(df);
-const std::vector<double>& bill = df["total_bill"];   // ready for ecdf_plot or summaryStatistics
+const std::vector<double>& bill = df["total_bill"];   // ready for ECDFPlot or summaryStatistics
 ```
 
 ## 2. How it works
@@ -38,7 +39,7 @@ Before it starts, it skips the UTF-8 byte order mark that Excel adds. It accepts
 
 - **Classes and encapsulation.** `Column` and `DataFrame` keep their data private. `add_column` throws if the name is already used or the length is wrong, so a `DataFrame` always has columns of the same length.
 - **`enum class`.** `Column::Type` (`Numeric` or `Text`), `BadRowPolicy` (`Throw` or `Skip`) and the reader's `State` are `enum class`, so they cannot be mixed up with plain numbers.
-- **A conversion operator.** A `Column` turns into `const std::vector<double>&` by itself. That is why `ecdf_plot(ax, df["tip"])` works with no extra step. It returns a reference, so nothing is copied.
+- **A conversion operator.** A `Column` turns into `const std::vector<double>&` by itself. That is why `vizlib::ECDFPlot(df["tip"])` works with no extra step. It returns a reference, so nothing is copied.
 - **`const` and references.** The cleaning functions take `const DataFrame&` and return a new one, the same as pandas.
 - **Exceptions with line numbers.** A bad file throws `std::invalid_argument` with the line number in the message. A file that cannot be opened throws `std::runtime_error`.
 - **Options in a struct.** `CsvOptions` holds the delimiter, the header flag, the bad-row policy and the missing-value words, with defaults. So `read_csv(path)` works with no options.

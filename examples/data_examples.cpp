@@ -22,7 +22,7 @@ int main() {
         std::cout << "After cleaning: " << df.n_rows() << " rows\n" << df.to_string() << '\n';
 
         DataFrame tips = read_csv(std::string(VIZLIB_DATA_DIR) + "/tips.csv");
-        const std::vector<double>& bill = tips["total_bill"];  // ready for ecdf_plot
+        const std::vector<double>& bill = tips["total_bill"];  // ready for ECDFPlot
         std::cout << "tips.csv: " << bill.size() << " bills, first = " << bill[0] << '\n';
 
         // Filtering and choosing columns. Every function returns a new table.
