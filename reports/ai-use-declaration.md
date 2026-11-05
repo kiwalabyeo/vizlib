@@ -32,7 +32,7 @@ This declaration collects what each member declared in the weekly reports in `re
 - **Purpose:** Debugging C++ syntax and type-casting errors, using `std::sort`, and safe casting with `static_cast<double>` (Week 3).
 - **Reason:** To write correct, standard C++.
 - **Note:** She declared no AI use in Week 1. Her Week 4 and 5 reports (#136, #139) declare none.
-- **Note (5 November):** The `ECDFPlot` as a `Plot`, the `RugPlot` and the template constructors were written with Member 4 on his laptop, and reached GitHub in his commit of 3 November (#122), which was made with Claude Code. Member 4 wrote her module guide `docs/modules/ecdf.md` with Claude Code.
+- **Note (5 November):** The `ECDFPlot` as a `Plot`, the `RugPlot` and the template constructors were written by her on Member 4's laptop, using Claude Code, and reached GitHub in a commit under his name on 3 November (#122). Member 4 wrote her module guide `docs/modules/ecdf.md` with Claude Code.
 
 ### Member 4: Kiwalabye Oscar Muwanguzi (scatter, histogram, joint plot; repo owner)
 - **Tool:** Claude (claude.ai and Claude Code)
