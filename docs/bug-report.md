@@ -140,6 +140,21 @@ The first round left the pictures without axes in three examples. We had listed 
 
 We also ran every live-coding drill in the prep docs and the presentation guide. Each one compiles and gives the answer the doc says.
 
+## Third check (5 November): was the data module really used?
+
+A team member noticed that Member 1's data module looked like it stood on its own. We checked who calls each of its functions.
+
+- **What we found:**
+  - `read_csv` and `DataFrame` were used by six examples, so every plot does start from Member 1's reader.
+  - The cleaning functions (`drop_missing` and the rest) were only used in `data_examples`.
+  - The examples copied columns by hand with their own helpers (`column_as_doubles` in `pipeline.cpp`, `examples/example_utils.hpp`) instead of using `df["name"]` and `drop_missing`. `column_as_doubles` also skipped missing cells in each column separately, so a row with a missing value in only one column would have paired the wrong x with the wrong y.
+  - Four modules had their own copy of the same "leave out NaN" code: the ECDF and rug plot, the joint plot's KDE margins, the statistics, and `preprocessing.cpp` itself.
+- **What we changed:**
+  - Added `drop_nan(values)` to Member 1's `preprocessing.hpp`: the one place the library leaves missing values out of a list of numbers. The ECDF, the rug plot, the joint plot and the statistics now call it, and the three copies were removed. The statistics still refuse infinity on top of it.
+  - `pipeline`, `scatter_example`, `ecdf_example` and `joint_plot_example` now read the file, call `drop_missing`, and take each column with `df["name"]`. The hand-made helpers were deleted.
+  - Two new tests for `drop_nan`. The suite is now **273 test cases**. Every example PNG is byte-for-byte the same as before, because the sample files have no missing values.
+- **Why the plots still take `std::vector<double>`:** a plot should not need a `DataFrame`. Someone with numbers from anywhere else can still plot them. The data module sits at the front of the pipeline, the same way pandas feeds matplotlib in Python.
+
 ## Known limitations not changed
 
 These are design limits, not crashes, so we left them as they are:
@@ -151,6 +166,6 @@ These are design limits, not crashes, so we left them as they are:
 
 ## Ideas for later
 
-- **Examples:** `scatter_example` and `histogram_example` draw no axes, ticks or labels, and the joint plots have no tick numbers.
+- **Examples:** the margin panels of the joint plots have no tick numbers.
 - **Pipeline layout:** in `pipeline.png`, the y-axis label sits in the top-left corner, and the right-hand histogram has no axis labels.
 - **CI:** run the sanitizer build, and the Windows and macOS jobs, on every pull request instead of only after merging.

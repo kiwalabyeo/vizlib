@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <limits>
 
 #include "data_path.hpp"
 #include "doctest.h"
@@ -159,4 +160,21 @@ TEST_CASE("pipeline: read, clean, ready for plotting") {
 TEST_CASE("handle_missing_values keeps working as a name for drop_missing") {
     DataFrame out = handle_missing_values(sample());
     CHECK(out.n_rows() == 2);
+}
+
+TEST_CASE("drop_nan leaves out NaN and keeps the order") {
+    const double nan = std::numeric_limits<double>::quiet_NaN();
+    CHECK(vizlib::drop_nan({3.0, nan, 1.0, nan, 2.0}) == std::vector<double>{3.0, 1.0, 2.0});
+    CHECK(vizlib::drop_nan({}).empty());
+    CHECK(vizlib::drop_nan({nan, nan}).empty());
+}
+
+TEST_CASE("drop_nan gives the same numbers as dropping missing rows") {
+    const vizlib::DataFrame df = vizlib::parse_csv("x\n1\nNA\n3\nnull\n5\n");
+    const vizlib::DataFrame cleaned = vizlib::drop_missing(df);
+    const std::vector<double>& with_missing = df["x"];
+    const std::vector<double>& dropped = cleaned["x"];
+    CHECK(with_missing.size() == 5);
+    CHECK(vizlib::drop_nan(with_missing) == dropped);
+    CHECK(dropped == std::vector<double>{1.0, 3.0, 5.0});
 }

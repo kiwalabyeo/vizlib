@@ -2,7 +2,7 @@
 // length): one with histogram margins, one with KDE margins. Saves a PNG.
 // Run from the project root: ./build/examples/joint_plot_example
 
-#include "example_utils.hpp"
+#include <vizlib/preprocessing.hpp>
 
 #include <vizlib/canvas.hpp>
 #include <vizlib/canvas_export.hpp>
@@ -20,9 +20,10 @@ int main()
 {
     try
     {
-        const vizlib::DataFrame iris = vizlib::read_csv("data/input/iris.csv");
-        const std::vector<double> x = examples::numeric_column(iris, "sepal_length");
-        const std::vector<double> y = examples::numeric_column(iris, "petal_length");
+        // read the file, then drop rows with a missing value (Member 1's data module)
+        const vizlib::DataFrame iris = vizlib::drop_missing(vizlib::read_csv("data/input/iris.csv"));
+        const std::vector<double> x = iris["sepal_length"];
+        const std::vector<double> y = iris["petal_length"];
 
         const vizlib::Color white{255, 255, 255, 255};
         const vizlib::Color dark{40, 40, 40, 255};

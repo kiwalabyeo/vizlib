@@ -76,6 +76,7 @@ All functions return a new `DataFrame`; the input is never changed.
 | `filter_rows(df, pred)`, `filter_numeric(df, col, pred)` | keep rows where the predicate is true |
 | `select_columns(df, names)`, `drop_columns(df, names)` | keep / remove columns |
 | `parse_number(str, out)` | the number test the reader uses |
+| `drop_nan(values)` | a list of numbers without its NaN values, in order; the plots and statistics use it |
 
 ## Limits
 
@@ -86,7 +87,7 @@ All functions return a new `DataFrame`; the input is never changed.
 
 ## Tests
 
-`tests/tests_dataframe.cpp`, `tests/test_csv_reader.cpp`, `tests/test_preprocessor.cpp` (49 test cases). Sample data: `data/input/iris.csv`, `tips.csv`, and `messy.csv` (quoted commas, a quoted quote, empty cells, `NA`, junk in a numeric column).
+`tests/tests_dataframe.cpp`, `tests/test_csv_reader.cpp`, `tests/test_preprocessor.cpp` (51 test cases). Sample data: `data/input/iris.csv`, `tips.csv`, and `messy.csv` (quoted commas, a quoted quote, empty cells, `NA`, junk in a numeric column).
 
 ## Names from the first version of the library
 

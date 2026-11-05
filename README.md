@@ -171,7 +171,7 @@ On Windows, add the build type:
 ctest --test-dir build -C Debug --output-on-failure
 ```
 
-There are 271 test cases. GitHub Actions builds and tests every pull request on Linux, and every change to `main` on Linux, Windows and macOS. It also runs `pipeline` and checks that the PNG was created.
+There are 273 test cases. GitHub Actions builds and tests every pull request on Linux, and every change to `main` on Linux, Windows and macOS. It also runs `pipeline` and checks that the PNG was created.
 
 ## Documentation
 

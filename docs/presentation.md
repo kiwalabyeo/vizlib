@@ -6,7 +6,7 @@ vizlib is a small C++20 library that turns a CSV file into a readable statistica
 
 **CSV file → `DataFrame` (James) → statistics and KDE (Melissa) → plots (Crystal, Oscar) → axes (Destiny) → `Canvas` (Flavia) → text and legends (Joy) → PNG file and the pipeline (Norah)**
 
-It draws scatter plots, histograms, KDE curves, ECDF and rug plots, and joint plots. It runs on Linux, Windows and macOS, and is checked by 271 tests on every push.
+It draws scatter plots, histograms, KDE curves, ECDF and rug plots, and joint plots. It runs on Linux, Windows and macOS, and is checked by 273 tests on every push.
 
 ## How the presentation runs
 
@@ -74,7 +74,7 @@ Each member shows their header, one key function, and what it produces.
    - [`CsvOptions`](../include/vizlib/csv_reader.hpp#L18), and the [CSV reader's state machine](../src/csv_reader.cpp#L45), which handles commas and line breaks inside quotes
    - Show: `./build/examples/data_examples` on `messy.csv`
 2. **Statistics and KDE, Member 2 (Melissa)**
-   - [`summaryStatistics`](../include/vizlib/stats.hpp#L29), [`binningStrategy`](../include/vizlib/stats.hpp#L63)
+   - [`summaryStatistics`](../include/vizlib/stats.hpp#L26), [`binningStrategy`](../include/vizlib/stats.hpp#L60)
    - [`kde()`](../include/vizlib/kde.hpp#L29), with [the Gaussian density at one point](../src/kde.cpp#L8) and [Silverman's bandwidth](../src/kde.cpp#L30)
 3. **Axes and scaling, Member 5 (Destiny)**
    - [`Axes`](../include/vizlib/axes.hpp#L15), [`LogScale`](../include/vizlib/scale.hpp#L25)
@@ -88,15 +88,15 @@ Each member shows their header, one key function, and what it produces.
    - [tick labels](../src/axes.cpp#L179)
    - [`Legend`](../include/vizlib/legend.hpp#L21), [`Annotations`](../include/vizlib/annotations.hpp#L23)
 6. **ECDF and rug plots, Member 3 (Crystal)**
-   - [`ECDFPlot`](../include/vizlib/ecdf.hpp#L32), [drawing the steps](../src/ecdf.cpp#L84)
+   - [`ECDFPlot`](../include/vizlib/ecdf.hpp#L32), [drawing the steps](../src/ecdf.cpp#L74)
    - Show: `data/output/ecdf_example.png`
 7. **Scatter, histogram and joint plots, Member 4 (Oscar)**
    - [`ScatterPlot<TX, TY>`](../include/vizlib/scatter.hpp#L52), [`HistogramPlot`](../include/vizlib/histogram.hpp#L116)
-   - [`JointPlot`](../include/vizlib/joint_plot.hpp#L54), [`with_kde`](../include/vizlib/joint_plot.hpp#L106)
+   - [`JointPlot`](../include/vizlib/joint_plot.hpp#L49), [`with_kde`](../include/vizlib/joint_plot.hpp#L101)
    - Show: `data/output/joint_plot_example.png`
 8. **Export and the full pipeline, Member 7 (Norah)**
    - [`save_png` for a Canvas](../src/canvas_export.cpp#L41)
-   - [`pipeline.cpp`](../examples/pipeline.cpp#L62): every module in one program
+   - [`pipeline.cpp`](../examples/pipeline.cpp#L44): every module in one program
    - Show: `data/output/pipeline.png`
 
 ## 5. Important implementation decisions: OOP concepts (5 min, slides 16 to 18)
@@ -105,10 +105,10 @@ Each concept is presented by the member whose code shows it best.
 
 - **Inheritance and runtime polymorphism (Member 4).**
   - [`Plot`](../include/vizlib/plot.hpp#L24) is abstract.
-  - [`JointPlot::draw`](../src/joint_plot.cpp#L83) calls `draw()` on three `Plot` pointers without knowing their types.
+  - [`JointPlot::draw`](../src/joint_plot.cpp#L74) calls `draw()` on three `Plot` pointers without knowing their types.
   - The [`FakePlot` test](../tests/test_joint_plot.cpp#L33) proves it: a plot type defined only inside a test works in a joint plot.
 - **Inheritance and polymorphism, second hierarchy (Member 8).** [`Drawable`](../include/vizlib/drawable.hpp#L10) is the base of `Annotations` and `Legend`.
-- **The strategy pattern (Member 2).** [`binningStrategy`](../include/vizlib/stats.hpp#L63), with the Freedman–Diaconis and Sturges rules.
+- **The strategy pattern (Member 2).** [`binningStrategy`](../include/vizlib/stats.hpp#L60), with the Freedman–Diaconis and Sturges rules.
 - **Encapsulation (Members 6 and 1).**
   - `Canvas` keeps its pixels private and checks every coordinate.
   - `DataFrame` refuses duplicate names and columns of different lengths.
@@ -149,7 +149,7 @@ Rehearse each change once, so you know exactly which line to edit.
   - [the same test run once per number type](../tests/test_plot_templates.cpp#L62)
   - [bad CSV input](../tests/test_csv_reader.cpp#L83)
   - [the KDE's area is 1](../tests/test_kde.cpp#L22)
-- **Results:** 271 test cases pass, also under AddressSanitizer and UndefinedBehaviorSanitizer. A fresh clone builds and passes by following the README. Run `ctest --test-dir build --output-on-failure` live.
+- **Results:** 273 test cases pass, also under AddressSanitizer and UndefinedBehaviorSanitizer. A fresh clone builds and passes by following the README. Run `ctest --test-dir build --output-on-failure` live.
 - **End-of-project bug hunt (done with AI):** testing with bad input found 6 bugs, all fixed with a test each. See [`docs/bug-report.md`](bug-report.md).
 
 ## 8. Challenges and how we addressed them (2 min, Member 4, slide 21)

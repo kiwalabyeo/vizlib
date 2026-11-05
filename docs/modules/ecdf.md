@@ -25,7 +25,7 @@ rug.draw(canvas, axes);
 
 **Working out the points** (`compute_coordinates`):
 
-1. Copy the data and leave out NaN values.
+1. Copy the data and leave out NaN values, with Member 1's `drop_nan`.
 2. Sort the copy from smallest to largest.
 3. The i-th value (counting from 0) gets the point $\left(x_i, \frac{i+1}{n}\right)$, where n is the number of values.
 
