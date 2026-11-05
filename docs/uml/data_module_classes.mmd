@@ -1,0 +1,103 @@
+classDiagram
+direction TB
+
+class Numeric {
+    <<concept / enable_if>>
+    is_numeric_type_v~T~
+    is_representable~T~(double) bool
+    to_double_exact~T~(T) double
+}
+
+class Column {
+    -string name_
+    -Type type_
+    -vector~double~ numbers_
+    -vector~string~ strings_
+    -vector~char~ missing_
+    +Column(string, vector~double~)
+    +Column(string, vector~T~) template
+    +Column(string, vector~string~, vector~char~)
+    +name() string
+    +is_numeric() bool
+    +size() size_t
+    +is_missing(i) bool
+    +values() vector~double~
+    +as~T~() vector~T~ template
+    +text() vector~string~
+    +take(rows) Column
+}
+
+class ColumnType {
+    <<enumeration>>
+    Numeric
+    Text
+}
+
+class DataFrame {
+    -vector~Column~ columns_
+    +add_column(Column)
+    +n_rows() size_t
+    +n_cols() size_t
+    +operator[](name) Column
+    +column_as~T~(name) vector~T~ template
+    +replace_column(Column)
+    +take_rows(rows) DataFrame
+    +to_string(max_rows) string
+}
+
+class NumericColumn~T~ {
+    <<class template>>
+    -string name_
+    -vector~T~ data_
+    +NumericColumn(Column)
+    +size() size_t
+    +at(i) T
+    +sum() double
+    +to_column() Column
+}
+
+class CsvOptions {
+    <<struct>>
+    +char delimiter
+    +bool has_header
+    +BadRowPolicy bad_rows
+    +vector~string~ na_values
+}
+
+class BadRowPolicy {
+    <<enumeration>>
+    Throw
+    Skip
+}
+
+class csv_reader {
+    <<free functions>>
+    +read_csv(path, options) DataFrame
+    +read_csv(istream, options) DataFrame
+    +parse_csv(text, options) DataFrame
+    +read_csv_column~T~(path, column) vector~T~
+}
+
+class preprocessing {
+    <<free functions>>
+    +drop_missing(df) DataFrame
+    +fill_missing(df, col, T) DataFrame
+    +fill_missing_mean(df, col) DataFrame
+    +to_numeric(df, col, coerce) DataFrame
+    +parse_number(string, T&) bool
+    +filter_numeric~T~(df, col, pred) DataFrame
+    +select_columns(df, names) DataFrame
+}
+
+DataFrame "1" *-- "0..*" Column : columns_ (composition)
+Column --> ColumnType : type_
+NumericColumn~T~ ..> Column : built from / to_column()
+csv_reader --> CsvOptions : uses
+CsvOptions --> BadRowPolicy : bad_rows
+csv_reader ..> DataFrame : returns
+csv_reader ..> preprocessing : parse_number()
+preprocessing ..> DataFrame : returns a new one
+Column ..> Numeric : constrains as<T> and ctor
+NumericColumn~T~ ..> Numeric : constrains T
+preprocessing ..> Numeric : constrains T
+csv_reader ..> Numeric : constrains T

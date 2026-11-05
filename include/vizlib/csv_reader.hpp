@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "vizlib/dataframe.hpp"
+#include "vizlib/numeric.hpp"
 
 namespace vizlib {
 
@@ -45,5 +46,15 @@ DataFrame read_csv(std::istream& in, const CsvOptions& options = {});
 
 // Same, from text already in memory.
 DataFrame parse_csv(const std::string& text, const CsvOptions& options = {});
+
+// Read one numeric column of a CSV file as any numeric type:
+//   std::vector<int> sizes = read_csv_column<int>("tips.csv", "size");
+// Throws what read_csv() throws, std::invalid_argument for an unknown or text
+// column, and std::invalid_argument if a value does not fit T (see Column::as).
+VIZLIB_NUMERIC_TEMPLATE(T)
+std::vector<T> read_csv_column(const std::string& path, const std::string& column,
+                               const CsvOptions& options = {}) {
+    return read_csv(path, options)[column].as<T>();
+}
 
 }  // namespace vizlib

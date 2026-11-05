@@ -10,9 +10,13 @@
 
 #include <cmath>
 #include <cstddef>
+#include <stdexcept>
 #include <string>
+#include <utility>
 #include <variant>
 #include <vector>
+
+#include "vizlib/numeric.hpp"
 
 namespace vizlib {
 
@@ -27,6 +31,13 @@ public:
 
     // Numeric column. NaN entries are treated as missing.
     Column(std::string name, std::vector<double> values);
+
+    // Numeric column from any numeric type (int, long, float, unsigned, ...).
+    // The values are stored as double. Throws std::invalid_argument if a value
+    // cannot be held exactly by a double (e.g. a 64-bit integer above 2^53).
+    VIZLIB_NUMERIC_TEMPLATE(T)
+    Column(std::string name, const std::vector<T>& values)
+        : Column(std::move(name), convert_to_doubles(values)) {}
 
     // Text column. `missing` is either empty (nothing missing) or the same
     // length as `values`, where a non-zero entry marks that cell as missing.
@@ -53,6 +64,27 @@ public:
     // Throws std::invalid_argument on a text column.
     operator const std::vector<double>&() const { return values(); }
 
+    // The numbers converted to any numeric type T. For floating types NaN
+    // (missing) is kept. For integer types a missing cell, a fractional value or
+    // a value outside T's range throws std::invalid_argument naming the row, so
+    // nothing is rounded or wrapped silently. Also throws on a text column.
+    //   std::vector<int> sizes = df["size"].as<int>();
+    VIZLIB_NUMERIC_TEMPLATE(T)
+    std::vector<T> as() const {
+        const std::vector<double>& v = values();
+        std::vector<T> out;
+        out.reserve(v.size());
+        for (std::size_t i = 0; i < v.size(); ++i) {
+            if (!is_representable<T>(v[i]))
+                throw std::invalid_argument(
+                    "Column '" + name_ + "', row " + std::to_string(i) + ": " +
+                    std::to_string(v[i]) +
+                    " cannot be converted to the requested type (missing, fractional or out of range)");
+            out.push_back(static_cast<T>(v[i]));
+        }
+        return out;
+    }
+
     // Text of a text column. Throws std::invalid_argument on a numeric column.
     const std::vector<std::string>& text() const;
 
@@ -67,6 +99,14 @@ public:
     Column renamed(std::string new_name) const;
 
 private:
+    template <typename T>
+    static std::vector<double> convert_to_doubles(const std::vector<T>& values) {
+        std::vector<double> out;
+        out.reserve(values.size());
+        for (const T& x : values) out.push_back(to_double_exact(x));
+        return out;
+    }
+
     std::string name_;
     Type type_;
     std::vector<double> numbers_;
@@ -94,6 +134,10 @@ public:
     const Column& column(const std::string& name) const { return (*this)[name]; }
     // Get a column by position. Throws std::out_of_range.
     const Column& column(std::size_t index) const;
+
+    // A numeric column read as any numeric type: same as df[name].as<T>().
+    VIZLIB_NUMERIC_TEMPLATE(T)
+    std::vector<T> column_as(const std::string& name) const { return (*this)[name].as<T>(); }
 
     // Replace an existing column (same length required, same or new type).
     // Throws std::invalid_argument if the name does not exist.
