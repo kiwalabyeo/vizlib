@@ -1,7 +1,7 @@
 # Canvas Module Changelog
 
 **Author:** Nambalirwa Flavia Cate (Member 6, Rendering / Canvas)
-**Project:** vizlib, Group 7 (C++17)
+**Project:** vizlib, Group 7 (C++20; it started on C++17)
 
 
 Legend: **Added** = new, **Changed** = modified, **Fixed** = bug or build error corrected, **Not done** = planned but decided against
